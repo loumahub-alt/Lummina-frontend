@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import { navigation } from '../../data/site';
 import { Logo } from '../common/Logo';
 import { TransitionLink } from '../transitions';
 
 export const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
@@ -23,6 +26,10 @@ export const MobileNavigation = () => {
     };
   }, [open]);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [location.hash, location.pathname, location.search]);
+
   return (
     <div className="xl:hidden">
       <button
@@ -36,11 +43,18 @@ export const MobileNavigation = () => {
         {open ? <X aria-hidden="true" className="h-6 w-6" /> : <Menu aria-hidden="true" className="h-6 w-6" />}
       </button>
 
-      {open && (
-        <div className="fixed inset-0 z-50 bg-wine/80 backdrop-blur-md">
+      {open && createPortal(
+        <div
+          className="fixed inset-0 z-50 overflow-hidden bg-wine/95 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        >
           <div
             id="mobile-menu"
-            className="ml-auto flex h-full w-full max-w-md animate-menu-enter flex-col border-l border-champagne/15 bg-[linear-gradient(160deg,#5F021F_0%,#430016_58%,#25000C_100%)] px-6 py-5 shadow-[0_28px_90px_rgba(0,0,0,0.38)]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            onClick={(event) => event.stopPropagation()}
+            className="mobile-menu-surface ml-auto flex min-h-[100dvh] w-full max-w-md animate-menu-enter flex-col overflow-y-auto border-l border-champagne/15 px-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-[calc(1.25rem+env(safe-area-inset-top))] shadow-[0_28px_90px_rgba(0,0,0,0.38)] overscroll-contain"
           >
             <div className="flex items-center justify-between gap-4 border-b border-champagne/15 pb-5">
               <Logo compact />
@@ -74,7 +88,8 @@ export const MobileNavigation = () => {
               ))}
             </nav>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
