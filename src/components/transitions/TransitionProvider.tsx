@@ -16,9 +16,9 @@ import {
 import { TransitionOverlay } from './TransitionOverlay';
 
 const DEFAULT_TIMINGS = {
-  coverMs: 250,
-  holdMs: 500,
-  revealMs: 250,
+  coverMs: 500,
+  holdMs: 1000,
+  revealMs: 500,
 };
 
 const INITIAL_LOAD_MS = 3000;
