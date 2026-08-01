@@ -25,7 +25,8 @@ const INITIAL_LOAD_MS = 3000;
 
 const REDUCED_MOTION_TIMINGS = {
   coverMs: 0,
-  holdMs: 0,
+  // Keep the loading surface visible long enough to be perceived without animating it.
+  holdMs: 800,
   revealMs: 0,
 };
 
