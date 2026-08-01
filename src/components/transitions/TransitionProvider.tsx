@@ -16,9 +16,9 @@ import {
 import { TransitionOverlay } from './TransitionOverlay';
 
 const DEFAULT_TIMINGS = {
-  coverMs: 500,
-  holdMs: 2000,
-  revealMs: 500,
+  coverMs: 250,
+  holdMs: 500,
+  revealMs: 250,
 };
 
 const INITIAL_LOAD_MS = 3000;
@@ -26,7 +26,7 @@ const INITIAL_LOAD_MS = 3000;
 const REDUCED_MOTION_TIMINGS = {
   coverMs: 0,
   // Keep the loading surface visible long enough to be perceived without animating it.
-  holdMs: 800,
+  holdMs: 1000,
   revealMs: 0,
 };
 
