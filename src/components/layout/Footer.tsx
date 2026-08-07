@@ -2,6 +2,7 @@ import { Facebook, Linkedin, Twitter } from 'lucide-react';
 import { brand, footerColumns, legalLinks, offices } from '../../data/site';
 import { Logo } from '../common/Logo';
 import { TransitionLink } from '../transitions';
+import { trackEvent } from '../../utils/analytics';
 
 const socialLinks = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: Linkedin },
@@ -52,10 +53,16 @@ export const Footer = () => (
       <div>
         <h2 className="text-xs font-extrabold uppercase tracking-[0.12em] text-white">Contact</h2>
         <div className="mt-5 space-y-5 text-sm leading-7 text-muted">
+          <p className="font-bold text-white">{brand.legalName}</p>
           {offices.map((office) => (
             <div key={office.name}>
               <p className="font-bold text-gold-bright">{office.name}</p>
-              <a href={`tel:${office.phone.replace(/[^+\d]/g, '')}`} className="hover:text-white">
+              <address className="not-italic leading-6">{office.address.join(', ')}</address>
+              <a
+                href={`tel:${office.phone.replace(/[^+\d]/g, '')}`}
+                onClick={() => trackEvent('phone_tap', { location: office.name, source: 'footer' })}
+                className="hover:text-white"
+              >
                 {office.phone}
               </a>
             </div>

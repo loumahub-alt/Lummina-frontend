@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import type { Attorney } from '../../types';
@@ -11,19 +11,46 @@ type AttorneyProfileModalProps = {
 };
 
 export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModalProps) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (!attorney) return;
 
     document.body.classList.add('modal-open');
+    closeButtonRef.current?.focus();
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
 
     window.addEventListener('keydown', handleEscape);
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
     return () => {
       document.body.classList.remove('modal-open');
       window.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleTab);
     };
   }, [attorney, onClose]);
 
@@ -45,6 +72,7 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
     >
       <div className="flex min-h-full items-start justify-center sm:items-center">
         <div
+          ref={dialogRef}
           className="my-4 w-full max-w-5xl overflow-hidden rounded-[2px] border border-light-line bg-cream text-ink shadow-luxe sm:my-8"
           onClick={(event) => event.stopPropagation()}
         >
@@ -53,6 +81,9 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
               <img
                 src={attorney.portrait}
                 alt={`${attorney.name}, ${attorney.position}`}
+                width={520}
+                height={640}
+                loading="lazy"
                 onError={(event) => {
                   event.currentTarget.src = images.team.src;
                 }}
@@ -62,7 +93,7 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
             <div className="p-7 md:p-10">
               <div className="flex items-start justify-between gap-5">
                 <div>
-                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark">
                     {attorney.position}
                   </p>
                   <h2 id="attorney-modal-title" className="mt-3 font-serif text-5xl font-medium">
@@ -75,8 +106,9 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
                 <button
                   type="button"
                   aria-label="Close attorney profile"
+                  ref={closeButtonRef}
                   onClick={onClose}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] border border-light-line bg-white/70 text-ink transition hover:border-gold hover:text-gold"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[2px] border border-light-line bg-white/70 text-ink transition hover:border-gold-dark hover:text-gold-dark"
                 >
                   <X aria-hidden="true" className="h-5 w-5" />
                 </button>
@@ -91,7 +123,7 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
               </div>
 
               <div className="mt-8 border-t border-light-line pt-6 text-sm leading-7 text-ink/76">
-                <a href={`mailto:${attorney.email}`} className="font-bold text-gold hover:text-ink">
+                <a href={`mailto:${attorney.email}`} className="font-bold text-gold-dark hover:text-ink">
                   {attorney.email}
                 </a>
               </div>
@@ -112,7 +144,7 @@ type ProfileListProps = {
 
 const ProfileList = ({ icon: Icon, title, items }: ProfileListProps) => (
   <div>
-    <Icon aria-hidden="true" className="h-6 w-6 text-gold" />
+    <Icon aria-hidden="true" className="h-6 w-6 text-gold-dark" />
     <h3 className="mt-3 text-sm font-extrabold uppercase tracking-[0.12em]">{title}</h3>
     <ul className="mt-3 space-y-2 text-sm leading-6 text-ink/68">
       {items.map((item) => (

@@ -13,6 +13,8 @@ export const TransitionOverlay = memo(({ phase }: TransitionOverlayProps) => (
       <img
         src={brand.loader}
         alt=""
+        width={750}
+        height={434}
         className="route-transition-overlay__loader"
         aria-hidden="true"
         decoding="async"

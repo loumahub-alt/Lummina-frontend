@@ -8,6 +8,7 @@ import type {
   PracticeArea,
   ResultItem,
   SeoEntry,
+  ServicePage,
   Stat,
   TeamMember,
   Testimonial,
@@ -20,13 +21,16 @@ export const brand = {
   email: 'info@lummina.com',
   alternateEmail: 'lumminalp@gmail.com',
   phone: '0706 046 9068',
-  website: 'www.lumminalp.com',
+  phoneInternational: '+234 706 046 9068',
+  whatsapp: 'https://wa.me/2347060469068',
+  website: 'www.lumminalaw.com',
+  siteUrl: 'https://www.lumminalaw.com',
   logoDark: '/assets/lummina-logo-dark-transparent.png',
   logoLight: '/assets/lummina-logo-light-transparent.png',
   loader: '/assets/lummina-loader.gif',
   copyright: '(c) 2026 Lummina Law Firm. All Rights Reserved.',
   statement:
-    'Modern, innovative and client-centered legal counsel from Lagos, Nigeria.',
+    'Commercially intelligent legal advisory for businesses building toward scale.',
 };
 
 export const navigation: NavigationItem[] = [
@@ -43,79 +47,293 @@ export const navigation: NavigationItem[] = [
 
 export const images: ImageRegistry = {
   columns: {
-    src: '/assets/hero-columns.png',
+    src: '/assets/hero-columns.webp',
     alt: 'Classical courthouse columns lit warmly against a dark evening sky',
     position: 'center right',
+    width: 1815,
+    height: 867,
   },
   boardroom: {
-    src: '/assets/boardroom.png',
+    src: '/assets/boardroom.webp',
     alt: 'Premium executive boardroom with a polished walnut table and city skyline',
     position: 'center right',
+    width: 1681,
+    height: 935,
   },
   library: {
-    src: '/assets/library-desk.png',
+    src: '/assets/library-desk.webp',
     alt: 'Quiet legal library with an open book, brass lamp and leather-bound volumes',
     position: 'center right',
+    width: 1774,
+    height: 887,
   },
   conference: {
-    src: '/assets/conference-room.png',
+    src: '/assets/conference-room.webp',
     alt: 'Refined law firm conference room with leather chairs and organized folders',
     position: 'center center',
+    width: 1774,
+    height: 887,
   },
   scales: {
-    src: '/assets/scales.png',
+    src: '/assets/scales.webp',
     alt: 'Bronze scales of justice on a polished table in a legal library',
     position: 'center right',
+    width: 1694,
+    height: 929,
   },
   team: {
-    src: '/assets/team-group.png',
+    src: '/assets/team-group.webp',
     alt: 'Diverse law firm leadership group in a premium office lobby',
     position: 'center center',
+    width: 1774,
+    height: 887,
   },
 };
 
+export const messagePillars = [
+  {
+    title: 'Legal Foundations for Growth',
+    icon: 'building' as const,
+    text: 'We help clients structure businesses correctly, establish scalable governance, protect ownership and control, and manage legal risk before it becomes expensive.',
+    signature: 'Structure before speed.',
+  },
+  {
+    title: 'Commercially Intelligent Advisory',
+    icon: 'briefcase' as const,
+    text: 'Our legal strategy accounts for commercial realities, operational impact, investor readiness, execution speed and long-term value creation.',
+    signature: 'Commercial outcomes, not just legal output.',
+  },
+  {
+    title: 'Long-Term Strategic Partnership',
+    icon: 'handshake' as const,
+    text: 'We provide proactive, clear and tailored guidance so clients feel informed, protected and supported through growth and complexity.',
+    signature: 'Trusted guidance through complexity.',
+  },
+];
+
+export const audienceSegments = [
+  {
+    title: 'Founders & Startups',
+    text: 'Structure, governance, compliance, IP and growth protection for businesses taking shape.',
+  },
+  {
+    title: 'Investors & Capital Deployers',
+    text: 'Transaction support, due diligence, structuring and protection for capital at work.',
+  },
+  {
+    title: 'Established Businesses',
+    text: 'Governance, restructuring, compliance, transactions and risk management for evolving enterprises.',
+  },
+  {
+    title: 'Private Clients & Families',
+    text: 'Discreet asset protection, succession planning and continuity structures for the long term.',
+  },
+];
+
+export const servicePages: ServicePage[] = [
+  {
+    slug: 'corporate-commercial-law-lagos',
+    eyebrow: 'Corporate & Commercial Law',
+    title: 'Corporate & Commercial Lawyers in Lagos',
+    primaryKeyword: 'corporate and commercial law firm Lagos',
+    seoTitle: 'Corporate & Commercial Lawyers Lagos | Lummina Law Firm',
+    seoDescription:
+      'Commercial and corporate legal advisory in Lagos for contracts, governance, business structuring, company secretarial work and investment readiness.',
+    intro:
+      'Lummina helps founders, companies and investors make sound commercial decisions with legal structure that supports sustainable growth. We advise across formation, governance, contracts, transactions and the practical issues that arise as a business evolves.',
+    practiceAreaIds: ['business-law', 'company-secretarial-compliance', 'startup-law'],
+    insightIds: ['business-law-nigeria', 'startup-readiness', 'company-secretarial'],
+    highlights: [
+      'Business formation and structuring',
+      'Commercial contracts and negotiations',
+      'Corporate governance and board support',
+      'Shareholder and founder arrangements',
+      'Investment readiness and transaction support',
+      'Company secretarial and statutory compliance',
+    ],
+  },
+  {
+    slug: 'real-estate-property-law-lagos',
+    eyebrow: 'Real Estate & Construction',
+    title: 'Real Estate Lawyers in Lagos',
+    primaryKeyword: 'real estate lawyer Lagos',
+    seoTitle: 'Real Estate Lawyers Lagos | Property Law | Lummina',
+    seoDescription:
+      'Lagos property lawyers advising on title review, land verification, acquisition, leases, perfection and real estate disputes.',
+    intro:
+      'Property decisions require clarity before money changes hands. Lummina helps purchasers, developers, landlords and businesses assess title, structure transactions and manage property risk from due diligence through completion.',
+    practiceAreaIds: ['real-estate-property-law'],
+    insightIds: ['real-estate-title', 'business-law-nigeria', 'startup-readiness'],
+    highlights: [
+      'Title review and land verification',
+      'Property acquisition and sale',
+      'Leases and development agreements',
+      'Perfection and registration support',
+      'Real estate financing and security',
+      'Property-related disputes',
+    ],
+  },
+  {
+    slug: 'debt-recovery-dispute-resolution-lagos',
+    eyebrow: 'Dispute Resolution & Debt Recovery',
+    title: 'Debt Recovery Lawyers in Lagos',
+    primaryKeyword: 'debt recovery lawyer Lagos',
+    seoTitle: 'Debt Recovery Lawyers Lagos | Lummina Law Firm',
+    seoDescription:
+      'Debt recovery and dispute resolution lawyers in Lagos handling demand strategy, negotiation, litigation, enforcement and commercial settlements.',
+    intro:
+      'Debt recovery is a commercial decision as well as a legal process. Lummina helps creditors assess recovery options, preserve leverage, negotiate where appropriate and pursue enforcement or litigation when it is the right route.',
+    practiceAreaIds: ['debt-recovery', 'litigation', 'alternative-dispute-resolution'],
+    insightIds: ['debt-recovery-strategy', 'adr-commercial-disputes', 'business-law-nigeria'],
+    highlights: [
+      'Recovery assessment and demand strategy',
+      'Negotiated settlements',
+      'Commercial litigation',
+      'Mediation and arbitration',
+      'Judgment enforcement planning',
+      'Debt restructuring and recovery-linked advice',
+    ],
+  },
+  {
+    slug: 'banking-lending-trade-finance-nigeria',
+    eyebrow: 'Banking, Lending & Trade Finance',
+    title: 'Banking & Finance Lawyers in Nigeria',
+    primaryKeyword: 'banking lawyer Nigeria',
+    seoTitle: 'Banking & Finance Lawyers Nigeria | Lummina Law Firm',
+    seoDescription:
+      'Banking and finance lawyers in Nigeria advising lenders, borrowers and businesses on loan documents, security, restructuring and finance transactions.',
+    intro:
+      'Lummina supports lenders, borrowers and businesses with finance documentation that reflects the transaction, the security position and the commercial objective. Our advice is designed to help clients understand obligations, manage risk and execute with confidence.',
+    practiceAreaIds: ['banking-finance', 'debt-recovery'],
+    insightIds: ['debt-recovery-strategy', 'startup-readiness', 'business-law-nigeria'],
+    highlights: [
+      'Loan and facility documentation',
+      'Security review and documentation',
+      'Borrower and lender advisory',
+      'Trade and structured finance support',
+      'Debt restructuring',
+      'Finance-linked recovery strategy',
+    ],
+  },
+  {
+    slug: 'intellectual-property-law-nigeria',
+    eyebrow: 'Intellectual Property',
+    title: 'Intellectual Property Lawyers in Nigeria',
+    primaryKeyword: 'trademark lawyer Nigeria',
+    seoTitle: 'Intellectual Property Lawyers Nigeria | Lummina Law Firm',
+    seoDescription:
+      'Intellectual property lawyers in Nigeria advising on trademarks, copyright, licensing, brand protection and IP enforcement.',
+    intro:
+      'Brands, content and ideas are business assets. Lummina helps companies and creators protect, use and commercialise intellectual property through practical advice on ownership, registration, licensing and enforcement.',
+    practiceAreaIds: ['intellectual-property', 'entertainment-media-law'],
+    insightIds: ['creative-sector-rights', 'tech-contracting', 'startup-readiness'],
+    highlights: [
+      'Trademark registration and strategy',
+      'Copyright ownership and protection',
+      'Licensing and commercialisation',
+      'Brand and content agreements',
+      'IP due diligence',
+      'Infringement and enforcement strategy',
+    ],
+  },
+  {
+    slug: 'compliance-governance-law-nigeria',
+    eyebrow: 'Compliance & Governance',
+    title: 'Compliance Lawyers in Nigeria',
+    primaryKeyword: 'compliance lawyer Nigeria',
+    seoTitle: 'Compliance Lawyers Nigeria | Governance & NDPA | Lummina',
+    seoDescription:
+      'Compliance and governance lawyers advising Nigerian businesses on CAC filings, company secretarial work, data protection, regulatory readiness and risk.',
+    intro:
+      'Good compliance is operational infrastructure. Lummina helps businesses build governance systems, maintain accurate records and respond to regulatory obligations before they become disruptive or expensive.',
+    practiceAreaIds: ['company-secretarial-compliance', 'technology-law', 'energy-natural-resources'],
+    insightIds: ['company-secretarial', 'tech-contracting', 'startup-readiness'],
+    highlights: [
+      'Company secretarial services',
+      'CAC filings and statutory records',
+      'Corporate governance systems',
+      'Data protection and privacy advisory',
+      'Regulatory compliance reviews',
+      'Risk management and remediation planning',
+    ],
+  },
+  {
+    slug: 'private-client-estate-planning-law-lagos',
+    eyebrow: 'Private Client & Family Services',
+    title: 'Private Client Lawyers in Lagos',
+    primaryKeyword: 'private client lawyer Lagos',
+    seoTitle: 'Private Client Lawyers Lagos | Estate Planning | Lummina',
+    seoDescription:
+      'Private client lawyers in Lagos advising families and individuals on estate planning, succession, asset protection and sensitive personal matters.',
+    intro:
+      'Private client advice should protect both today’s interests and tomorrow’s continuity. Lummina provides discreet counsel to individuals and families on succession, asset protection, estate planning and sensitive legal arrangements.',
+    practiceAreaIds: ['family-private-client-services'],
+    insightIds: ['adr-commercial-disputes', 'real-estate-title', 'business-law-nigeria'],
+    highlights: [
+      'Wills and estate planning',
+      'Probate and succession support',
+      'Asset protection structures',
+      'Family arrangements',
+      'Private client advisory',
+      'Sensitive negotiations and dispute support',
+    ],
+  },
+];
+
 export const seo: Record<string, SeoEntry> = {
   '/': {
-    title: 'Lummina | Barristers and Solicitors',
+    title: 'Lummina Law Firm Lagos | Legal Clarity for Businesses',
     description:
-      'Lummina Law Firm is a modern, innovative and client-centered full-service law firm based in Lagos, Nigeria.',
+      'Lummina Law Firm is a modern, commercially minded law firm helping founders, businesses, investors and private clients build, protect and scale with clarity, structure and strategic foresight.',
   },
   '/about': {
-    title: 'About Lummina | Barristers and Solicitors',
+    title: 'About Lummina Law Firm | Commercial Legal Advisory Lagos',
     description:
-      'Learn about Lummina Law Firm, our mission, values and commitment to practical bespoke legal solutions.',
+      'Learn how Lummina helps emerging and evolving businesses navigate legal and regulatory complexity with clarity, structure and strategic foresight.',
   },
   '/practice-areas': {
-    title: 'Practice Areas | Lummina Law Firm',
+    title: 'Commercial Law Firm Lagos | Practice Areas | Lummina Law Firm',
     description:
-      'Explore Lummina legal services across business law, debt recovery, compliance, technology, litigation, ADR, real estate, IP and more.',
+      'Explore commercially minded legal advisory across business foundations, governance, transactions, disputes, protection and private client needs.',
   },
   '/attorneys': {
-    title: 'Attorneys | Lummina Law Firm',
+    title: 'Lummina Lawyers Lagos | Attorneys | Lummina Law Firm',
     description:
       'Meet the Lummina team and search legal professionals by role, name and practice area.',
   },
   '/our-team': {
-    title: 'Our Team | Lummina Law Firm',
+    title: 'Our Legal Team | Lummina Law Firm Lagos',
     description:
-      'Meet Lummina Law Firm leadership and the wider client-centered team behind our work.',
+      'Meet the Lummina team providing clear, strategic and commercially aware guidance through growth and complexity.',
   },
   '/results': {
-    title: 'Results | Lummina Law Firm',
+    title: 'Commercial Legal Results | Lummina Law Firm Lagos',
     description:
       'Representative Lummina outcomes and case highlights. Past results do not guarantee future outcomes.',
   },
   '/insights': {
-    title: 'Insights | Lummina Law Firm',
+    title: 'Legal Insights Nigeria | Lummina Law Firm',
     description:
       'Legal insights, publications and events from Lummina Law Firm in Lagos, Nigeria.',
   },
   '/consultation': {
     title: 'Schedule a Consultation | Lummina Law Firm',
     description:
-      'Request a consultation with Lummina Law Firm, Barristers and Solicitors in Lagos, Nigeria.',
+      'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+  },
+  '/404': {
+    title: 'Page Not Found | Lummina Law Firm',
+    description:
+      'The page you requested could not be found. Explore Lummina Law Firm services or schedule a consultation in Lagos.',
   },
 };
+
+for (const page of servicePages) {
+  seo[`/services/${page.slug}`] = {
+    title: page.seoTitle,
+    description: page.seoDescription,
+  };
+}
 
 export const practiceAreas: PracticeArea[] = [
   {
@@ -308,45 +526,45 @@ export const foundationValues = [
   {
     title: 'Our Mission',
     icon: 'target' as const,
-    text: 'To provide innovative, practical and bespoke legal solutions tailored to each client.',
+    text: 'To help emerging and evolving businesses build, protect and scale through commercially intelligent legal advisory.',
   },
   {
     title: 'Our Vision',
     icon: 'eye' as const,
-    text: 'To be the premier legal partner for individuals, businesses and institutions in Nigeria and beyond.',
+    text: 'To be the law firm that businesses building toward scale trust for clarity, structure and strategic foresight.',
   },
   {
     title: 'Our Values',
     icon: 'values' as const,
-    text: 'Excellence, client-centered service, integrity and innovation guide our work.',
+    text: 'Clarity, structure, trust, excellence and strategic foresight guide our work.',
   },
   {
     title: 'Our Approach',
     icon: 'compass' as const,
-    text: 'We design tailored solutions, anticipate legal risks and use modern tools effectively.',
+    text: 'We align legal strategy with commercial realities, operational impact and long-term value.',
   },
 ];
 
 export const cultureValues = [
   {
-    title: 'Excellence',
-    icon: 'trophy' as const,
-    text: 'We deliver superior results with precision, professionalism and attention to detail.',
+    title: 'Clarity',
+    icon: 'compass' as const,
+    text: 'We communicate clearly so clients can make stronger decisions with confidence.',
   },
   {
-    title: 'Client-Centered',
-    icon: 'heart' as const,
-    text: "Our clients' needs and interests guide every decision we make.",
+    title: 'Commercial Intelligence',
+    icon: 'briefcase' as const,
+    text: 'We understand the business pressure and operational realities behind the legal question.',
   },
   {
-    title: 'Integrity',
-    icon: 'lock' as const,
-    text: 'We maintain high ethical standards in all our dealings.',
+    title: 'Trust',
+    icon: 'handshake' as const,
+    text: 'We build lasting relationships through consistency, responsiveness and ethical practice.',
   },
   {
-    title: 'Innovation',
-    icon: 'lightbulb' as const,
-    text: 'We use modern technologies and creative approaches to solve complex legal challenges.',
+    title: 'Strategic Foresight',
+    icon: 'eye' as const,
+    text: 'We look beyond the immediate issue to help clients protect long-term value and growth.',
   },
 ];
 
@@ -592,12 +810,12 @@ export const milestones = [
   {
     year: 'Founded',
     title: 'Modern Nigerian Practice',
-    text: 'Lummina was created as a client-centered full-service law firm based in Lagos, Nigeria.',
+    text: 'Lummina was created as a modern, commercially minded law firm based in Lagos, Nigeria.',
   },
   {
     year: 'Built',
-    title: 'Bespoke Legal Service',
-    text: 'The firm developed a practical advisory model around tailored solutions and trusted relationships.',
+    title: 'Legal Infrastructure for Growth',
+    text: 'The firm developed a practical advisory model around structure, commercial intelligence and trusted relationships.',
   },
   {
     year: 'Growing',
@@ -606,8 +824,8 @@ export const milestones = [
   },
   {
     year: 'Today',
-    title: 'Counsel for Sustainable Success',
-    text: 'The firm supports individuals, businesses and institutions in Nigeria and beyond.',
+    title: 'Counsel for Sustainable Growth',
+    text: 'The firm supports founders, businesses, investors and private clients through growth and complexity.',
   },
 ];
 

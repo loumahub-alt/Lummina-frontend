@@ -12,6 +12,9 @@ export const AttorneyCard = ({ attorney, onViewProfile }: AttorneyCardProps) => 
     <img
       src={attorney.portrait}
       alt={`${attorney.name}, ${attorney.position}`}
+      width={520}
+      height={640}
+      loading="lazy"
       onError={(event) => {
         event.currentTarget.src = images.team.src;
       }}
@@ -29,21 +32,21 @@ export const AttorneyCard = ({ attorney, onViewProfile }: AttorneyCardProps) => 
         <a
           href={`mailto:${attorney.email}`}
           aria-label={`Email ${attorney.name}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-light-line bg-white/70 text-ink/70 transition hover:border-gold hover:text-gold"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-light-line bg-white/70 text-ink/70 transition hover:border-gold-dark hover:text-gold-dark"
         >
           <Mail aria-hidden="true" className="h-4 w-4" />
         </a>
         <a
           href={attorney.linkedin}
           aria-label={`${attorney.name} on LinkedIn`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-light-line bg-white/70 text-ink/70 transition hover:border-gold hover:text-gold"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-light-line bg-white/70 text-ink/70 transition hover:border-gold-dark hover:text-gold-dark"
         >
           <Linkedin aria-hidden="true" className="h-4 w-4" />
         </a>
         <button
           type="button"
           onClick={() => onViewProfile(attorney)}
-          className="ml-auto rounded-[2px] border border-gold/25 px-3 py-2 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-gold transition hover:border-gold/60 hover:text-ink"
+          className="ml-auto rounded-[2px] border border-gold-dark/35 px-3 py-2 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-gold-dark transition hover:border-gold-dark/60 hover:text-ink"
         >
           View Profile
         </button>

@@ -25,6 +25,9 @@ export const PageHero = ({
       <img
         src={image.src}
         alt={image.alt}
+        width={image.width}
+        height={image.height}
+        loading="eager"
         className="h-full min-h-[440px] w-full object-cover opacity-70 saturate-[0.9]"
         style={{ objectPosition: image.position }}
       />
@@ -33,7 +36,7 @@ export const PageHero = ({
     <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,rgba(37,0,12,0.76))]" />
     <div className="container-shell relative z-10 grid min-h-[420px] items-center py-20 md:min-h-[480px] lg:py-24">
       <div className={centered ? 'mx-auto max-w-4xl text-center' : 'max-w-2xl'}>
-        <p className="eyebrow">{eyebrow}</p>
+        <p className="eyebrow text-gold-bright">{eyebrow}</p>
         <h1 className="serif-heading mt-5 text-5xl md:text-7xl">{title}</h1>
         <p className="mt-6 max-w-xl text-base leading-8 text-white/84 md:text-lg">
           {description}

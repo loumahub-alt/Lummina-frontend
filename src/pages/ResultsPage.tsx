@@ -10,8 +10,8 @@ export const ResultsPage = () => (
   <>
     <PageHero
       eyebrow="Results"
-      title="Proven Results. Real Impact."
-      description="We are proud of the outcomes we achieve for our clients. Here are just a few representative highlights."
+      title="Commercial Outcomes. Strategic Impact."
+      description="Our representative matters show how preparation, commercial awareness and sound judgment can support stronger business outcomes."
       image={images.scales}
     />
 

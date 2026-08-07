@@ -11,18 +11,21 @@ export const ConsultationPage = () => (
           src={images.library.src}
           alt=""
           aria-hidden="true"
+          width={images.library.width}
+          height={images.library.height}
+          loading="lazy"
           className="absolute inset-0 h-full w-full object-cover opacity-22"
           style={{ objectPosition: images.library.position }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(95,2,31,0.94),rgba(37,0,12,0.98))]" />
         <div className="relative z-10 mx-auto max-w-xl">
-          <p className="eyebrow">Schedule a Consultation</p>
+          <p className="eyebrow text-gold-bright">Schedule a Consultation</p>
           <h1 className="mt-5 font-serif text-5xl font-medium leading-tight text-white md:text-7xl">
-            Let's Solve What's Next. Together.
+            Trusted guidance through complexity.
           </h1>
           <p className="mt-6 text-lg leading-8 text-white/80">
-            Tell us about your business and one of our attorneys will be in touch to
-            discuss how we can help.
+            Tell us about your business, transaction or legal challenge. We will discuss the
+            decision in front of you and the practical path forward.
           </p>
 
           <div className="mt-10">
@@ -50,7 +53,7 @@ export const ConsultationPage = () => (
       <div className="px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-4xl rounded-[2px] border border-light-line bg-paper/95 p-6 shadow-soft sm:p-8 lg:p-10">
           <h2 className="font-serif text-4xl font-medium leading-tight text-ink">
-            Request a Consultation
+            Start with clarity.
           </h2>
           <p className="mt-3 leading-7 text-ink/68">
             Required fields are marked with an asterisk.

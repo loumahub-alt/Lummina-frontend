@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PrimaryButton } from '../common/PrimaryButton';
+import { trackEvent } from '../../utils/analytics';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -26,6 +27,7 @@ export const NewsletterForm = () => {
 
     setError('');
     setSuccess(true);
+    trackEvent('newsletter_signup', { form_name: 'newsletter' });
     setEmail('');
     setConsent(false);
   };

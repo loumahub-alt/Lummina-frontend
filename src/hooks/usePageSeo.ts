@@ -7,7 +7,7 @@ export const usePageSeo = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const entry = seo[location.pathname] ?? seo['/'];
+    const entry = seo[location.pathname] ?? seo['/404'];
     applySeo(entry, `${location.pathname}${location.hash}`);
   }, [location.hash, location.pathname]);
 };

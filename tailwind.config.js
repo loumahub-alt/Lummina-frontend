@@ -8,6 +8,7 @@ export default {
         'navy-2': '#430016',
         wine: '#25000C',
         gold: '#FFA500',
+        'gold-dark': '#8A5400',
         'gold-bright': '#FFBD3D',
         cream: '#F7E7CE',
         paper: '#FFF8EA',

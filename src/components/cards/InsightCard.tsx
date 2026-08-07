@@ -21,12 +21,15 @@ export const InsightCard = ({ insight, featured = false }: InsightCardProps) => 
         <img
           src={image.src}
           alt={image.alt}
+          width={image.width}
+          height={image.height}
+          loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           style={{ objectPosition: image.position }}
         />
       </div>
       <div className={featured ? 'p-8 md:p-10' : 'p-6'}>
-        <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold">
+        <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">
           {insight.category} <span aria-hidden="true">|</span> {insight.date}
         </p>
         <h3

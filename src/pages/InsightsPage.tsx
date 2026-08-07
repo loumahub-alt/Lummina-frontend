@@ -29,8 +29,8 @@ export const InsightsPage = () => {
     <>
       <PageHero
         eyebrow="Insights"
-        title="Thought Leadership That Keeps You Ahead."
-        description="Stay informed with our latest legal insights, articles and industry updates."
+        title="Legal Insights for Businesses in Nigeria."
+        description="Practical legal thinking for founders, operators, investors and businesses navigating growth and complexity."
         image={images.library}
       />
 
@@ -54,7 +54,7 @@ export const InsightsPage = () => {
                 className={`rounded-[2px] border px-5 py-3 text-sm font-bold transition ${
                   activeCategory === category
                     ? 'border-gold bg-gold text-navy shadow-gold'
-                    : 'border-light-line bg-white/70 text-ink/72 hover:border-gold hover:bg-white hover:text-gold'
+                    : 'border-light-line bg-white/70 text-ink/72 hover:border-gold-dark hover:bg-white hover:text-gold-dark'
                 }`}
               >
                 {category}

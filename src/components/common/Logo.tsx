@@ -16,6 +16,9 @@ export const Logo = ({ compact = false, variant = 'light' }: LogoProps) => (
       src={variant === 'dark' ? brand.logoDark : brand.logoLight}
       alt=""
       aria-hidden="true"
+      width={variant === 'dark' ? 494 : 512}
+      height={variant === 'dark' ? 190 : 188}
+      loading="eager"
       className="h-auto w-[9.8rem] object-contain sm:w-[11.2rem]"
     />
     {!compact && (

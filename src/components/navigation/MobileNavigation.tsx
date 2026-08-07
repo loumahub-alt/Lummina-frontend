@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
@@ -9,13 +9,21 @@ import { TransitionLink } from '../transitions';
 export const MobileNavigation = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const closeMenu = () => {
+    setOpen(false);
+    menuButtonRef.current?.focus();
+  };
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        closeMenu();
       }
     };
 
@@ -27,13 +35,44 @@ export const MobileNavigation = () => {
   }, [open]);
 
   useEffect(() => {
+    if (!open) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        menuRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, [open]);
+
+  useEffect(() => {
     setOpen(false);
   }, [location.hash, location.pathname, location.search]);
 
   return (
     <div className="xl:hidden">
       <button
-        type="button"
+      type="button"
+        ref={menuButtonRef}
         aria-label={open ? 'Close menu' : 'Open menu'}
         aria-expanded={open}
         aria-controls="mobile-menu"
@@ -46,10 +85,11 @@ export const MobileNavigation = () => {
       {open && createPortal(
         <div
           className="fixed inset-0 z-50 overflow-hidden bg-wine/95 backdrop-blur-sm"
-          onClick={() => setOpen(false)}
+          onClick={closeMenu}
         >
           <div
             id="mobile-menu"
+            ref={menuRef}
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
@@ -61,7 +101,8 @@ export const MobileNavigation = () => {
               <button
                 type="button"
                 aria-label="Close menu"
-                onClick={() => setOpen(false)}
+                ref={closeButtonRef}
+                onClick={closeMenu}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-[2px] border border-champagne/20 bg-champagne/5 text-champagne transition hover:border-gold hover:text-gold-bright"
               >
                 <X aria-hidden="true" className="h-5 w-5" />
@@ -72,7 +113,7 @@ export const MobileNavigation = () => {
                 <TransitionLink
                   key={item.label}
                   to={item.to}
-                  onClick={() => setOpen(false)}
+                  onClick={closeMenu}
                   className={({ isActive }) =>
                     `flex min-h-12 items-center justify-between rounded-[2px] border px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition ${
                       item.cta

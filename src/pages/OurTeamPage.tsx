@@ -9,19 +9,22 @@ export const OurTeamPage = () => (
   <>
     <section className="luxury-dark">
       <div className="container-shell py-16 text-center">
-        <p className="eyebrow">Our Team</p>
+        <p className="eyebrow text-gold-bright">Our Team</p>
         <h1 className="serif-heading mx-auto mt-5 max-w-5xl text-6xl md:text-8xl">
-          People. Purpose. Performance.
+          People. Judgment. Strategic Partnership.
         </h1>
         <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-white/80">
-          Our team brings together exceptional legal talent and diverse experiences to
-          provide innovative solutions and outstanding client service.
+          Our team combines legal expertise, commercial awareness and calm judgment to provide
+          clear guidance through growth and complexity.
         </p>
       </div>
       <div className="relative min-h-[380px] overflow-hidden border-y border-dark-line md:min-h-[460px]">
         <img
           src={images.team.src}
           alt={images.team.alt}
+          width={images.team.width}
+          height={images.team.height}
+          loading="eager"
           className="h-full min-h-[380px] w-full object-cover"
           style={{ objectPosition: images.team.position }}
         />
@@ -48,8 +51,8 @@ export const OurTeamPage = () => (
       <div className="container-shell">
         <SectionHeading title="Leadership" align="center">
           <p>
-            Selected managing partners, executive partners and department leaders guide
-            the firm with clarity, service and accountability.
+            Our leadership guides the firm with clarity, strategic foresight, service and
+            accountability.
           </p>
         </SectionHeading>
         <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
@@ -68,8 +71,8 @@ export const OurTeamPage = () => (
           dark
         >
           <p>
-            Our attorneys are supported by focused teams across research, operations,
-            technology and client service.
+            Our attorneys are supported by focused systems and people across research,
+            operations, technology and client service so advice remains responsive and practical.
           </p>
         </SectionHeading>
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -15,6 +15,7 @@ import type {
   NavLinkRenderProps,
 } from 'react-router-dom';
 import { useTransitionNavigation } from './useTransitionNavigation';
+import { trackEvent } from '../../utils/analytics';
 
 type TransitionLinkProps = Omit<LinkProps, 'children' | 'className' | 'style'> & {
   caseSensitive?: boolean;
@@ -89,6 +90,10 @@ export const TransitionLink = forwardRef<HTMLAnchorElement, TransitionLinkProps>
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);
+
+    if (resolvedPath.pathname === '/consultation' || resolvedPath.pathname === '/book') {
+      trackEvent('book_redirect_click', { destination: resolvedPath.pathname });
+    }
 
     if (
       event.defaultPrevented ||

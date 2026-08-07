@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { brand, offices } from '../../data/site';
+import { trackEvent } from '../../utils/analytics';
 
 export const ContactInformation = () => (
   <div className="space-y-8">
@@ -15,8 +16,29 @@ export const ContactInformation = () => (
               </span>
             ))}
           </address>
-          <a href={`tel:${office.phone.replace(/[^+\d]/g, '')}`} className="mt-1 block text-white">
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${brand.legalName}, ${office.address.join(', ')}, Nigeria`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-block text-sm font-bold text-gold-bright hover:text-white"
+          >
+            View office on Google Maps
+          </a>
+          <a
+            href={`tel:${office.phone.replace(/[^+\d]/g, '')}`}
+            onClick={() => trackEvent('phone_tap', { location: office.name })}
+            className="mt-1 block text-white"
+          >
             {office.phone}
+          </a>
+          <a
+            href={brand.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackEvent('whatsapp_click', { location: office.name })}
+            className="mt-1 block text-gold-bright hover:text-white"
+          >
+            Message us on WhatsApp
           </a>
         </div>
       </div>

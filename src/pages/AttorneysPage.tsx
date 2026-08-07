@@ -41,8 +41,8 @@ export const AttorneysPage = () => {
     <>
       <PageHero
         eyebrow="Attorneys"
-        title="Experienced. Respected. Results-Driven."
-        description="Our attorneys combine deep legal knowledge with real-world experience to deliver exceptional representation and practical solutions."
+        title="Lummina Lawyers in Lagos."
+        description="Meet the Lummina lawyers combining legal knowledge, commercial awareness and practical judgment across business, disputes, transactions and private client matters."
         image={images.conference}
       />
 
@@ -60,7 +60,7 @@ export const AttorneysPage = () => {
                 className={`rounded-[2px] border px-5 py-3 text-sm font-bold transition ${
                     role === filter
                       ? 'border-gold bg-gold text-navy shadow-gold'
-                      : 'border-light-line bg-white/70 text-ink/72 hover:border-gold hover:bg-white hover:text-gold'
+                      : 'border-light-line bg-white/70 text-ink/72 hover:border-gold-dark hover:bg-white hover:text-gold-dark'
                   }`}
                 >
                   {filter}

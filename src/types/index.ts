@@ -36,12 +36,15 @@ export type NavigationItem = {
 export type SeoEntry = {
   title: string;
   description: string;
+  image?: string;
 };
 
 export type ImageAsset = {
   src: string;
   alt: string;
   position?: string;
+  width?: number;
+  height?: number;
 };
 
 export type PracticeArea = {
@@ -53,6 +56,19 @@ export type PracticeArea = {
   services: string[];
   detail: string;
   image: keyof ImageRegistry;
+};
+
+export type ServicePage = {
+  slug: string;
+  title: string;
+  eyebrow: string;
+  primaryKeyword: string;
+  seoTitle: string;
+  seoDescription: string;
+  intro: string;
+  practiceAreaIds: string[];
+  highlights: string[];
+  insightIds?: string[];
 };
 
 export type ImageRegistry = {

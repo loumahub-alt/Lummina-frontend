@@ -26,7 +26,7 @@ export const PracticeAreaCard = ({ area, detailed = false }: PracticeAreaCardPro
       >
         <Icon
           aria-hidden="true"
-          className={`h-11 w-11 shrink-0 text-gold stroke-[1.35] transition duration-300 group-hover:text-gold-bright ${
+          className={`h-11 w-11 shrink-0 text-gold-dark stroke-[1.35] transition duration-300 group-hover:text-gold-dark ${
             detailed ? '' : 'mx-auto'
           }`}
         />

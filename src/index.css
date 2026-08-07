@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,8 +59,9 @@
   }
 
   :focus-visible {
-    outline: 2px solid #FFA500;
-    outline-offset: 4px;
+    outline: 3px solid #FFFFFF;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #111111;
   }
 
   ::selection {
@@ -76,7 +75,8 @@
   }
 
   .eyebrow {
-    @apply text-xs font-extrabold uppercase tracking-[0.14em] text-gold-bright;
+    @apply text-xs font-extrabold uppercase tracking-[0.14em];
+    color: #8A5400;
   }
 
   .serif-heading {

@@ -7,6 +7,9 @@ export const TeamMemberCard = ({ member }: { member: TeamMember }) => (
       <img
         src={member.portrait}
         alt={`${member.name}, ${member.role}`}
+        width={520}
+        height={390}
+        loading="lazy"
         onError={(event) => {
           event.currentTarget.src = images.team.src;
         }}

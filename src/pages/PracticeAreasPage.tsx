@@ -1,16 +1,17 @@
 import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
+import { SecondaryButton } from '../components/common/SecondaryButton';
 import { PracticeAreaCard } from '../components/cards/PracticeAreaCard';
-import { images, industries, practiceAreas } from '../data/site';
+import { images, industries, practiceAreas, servicePages } from '../data/site';
 import { iconMap } from '../utils/icons';
 
 export const PracticeAreasPage = () => (
   <>
     <PageHero
       eyebrow="Practice Areas"
-      title="Comprehensive Legal Solutions."
-      description="We advise clients across industries and around the world, delivering practical solutions to their most complex legal challenges."
+      title="Commercial Legal Services in Lagos and Beyond."
+      description="From foundations and governance to transactions, disputes and protection, Lummina provides commercially minded legal advisory for businesses, investors and private clients."
       image={images.library}
     />
 
@@ -28,12 +29,13 @@ export const PracticeAreasPage = () => (
       <div className="container-shell">
         <SectionHeading
           eyebrow="Service Depth"
-          title="Senior legal teams matched to the decision in front of you."
+          title="Commercially aligned strategy for the decision in front of you."
           dark
         >
           <p>
-            Every matter receives a disciplined strategy, a clear operating plan and
-            direct attorney accountability from start to finish.
+            Every matter receives a disciplined strategy, a clear operating plan and direct
+            attorney accountability, with legal advice aligned to commercial goals and long-term
+            value.
           </p>
         </SectionHeading>
 
@@ -55,6 +57,9 @@ export const PracticeAreasPage = () => (
                   <img
                     src={image.src}
                     alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
                     className="h-full w-full object-cover transition duration-500 hover:scale-105"
                     style={{ objectPosition: image.position }}
                   />
@@ -81,11 +86,40 @@ export const PracticeAreasPage = () => (
       </div>
     </section>
 
+    <section className="cream-section border-y border-light-line py-20">
+      <div className="container-shell">
+        <SectionHeading
+          eyebrow="Commercial Service Pages"
+          title="Focused legal support for high-stakes business decisions."
+          align="center"
+        >
+          <p>
+            Start with the service area closest to your objective, then speak with us about a
+            scope tailored to your business, transaction or personal priorities.
+          </p>
+        </SectionHeading>
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {servicePages.map((page) => (
+            <article key={page.slug} className="luxury-card flex h-full flex-col p-7">
+              <p className="eyebrow">{page.eyebrow}</p>
+              <h2 className="mt-4 font-serif text-3xl font-medium leading-tight text-ink">
+                {page.title}
+              </h2>
+              <p className="mt-4 flex-1 leading-7 text-ink/70">{page.seoDescription}</p>
+              <SecondaryButton to={`/services/${page.slug}`} dark className="mt-7">
+                Explore {page.eyebrow}
+              </SecondaryButton>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <section className="cream-section py-20">
       <div className="container-shell">
         <SectionHeading
           eyebrow="Industry Expertise"
-          title="Focused insight for the sectors shaping modern business."
+          title="Sector-aware guidance for modern businesses."
           align="center"
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

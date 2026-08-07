@@ -1,8 +1,4 @@
-import {
-  Navigate,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { Footer } from './components/layout/Footer';
 import { Header } from './components/layout/Header';
@@ -20,6 +16,10 @@ import { InsightsPage } from './pages/InsightsPage';
 import { OurTeamPage } from './pages/OurTeamPage';
 import { PracticeAreasPage } from './pages/PracticeAreasPage';
 import { ResultsPage } from './pages/ResultsPage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { ServicePage } from './pages/ServicePage';
+import { servicePages } from './data/site';
+import { CookieConsentBanner } from './components/common/CookieConsentBanner';
 
 export const App = () => {
   usePageSeo();
@@ -41,11 +41,19 @@ export const App = () => {
             <Route path="/results" element={<ResultsPage />} />
             <Route path="/insights" element={<InsightsPage />} />
             <Route path="/consultation" element={<ConsultationPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {servicePages.map((page) => (
+              <Route
+                key={page.slug}
+                path={`/services/${page.slug}`}
+                element={<ServicePage page={page} />}
+              />
+            ))}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </PageTransition>
 
         <Footer />
+        <CookieConsentBanner />
       </div>
     </TransitionProvider>
   );

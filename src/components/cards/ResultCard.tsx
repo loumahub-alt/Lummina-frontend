@@ -6,7 +6,7 @@ export const ResultCard = ({ result }: { result: ResultItem }) => (
     id={result.id}
     className="luxury-card flex h-full flex-col p-7"
   >
-    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold">{result.category}</p>
+    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark">{result.category}</p>
     <p className="mt-5 font-serif text-4xl font-medium text-ink">{result.value}</p>
     <h3 className="mt-5 font-serif text-2xl font-medium leading-tight text-ink">
       {result.title}

@@ -2,6 +2,7 @@ import { cloneElement, FormEvent, ReactElement, useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { practiceAreas } from '../../data/site';
 import { PrimaryButton } from '../common/PrimaryButton';
+import { trackEvent } from '../../utils/analytics';
 
 type FormValues = {
   firstName: string;
@@ -76,6 +77,7 @@ export const ConsultationForm = () => {
     window.setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
+      trackEvent('form_submit', { form_name: 'consultation' });
       setValues(initialValues);
     }, 850);
   };
@@ -201,6 +203,8 @@ export const ConsultationForm = () => {
             type="checkbox"
             checked={values.consent}
             onChange={(event) => setValue('consent', event.target.checked)}
+            aria-invalid={Boolean(errors.consent)}
+            aria-describedby={errors.consent ? 'consent-error' : undefined}
             className="mt-1 h-4 w-4 accent-gold"
           />
           <span>
@@ -209,7 +213,7 @@ export const ConsultationForm = () => {
           </span>
         </label>
         {errors.consent && (
-          <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-gold">
+          <p id="consent-error" className="mt-2 flex items-center gap-2 text-sm font-semibold text-gold-dark">
             <AlertCircle aria-hidden="true" className="h-4 w-4" />
             {errors.consent}
           </p>
@@ -227,7 +231,7 @@ export const ConsultationForm = () => {
 
       {success && (
         <p className="flex items-center gap-2 rounded-[2px] border border-gold/45 bg-gold/10 p-4 text-sm font-semibold text-ink">
-          <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-gold" />
+          <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-gold-dark" />
           Thank you. Your consultation request has been received and our team will respond shortly.
         </p>
       )}
@@ -254,11 +258,11 @@ const Field = ({ label, required = false, error, children }: FieldProps) => {
     <div>
       <label htmlFor={id} className="text-sm font-bold text-ink">
         {label}
-        {required && <span className="text-gold"> *</span>}
+        {required && <span className="text-gold-dark"> *</span>}
       </label>
       {control}
       {error && (
-        <p id={errorId} className="mt-2 flex items-center gap-2 text-sm font-semibold text-gold">
+        <p id={errorId} className="mt-2 flex items-center gap-2 text-sm font-semibold text-gold-dark">
           <AlertCircle aria-hidden="true" className="h-4 w-4" />
           {error}
         </p>

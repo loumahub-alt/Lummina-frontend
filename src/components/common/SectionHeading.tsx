@@ -16,7 +16,7 @@ export const SectionHeading = ({
   dark = false,
 }: SectionHeadingProps) => (
   <div className={align === 'center' ? 'mx-auto max-w-3xl text-center' : 'max-w-3xl'}>
-    {eyebrow && <p className="eyebrow">{eyebrow}</p>}
+    {eyebrow && <p className={`eyebrow ${dark ? 'text-gold-bright' : ''}`}>{eyebrow}</p>}
     <h2
       className={`mt-4 font-serif text-4xl font-medium leading-[1.03] md:text-5xl ${
         dark ? 'text-white' : 'text-ink'
