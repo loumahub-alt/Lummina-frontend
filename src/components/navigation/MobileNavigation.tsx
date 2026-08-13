@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, Search as SearchIcon, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { navigation } from '../../data/site';
@@ -109,6 +109,14 @@ export const MobileNavigation = () => {
               </button>
             </div>
             <nav aria-label="Mobile navigation" className="mt-8 flex flex-col gap-3">
+              <TransitionLink
+                to="/search"
+                onClick={closeMenu}
+                className="flex min-h-12 items-center justify-between rounded-[2px] border border-champagne/15 bg-black/10 px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] text-champagne/80 hover:border-gold/55 hover:bg-champagne/10 hover:text-gold-bright"
+              >
+                <span>Search</span>
+                <SearchIcon aria-hidden="true" className="h-4 w-4" />
+              </TransitionLink>
               {navigation.map((item) => (
                 <TransitionLink
                   key={item.label}
@@ -117,7 +125,7 @@ export const MobileNavigation = () => {
                   className={({ isActive }) =>
                     `flex min-h-12 items-center justify-between rounded-[2px] border px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition ${
                       item.cta
-                        ? 'mt-4 border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] text-bordeaux shadow-gold hover:border-champagne/80'
+                        ? 'mt-4 border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] text-bordeaux hover:border-champagne/80'
                         : isActive
                           ? 'border-gold/55 bg-champagne/10 text-gold-bright'
                           : 'border-champagne/15 bg-black/10 text-champagne/80 hover:border-gold/55 hover:bg-champagne/10 hover:text-gold-bright'

@@ -5,6 +5,7 @@
 @layer base {
   * {
     box-sizing: border-box;
+    min-width: 0;
   }
 
   html {
@@ -16,6 +17,7 @@
   body {
     margin: 0;
     overflow-x: hidden;
+    overflow-wrap: anywhere;
     background:
       linear-gradient(180deg, rgba(95, 2, 31, 0.96), rgba(67, 0, 22, 0.98) 48%, rgba(37, 0, 12, 1)),
       #5F021F;
@@ -132,7 +134,7 @@
   }
 
   .luxury-card {
-    @apply rounded-[2px] border border-light-line bg-paper/90 shadow-soft backdrop-blur-sm transition duration-300;
+    @apply min-w-0 overflow-hidden rounded-[2px] border border-light-line bg-paper/90 shadow-soft backdrop-blur-sm transition duration-300;
   }
 
   .luxury-card:hover {

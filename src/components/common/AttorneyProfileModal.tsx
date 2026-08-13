@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { Linkedin, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import type { Attorney } from '../../types';
 import { detailIconMap } from '../../utils/icons';
-import { images } from '../../data/site';
 
 type AttorneyProfileModalProps = {
   attorney: Attorney | null;
@@ -73,22 +72,19 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
       <div className="flex min-h-full items-start justify-center sm:items-center">
         <div
           ref={dialogRef}
-          className="my-4 w-full max-w-5xl overflow-hidden rounded-[2px] border border-light-line bg-cream text-ink shadow-luxe sm:my-8"
+          className="my-4 max-h-[calc(100vh-2rem)] w-full max-w-5xl overflow-y-auto rounded-[2px] border border-light-line bg-cream text-ink shadow-luxe sm:my-8 sm:max-h-[calc(100vh-4rem)]"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="grid lg:grid-cols-[0.42fr_0.58fr]">
-            <div className="relative min-h-[420px] bg-navy">
-              <img
+            <div className="relative h-[360px] bg-navy sm:h-[440px] lg:h-[560px]">
+              {attorney.portrait ? <img
                 src={attorney.portrait}
                 alt={`${attorney.name}, ${attorney.position}`}
                 width={520}
                 height={640}
                 loading="lazy"
-                onError={(event) => {
-                  event.currentTarget.src = images.team.src;
-                }}
-                className="h-full w-full object-cover object-top"
-              />
+                className="h-full w-full object-contain object-top"
+              /> : <div className="grid h-full place-items-center text-xs font-bold uppercase tracking-[0.12em] text-gold-dark">No photo</div>}
             </div>
             <div className="p-7 md:p-10">
               <div className="flex items-start justify-between gap-5">
@@ -99,9 +95,7 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
                   <h2 id="attorney-modal-title" className="mt-3 font-serif text-5xl font-medium">
                     {attorney.name}
                   </h2>
-                  <p className="mt-3 font-semibold text-ink/70">
-                    {attorney.practiceArea} | {attorney.location}
-                  </p>
+                  {(attorney.practiceArea || attorney.location) && <p className="mt-3 font-semibold text-ink/70">{[attorney.practiceArea, attorney.location].filter(Boolean).join(' | ')}</p>}
                 </div>
                 <button
                   type="button"
@@ -114,19 +108,19 @@ export const AttorneyProfileModal = ({ attorney, onClose }: AttorneyProfileModal
                 </button>
               </div>
 
-              <p className="mt-7 leading-8 text-ink/76">{attorney.bio}</p>
+              {attorney.shortBio && <p className="mt-7 text-lg font-semibold leading-8 text-ink/80">{attorney.shortBio}</p>}
+              <p className={attorney.shortBio ? 'mt-3 leading-8 text-ink/76' : 'mt-7 leading-8 text-ink/76'}>{attorney.bio}</p>
 
-              <div className="mt-8 grid gap-6 md:grid-cols-3">
-                <ProfileList icon={EducationIcon} title="Education" items={attorney.education} />
-                <ProfileList icon={AdmissionsIcon} title="Admissions" items={attorney.admissions} />
-                <ProfileList icon={PracticesIcon} title="Practices" items={attorney.practices} />
-              </div>
+              {(attorney.education.length > 0 || attorney.admissions.length > 0 || attorney.practices.length > 0) && <div className="mt-8 grid gap-6 md:grid-cols-3">
+                {attorney.education.length > 0 && <ProfileList icon={EducationIcon} title="Education" items={attorney.education} />}
+                {attorney.admissions.length > 0 && <ProfileList icon={AdmissionsIcon} title="Admissions" items={attorney.admissions} />}
+                {attorney.practices.length > 0 && <ProfileList icon={PracticesIcon} title="Practices" items={attorney.practices} />}
+              </div>}
 
-              <div className="mt-8 border-t border-light-line pt-6 text-sm leading-7 text-ink/76">
-                <a href={`mailto:${attorney.email}`} className="font-bold text-gold-dark hover:text-ink">
-                  {attorney.email}
-                </a>
-              </div>
+              {(attorney.email || attorney.linkedin) && <div className="mt-8 flex items-center gap-5 border-t border-light-line pt-6 text-sm leading-7 text-ink/76">
+                {attorney.email && <a href={`mailto:${attorney.email}`} className="font-bold text-gold-dark hover:text-ink">{attorney.email}</a>}
+                {attorney.linkedin && <a href={attorney.linkedin} target="_blank" rel="noreferrer" aria-label={`${attorney.name} on LinkedIn`} className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-light-line bg-white/70 text-gold-dark transition hover:border-gold-dark hover:text-ink"><Linkedin aria-hidden="true" className="h-4 w-4" /></a>}
+              </div>}
             </div>
           </div>
         </div>

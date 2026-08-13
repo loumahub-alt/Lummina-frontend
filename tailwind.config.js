@@ -25,7 +25,6 @@ export default {
         sans: ['Montserrat', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        gold: '0 18px 40px rgba(255, 165, 0, 0.22)',
         soft: '0 22px 70px rgba(95, 2, 31, 0.16)',
         luxe: '0 28px 80px rgba(31, 0, 10, 0.26)',
       },

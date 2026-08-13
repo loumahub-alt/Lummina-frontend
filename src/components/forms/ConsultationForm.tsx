@@ -1,8 +1,9 @@
-import { cloneElement, FormEvent, ReactElement, useState } from 'react';
+import { cloneElement, FormEvent, ReactElement, useMemo, useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { practiceAreas } from '../../data/site';
 import { PrimaryButton } from '../common/PrimaryButton';
 import { trackEvent } from '../../utils/analytics';
+import { api, ApiError } from '../../services/api';
+import { mapPublishedPracticeAreas, usePublishedCollection } from '../../hooks/usePublishedContent';
 
 type FormValues = {
   firstName: string;
@@ -37,6 +38,8 @@ const initialValues: FormValues = {
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const ConsultationForm = () => {
+  const practiceAreaRecords = usePublishedCollection('practice-areas');
+  const practiceAreas = useMemo(() => mapPublishedPracticeAreas(practiceAreaRecords), [practiceAreaRecords]);
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,7 +68,7 @@ export const ConsultationForm = () => {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSuccess(false);
 
@@ -74,12 +77,28 @@ export const ConsultationForm = () => {
     }
 
     setIsSubmitting(true);
-    window.setTimeout(() => {
+    try {
+      await api.public.consultation({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        phone: values.phone,
+        company: values.company,
+        practiceAreaId: values.practiceArea,
+        consultationMethod: values.method,
+        preferredDate: values.date,
+        preferredTime: values.time,
+        message: values.message,
+        consent: values.consent,
+      });
       setIsSubmitting(false);
       setSuccess(true);
       trackEvent('form_submit', { form_name: 'consultation' });
       setValues(initialValues);
-    }, 850);
+    } catch (error) {
+      setIsSubmitting(false);
+      setErrors({ message: error instanceof ApiError ? error.message : 'Unable to submit your request. Please try again.' });
+    }
   };
 
   const inputClass =

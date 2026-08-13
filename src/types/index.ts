@@ -37,6 +37,11 @@ export type SeoEntry = {
   title: string;
   description: string;
   image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  section?: string;
 };
 
 export type ImageAsset = {
@@ -80,12 +85,13 @@ export type ImageRegistry = {
   team: ImageAsset;
 };
 
-export type AttorneyLevel = 'Partner' | 'Counsel' | 'Associate';
+export type AttorneyLevel = 'Partner' | 'Counsel' | 'Associate' | 'Junior Associate';
 
 export type Attorney = {
   id: string;
   name: string;
   position: AttorneyLevel | 'Managing Partner' | 'Executive Partner';
+  shortBio: string;
   practiceArea: string;
   location: string;
   email: string;
@@ -95,14 +101,6 @@ export type Attorney = {
   education: string[];
   admissions: string[];
   practices: string[];
-};
-
-export type TeamMember = {
-  id: string;
-  name: string;
-  role: string;
-  portrait: string;
-  focus: string;
 };
 
 export type Stat = {
@@ -118,6 +116,7 @@ export type ResultItem = {
   title: string;
   description: string;
   industry: string;
+  matterDescription?: string;
 };
 
 export type InsightCategory = 'Articles' | 'Publications' | 'Events';
@@ -129,6 +128,10 @@ export type Insight = {
   title: string;
   summary: string;
   image: keyof ImageRegistry;
+  imageUrl?: string;
+  thumbnailUrl?: string;
+  imageAlt?: string;
+  thumbnailAlt?: string;
   featured?: boolean;
 };
 
@@ -136,13 +139,16 @@ export type Testimonial = {
   quote: string;
   name: string;
   title: string;
+  company?: string;
+  isFeatured?: boolean;
 };
 
 export type Office = {
   city: string;
   name: string;
   address: string[];
-  phone: string;
+  mapUrl: string;
+  phones: string[];
 };
 
 export type FooterColumn = {

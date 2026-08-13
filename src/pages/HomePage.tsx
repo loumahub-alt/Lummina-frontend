@@ -1,7 +1,6 @@
+import { useMemo } from 'react';
 import {
   audienceSegments,
-  homePracticeAreas,
-  homeStats,
   images,
   messagePillars,
 } from '../data/site';
@@ -10,10 +9,16 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PrimaryButton } from '../components/common/PrimaryButton';
 import { SecondaryButton } from '../components/common/SecondaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
+import { mapPublishedPracticeAreas, mapPublishedStatistics, usePublishedCollection } from '../hooks/usePublishedContent';
 import { iconMap } from '../utils/icons';
 
-export const HomePage = () => (
-  <>
+export const HomePage = () => {
+  const practiceAreaRecords = usePublishedCollection('practice-areas');
+  const statisticRecords = usePublishedCollection('statistics');
+  const practiceAreas = useMemo(() => mapPublishedPracticeAreas(practiceAreaRecords), [practiceAreaRecords]);
+  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords), [statisticRecords]);
+
+  return <>
     <section className="relative isolate overflow-hidden border-b border-dark-line luxury-dark">
       <img
         src={images.columns.src}
@@ -39,7 +44,9 @@ export const HomePage = () => (
             clients with clarity, structure and strategic foresight.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-5">
-            <PrimaryButton to="/consultation">Schedule a Consultation</PrimaryButton>
+            <PrimaryButton to="/consultation">
+              Schedule a Consultation
+            </PrimaryButton>
             <SecondaryButton to="/practice-areas">View Our Services</SecondaryButton>
           </div>
         </div>
@@ -92,7 +99,7 @@ export const HomePage = () => (
           </p>
         </SectionHeading>
         <div className="grid divide-y divide-light-line md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-6">
-          {homePracticeAreas.map((area) => {
+          {practiceAreas.map((area) => {
             const Icon = iconMap[area.icon];
 
             return (
@@ -171,12 +178,12 @@ export const HomePage = () => (
 
     <section className="border-b border-dark-line bg-wine">
       <div className="container-shell grid gap-y-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
-        {homeStats.map((stat) => (
+        {statistics.map((stat) => (
           <StatCard key={stat.label} stat={stat} />
         ))}
       </div>
     </section>
 
     <CallToAction />
-  </>
-);
+  </>;
+};

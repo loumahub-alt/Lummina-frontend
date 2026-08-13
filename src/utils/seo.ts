@@ -33,6 +33,15 @@ const setProperty = (property: string, content: string) => {
   meta.content = content;
 };
 
+const setOptionalProperty = (property: string, content?: string) => {
+  const selector = `meta[property="${property}"]`;
+  if (content) {
+    setProperty(property, content);
+    return;
+  }
+  document.head.querySelector(selector)?.remove();
+};
+
 const ensureLink = (rel: string) => {
   const existing = document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
   if (existing) {
@@ -58,7 +67,6 @@ const getBreadcrumbs = (path: string, entry: SeoEntry) => {
   const labels: Record<string, string> = {
     '/about': 'About',
     '/practice-areas': 'Practice Areas',
-    '/attorneys': 'Attorneys',
     '/our-team': 'Our Team',
     '/results': 'Results',
     '/insights': 'Insights',
@@ -104,7 +112,7 @@ const writeStructuredData = (path: string, entry: SeoEntry) => {
         logo: `${siteUrl}${brand.logoDark}`,
         image: entry.image ?? defaultImage,
         description: brand.statement,
-        telephone: brand.phoneInternational,
+        telephone: brand.phones,
         email: brand.email,
         address: {
           '@type': 'PostalAddress',
@@ -155,6 +163,28 @@ const writeStructuredData = (path: string, entry: SeoEntry) => {
     });
   }
 
+  if (entry.type === 'article') {
+    const canonicalUrl = `${siteUrl}${cleanPath(path) === '/' ? '/' : cleanPath(path)}`;
+    schema['@graph'].push({
+      '@type': 'Article',
+      '@id': `${canonicalUrl}#article`,
+      headline: entry.title,
+      description: entry.description,
+      image: [entry.image ?? defaultImage],
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+      datePublished: entry.publishedTime,
+      dateModified: entry.modifiedTime ?? entry.publishedTime,
+      author: { '@type': 'Organization', name: entry.author ?? brand.legalName, url: siteUrl },
+      publisher: {
+        '@type': 'Organization',
+        name: brand.legalName,
+        logo: { '@type': 'ImageObject', url: `${siteUrl}${brand.logoDark}` },
+      },
+      articleSection: entry.section ?? 'Legal Insights',
+      inLanguage: 'en-NG',
+    });
+  }
+
   let script = document.head.querySelector<HTMLScriptElement>('#lummina-structured-data');
   if (!script) {
     script = document.createElement('script');
@@ -178,7 +208,7 @@ export const applySeo = (entry: SeoEntry, path: string) => {
 
   setProperty('og:title', entry.title);
   setProperty('og:description', entry.description);
-  setProperty('og:type', 'website');
+  setProperty('og:type', entry.type === 'article' ? 'article' : 'website');
   setProperty('og:url', canonicalUrl);
   setProperty('og:site_name', brand.legalName);
   setProperty('og:locale', 'en_NG');
@@ -186,6 +216,11 @@ export const applySeo = (entry: SeoEntry, path: string) => {
   setProperty('og:image:alt', `${brand.legalName} - ${entry.title}`);
   setProperty('og:image:width', '1200');
   setProperty('og:image:height', '630');
+
+  setOptionalProperty('article:published_time', entry.type === 'article' ? entry.publishedTime : undefined);
+  setOptionalProperty('article:modified_time', entry.type === 'article' ? (entry.modifiedTime ?? entry.publishedTime) : undefined);
+  setOptionalProperty('article:author', entry.type === 'article' ? (entry.author ?? brand.legalName) : undefined);
+  setOptionalProperty('article:section', entry.type === 'article' ? (entry.section ?? 'Legal Insights') : undefined);
 
   setMeta('twitter:card', 'summary_large_image');
   setMeta('twitter:title', entry.title);

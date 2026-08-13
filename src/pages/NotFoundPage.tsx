@@ -13,7 +13,9 @@ export const NotFoundPage = () => (
     />
     <section className="cream-section py-16">
       <div className="container-shell flex flex-col justify-center gap-4 sm:flex-row">
-        <PrimaryButton to="/practice-areas">Explore Practice Areas</PrimaryButton>
+        <PrimaryButton to="/practice-areas">
+          Explore Practice Areas
+        </PrimaryButton>
         <SecondaryButton to="/consultation" dark>
           Schedule a Consultation
         </SecondaryButton>

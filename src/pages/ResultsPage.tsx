@@ -1,12 +1,50 @@
+import { useMemo } from 'react';
 import { ResultCard } from '../components/cards/ResultCard';
 import { StatCard } from '../components/cards/StatCard';
 import { TestimonialCard } from '../components/cards/TestimonialCard';
 import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { images, resultItems, resultStats, testimonials } from '../data/site';
+import { images } from '../data/site';
+import { mapPublishedStatistics, usePublishedCollection, type PublishedRecord } from '../hooks/usePublishedContent';
+import type { ResultItem, Testimonial } from '../types';
 
-export const ResultsPage = () => (
+const publishedResults = (records: PublishedRecord[] | null): ResultItem[] => {
+  if (records === null) return [];
+
+  return records.map((record, index) => {
+    return {
+      id: typeof record.slug === 'string' ? record.slug : String(record.id ?? record._id ?? index),
+      category: typeof record.category === 'string' ? record.category : '',
+      value: typeof record.headlineFigure === 'string' ? record.headlineFigure : '',
+      title: typeof record.title === 'string' ? record.title : '',
+      description: typeof record.shortDescription === 'string' ? record.shortDescription : '',
+      industry: typeof record.jurisdiction === 'string' ? record.jurisdiction : '',
+      matterDescription: typeof record.matterDescription === 'string' ? record.matterDescription : '',
+    };
+  });
+};
+
+const publishedTestimonials = (records: PublishedRecord[] | null): Testimonial[] => {
+  if (records === null) return [];
+  return records.map((record, index) => ({
+    quote: typeof record.testimonial === 'string' ? record.testimonial : '',
+    name: record.identityMode === 'named' && typeof record.clientDisplayName === 'string' ? record.clientDisplayName : 'Anonymous Client',
+    title: typeof record.position === 'string' ? record.position : '',
+    company: typeof record.company === 'string' ? record.company : undefined,
+    isFeatured: record.isFeatured === true,
+  }));
+};
+
+export const ResultsPage = () => {
+  const resultRecords = usePublishedCollection('results');
+  const statisticRecords = usePublishedCollection('statistics');
+  const testimonialRecords = usePublishedCollection('testimonials');
+  const results = useMemo(() => publishedResults(resultRecords), [resultRecords]);
+  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords), [statisticRecords]);
+  const testimonialItems = useMemo(() => publishedTestimonials(testimonialRecords), [testimonialRecords]);
+
+  return (
   <>
     <PageHero
       eyebrow="Results"
@@ -17,7 +55,7 @@ export const ResultsPage = () => (
 
     <section className="border-b border-dark-line bg-wine">
       <div className="container-shell grid gap-y-4 py-10 md:grid-cols-2 lg:grid-cols-4">
-        {resultStats.map((stat) => (
+        {statistics.map((stat) => (
           <StatCard key={stat.value} stat={stat} />
         ))}
       </div>
@@ -35,7 +73,7 @@ export const ResultsPage = () => (
           </p>
         </SectionHeading>
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {resultItems.map((result) => (
+          {results.map((result) => (
             <ResultCard key={result.id} result={result} />
           ))}
         </div>
@@ -59,7 +97,7 @@ export const ResultsPage = () => (
           align="center"
         />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          {testimonials.map((testimonial) => (
+          {testimonialItems.map((testimonial) => (
             <TestimonialCard key={testimonial.name} testimonial={testimonial} />
           ))}
         </div>
@@ -68,4 +106,5 @@ export const ResultsPage = () => (
 
     <CallToAction />
   </>
-);
+  );
+};

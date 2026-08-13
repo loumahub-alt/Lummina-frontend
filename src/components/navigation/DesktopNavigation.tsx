@@ -1,5 +1,6 @@
 import { navigation } from '../../data/site';
 import { TransitionLink } from '../transitions';
+import { Search } from 'lucide-react';
 
 export const DesktopNavigation = () => {
   const links = navigation.filter((item) => !item.cta);
@@ -24,10 +25,17 @@ export const DesktopNavigation = () => {
           </TransitionLink>
         ))}
       </div>
+      <TransitionLink
+        to="/search"
+        aria-label="Search the website"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-[2px] border border-champagne/20 text-champagne/82 transition hover:border-gold hover:text-gold-bright"
+      >
+        <Search aria-hidden="true" className="h-4 w-4" />
+      </TransitionLink>
       {cta && (
         <TransitionLink
           to={cta.to}
-          className="whitespace-nowrap border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] px-5 py-3.5 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-bordeaux shadow-gold transition duration-300 hover:-translate-y-0.5 hover:border-champagne/70 hover:shadow-[0_22px_46px_rgba(255,165,0,0.28)]"
+          className="whitespace-nowrap border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] px-5 py-3.5 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-bordeaux transition duration-300 hover:-translate-y-0.5 hover:border-champagne/70"
         >
           {cta.label}
         </TransitionLink>

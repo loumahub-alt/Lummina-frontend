@@ -4,7 +4,9 @@ import {
   hasAnalyticsConsent,
   loadAnalytics,
   setAnalyticsConsent,
+  trackEvent,
 } from '../../utils/analytics';
+import { api } from '../../services/api';
 
 export const CookieConsentBanner = () => {
   const [visible, setVisible] = useState(false);
@@ -28,8 +30,31 @@ export const CookieConsentBanner = () => {
 
   const choose = (consent: 'accepted' | 'rejected') => {
     setAnalyticsConsent(consent);
+    let anonymousId = '';
+    try {
+      anonymousId = window.localStorage.getItem('lummina_anonymous_id') ?? '';
+      if (!anonymousId) {
+        anonymousId = typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : Date.now() + '-' + Math.random().toString(36).slice(2);
+        window.localStorage.setItem('lummina_anonymous_id', anonymousId);
+      }
+    } catch {
+      anonymousId = typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : Date.now() + '-' + Math.random().toString(36).slice(2);
+    }
+    void api.public.consent({
+      anonymousId,
+      necessary: true,
+      analytics: consent === 'accepted',
+      preferences: false,
+      marketing: false,
+      policyVersion: '2026-01',
+    }).catch(() => undefined);
     if (consent === 'accepted') {
       loadAnalytics();
+      trackEvent('page_view', { page_title: document.title });
     }
     setVisible(false);
   };

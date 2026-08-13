@@ -19,16 +19,10 @@ const routes = [
       'Explore commercially minded legal advisory across business foundations, governance, transactions, disputes, protection and private client needs.',
   },
   {
-    path: '/attorneys',
-    title: 'Lummina Lawyers Lagos | Attorneys | Lummina Law Firm',
+    path: '/our-team',
+    title: 'Our Team | Lummina Law Firm Lagos',
     description:
       'Meet the Lummina team and search legal professionals by role, name and practice area.',
-  },
-  {
-    path: '/our-team',
-    title: 'Our Legal Team | Lummina Law Firm Lagos',
-    description:
-      'Meet the Lummina team providing clear, strategic and commercially aware guidance through growth and complexity.',
   },
   {
     path: '/results',
@@ -46,6 +40,30 @@ const routes = [
     title: 'Schedule a Consultation | Lummina Law Firm',
     description:
       'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+  },
+  {
+    path: '/insights/business-law-nigeria',
+    type: 'article',
+    title: 'Building Stronger Legal Foundations for Nigerian Businesses | Lummina Law Firm',
+    description: 'A practical guide to contracts, governance and compliance steps that help Nigerian companies grow with confidence.',
+    image: `${siteUrl}/assets/conference-room.webp`,
+    publishedTime: '2026-07-18T00:00:00.000Z',
+  },
+  {
+    path: '/insights/debt-recovery-strategy',
+    type: 'article',
+    title: 'Debt Recovery Strategy: What Businesses Should Do Before Litigation | Lummina Law Firm',
+    description: 'How evidence, negotiation posture and debtor analysis can shape better commercial debt recovery outcomes.',
+    image: `${siteUrl}/assets/scales.webp`,
+    publishedTime: '2026-07-09T00:00:00.000Z',
+  },
+  {
+    path: '/insights/startup-readiness',
+    type: 'article',
+    title: 'Startup Legal Readiness Checklist | Lummina Law Firm',
+    description: 'A founder-focused checklist covering incorporation, equity, contracts, intellectual property and investor preparedness.',
+    image: `${siteUrl}/assets/boardroom.webp`,
+    publishedTime: '2026-06-26T00:00:00.000Z',
   },
   {
     path: '/services/corporate-commercial-law-lagos',
@@ -103,12 +121,12 @@ const schemaFor = (route) => {
       logo: `${siteUrl}/assets/lummina-logo-dark.png`,
       image: `${siteUrl}/assets/lummina-og.png`,
       description: 'Commercially intelligent legal advisory for businesses building toward scale.',
-      telephone: '+234 706 046 9068',
-      email: 'info@lummina.com',
+      telephone: ['+234 201 330 7508', '+234 706 047 9068'],
+      email: 'info@lumminalaw.com',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: '12 Oluseyi Aweda Street',
-        addressLocality: 'Magodo Phase 1',
+        streetAddress: 'Plot 5, Block 94, The Providence Street,',
+        addressLocality: 'Lekki Phase 1',
         addressRegion: 'Lagos',
         addressCountry: 'NG',
       },
@@ -144,6 +162,27 @@ const schemaFor = (route) => {
     ],
   });
 
+  if (route.type === 'article') {
+    graph.push({
+      '@type': 'Article',
+      '@id': `${siteUrl}${route.path}#article`,
+      headline: route.title,
+      description: route.description,
+      image: [route.image ?? `${siteUrl}/assets/lummina-og.png`],
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `${siteUrl}${route.path}` },
+      datePublished: route.publishedTime,
+      dateModified: route.publishedTime,
+      author: { '@type': 'Organization', name: 'Lummina Law Firm', url: siteUrl },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Lummina Law Firm',
+        logo: { '@type': 'ImageObject', url: `${siteUrl}/assets/lummina-logo-dark.png` },
+      },
+      articleSection: 'Legal Insights',
+      inLanguage: 'en-NG',
+    });
+  }
+
   return { '@context': 'https://schema.org', '@graph': graph };
 };
 
@@ -151,7 +190,7 @@ const replace = (html, pattern, value) => html.replace(pattern, value);
 
 for (const route of routes) {
   const canonical = `${siteUrl}${route.path}`;
-  const image = `${siteUrl}/assets/lummina-og.png`;
+  const image = route.image ?? `${siteUrl}/assets/lummina-og.png`;
   let html = template;
 
   html = replace(html, /<title>[\s\S]*?<\/title>/, `<title>${route.title}</title>`);
@@ -159,11 +198,16 @@ for (const route of routes) {
   html = replace(html, /<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${canonical}" />`);
   html = replace(html, /<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${route.title}" />`);
   html = replace(html, /<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${route.description}" />`);
+  html = replace(html, /<meta property="og:type" content="[^"]*" \/>/, `<meta property="og:type" content="${route.type === 'article' ? 'article' : 'website'}" />`);
   html = replace(html, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${canonical}" />`);
   html = replace(html, /<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${image}" />`);
   html = replace(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${route.title}" />`);
   html = replace(html, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${route.description}" />`);
   html = replace(html, /<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${image}" />`);
+  if (route.type === 'article') {
+    const articleMeta = `<meta property="article:published_time" content="${route.publishedTime}" /><meta property="article:modified_time" content="${route.publishedTime}" /><meta property="article:author" content="Lummina Law Firm" /><meta property="article:section" content="Legal Insights" />`;
+    html = html.replace('</head>', articleMeta + '</head>');
+  }
   html = replace(html, /<script id="lummina-structured-data" type="application\/ld\+json">[\s\S]*?<\/script>/, `<script id="lummina-structured-data" type="application/ld+json">${escapeJson(schemaFor(route))}</script>`);
 
   const outputPath = join(distRoot, route.path.slice(1), 'index.html');

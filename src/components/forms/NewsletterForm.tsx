@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PrimaryButton } from '../common/PrimaryButton';
 import { trackEvent } from '../../utils/analytics';
+import { api, ApiError } from '../../services/api';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -11,7 +12,7 @@ export const NewsletterForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSuccess(false);
 
@@ -26,10 +27,15 @@ export const NewsletterForm = () => {
     }
 
     setError('');
-    setSuccess(true);
-    trackEvent('newsletter_signup', { form_name: 'newsletter' });
-    setEmail('');
-    setConsent(false);
+    try {
+      await api.public.newsletter(email, 'website');
+      setSuccess(true);
+      trackEvent('newsletter_signup', { form_name: 'newsletter' });
+      setEmail('');
+      setConsent(false);
+    } catch (reason) {
+      setError(reason instanceof ApiError ? reason.message : 'Unable to subscribe right now. Please try again.');
+    }
   };
 
   return (

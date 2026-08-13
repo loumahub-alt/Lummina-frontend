@@ -7,7 +7,7 @@ type StatCardProps = {
 
 export const StatCard = ({ stat, dark = true }: StatCardProps) => (
   <div
-    className={`px-8 py-6 text-center lg:border-l lg:first:border-l-0 ${
+    className={`min-w-0 px-8 py-6 text-center lg:border-l lg:first:border-l-0 ${
       dark ? 'border-dark-line text-white' : 'border-light-line text-ink'
     }`}
   >

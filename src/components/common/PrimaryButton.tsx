@@ -12,7 +12,7 @@ type ButtonProps = {
 };
 
 const baseClass =
-  'group inline-flex min-h-12 items-center justify-center gap-3 border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D_0%,#FFA500_48%,#D67F00_100%)] px-6 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-bordeaux shadow-gold transition duration-300 hover:-translate-y-0.5 hover:border-champagne/80 hover:shadow-[0_22px_46px_rgba(255,165,0,0.28)] focus-visible:outline-gold-bright disabled:cursor-not-allowed disabled:opacity-60 sm:px-8';
+  'group inline-flex min-h-12 items-center justify-center gap-3 border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D_0%,#FFA500_48%,#D67F00_100%)] px-6 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-bordeaux transition duration-300 hover:-translate-y-0.5 hover:border-champagne/80 focus-visible:outline-gold-bright disabled:cursor-not-allowed disabled:opacity-60 sm:px-8';
 
 export const PrimaryButton = ({
   children,
@@ -22,6 +22,7 @@ export const PrimaryButton = ({
   onClick,
   className = '',
 }: ButtonProps) => {
+  const buttonClass = `${baseClass} ${className}`;
   const content = (
     <>
       <span>{children}</span>
@@ -33,11 +34,7 @@ export const PrimaryButton = ({
   );
 
   if (to) {
-    return (
-      <TransitionLink to={to} className={`${baseClass} ${className}`}>
-        {content}
-      </TransitionLink>
-    );
+    return <TransitionLink to={to} className={buttonClass}>{content}</TransitionLink>;
   }
 
   return (
@@ -45,7 +42,7 @@ export const PrimaryButton = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`${baseClass} ${className}`}
+      className={buttonClass}
     >
       {content}
     </button>

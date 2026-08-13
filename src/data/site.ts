@@ -1,5 +1,4 @@
 import type {
-  Attorney,
   FooterColumn,
   ImageRegistry,
   Insight,
@@ -10,7 +9,6 @@ import type {
   SeoEntry,
   ServicePage,
   Stat,
-  TeamMember,
   Testimonial,
 } from '../types';
 
@@ -18,11 +16,12 @@ export const brand = {
   name: 'Lummina',
   legalName: 'Lummina Law Firm',
   descriptor: 'Barristers and Solicitors',
-  email: 'info@lummina.com',
+  email: 'info@lumminalaw.com',
   alternateEmail: 'lumminalp@gmail.com',
-  phone: '0706 046 9068',
-  phoneInternational: '+234 706 046 9068',
-  whatsapp: 'https://wa.me/2347060469068',
+  phone: '+234 201 330 7508',
+  phones: ['+234 201 330 7508', '+234 706 047 9068'],
+  phoneInternational: '+234 201 330 7508',
+  whatsapp: 'https://wa.me/2347060479068',
   website: 'www.lumminalaw.com',
   siteUrl: 'https://www.lumminalaw.com',
   logoDark: '/assets/lummina-logo-dark-transparent.png',
@@ -37,7 +36,6 @@ export const navigation: NavigationItem[] = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Practice Areas', to: '/practice-areas' },
-  { label: 'Attorneys', to: '/attorneys' },
   { label: 'Our Team', to: '/our-team' },
   { label: 'Results', to: '/results' },
   { label: 'Insights', to: '/insights' },
@@ -296,15 +294,10 @@ export const seo: Record<string, SeoEntry> = {
     description:
       'Explore commercially minded legal advisory across business foundations, governance, transactions, disputes, protection and private client needs.',
   },
-  '/attorneys': {
-    title: 'Lummina Lawyers Lagos | Attorneys | Lummina Law Firm',
+  '/our-team': {
+    title: 'Our Team | Lummina Law Firm Lagos',
     description:
       'Meet the Lummina team and search legal professionals by role, name and practice area.',
-  },
-  '/our-team': {
-    title: 'Our Legal Team | Lummina Law Firm Lagos',
-    description:
-      'Meet the Lummina team providing clear, strategic and commercially aware guidance through growth and complexity.',
   },
   '/results': {
     title: 'Commercial Legal Results | Lummina Law Firm Lagos',
@@ -320,6 +313,11 @@ export const seo: Record<string, SeoEntry> = {
     title: 'Schedule a Consultation | Lummina Law Firm',
     description:
       'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+  },
+  '/search': {
+    title: 'Search | Lummina Law Firm',
+    description:
+      'Search published practice areas, team profiles, representative results and legal insights from Lummina Law Firm.',
   },
   '/404': {
     title: 'Page Not Found | Lummina Law Firm',
@@ -506,7 +504,128 @@ export const practiceAreas: PracticeArea[] = [
   },
 ];
 
-export const homePracticeAreas = practiceAreas.slice(0, 6);
+export const practiceAreaGroups: PracticeArea[] = [
+  {
+    id: 'business-law',
+    title: 'Business Law',
+    icon: 'briefcase',
+    shortDescription:
+      'Durable businesses are built on sound legal foundations. We design and implement the legal infrastructure that makes sustainable growth possible.',
+    summary:
+      'Durable businesses are built on sound legal foundations. We design and implement the legal infrastructure that makes sustainable growth possible.',
+    services: [
+      'Business Formation',
+      'Corporate & Commercial Advisory',
+      'Corporate Structuring & Governance',
+      'Contract Drafting & Review',
+      'Legal & Regulatory Compliance',
+      'Commercial Documentation',
+      'Company Secretarial Services',
+      'Due Diligence',
+    ],
+    detail:
+      'Clear ownership architecture and documented decision frameworks, contracts that allocate risk with precision, governance systems that scale as the business does, and regulatory compliance built into operations.',
+    image: 'boardroom',
+  },
+  {
+    id: 'real-estate-property-law',
+    title: 'Real Estate & Property',
+    icon: 'building',
+    shortDescription:
+      'Property is one of the most significant assets an individual or business will ever hold. We advise on acquisition, structuring, and long-term protection.',
+    summary:
+      'Property is one of the most significant assets an individual or business will ever hold. We advise on acquisition, structuring, and long-term protection.',
+    services: ['Property Transactions', 'Title Due Diligence', 'Asset Structuring & Protection'],
+    detail:
+      'We help clients assess property risk early, structure acquisitions clearly, and protect the value and continuity of significant real estate assets.',
+    image: 'columns',
+  },
+  {
+    id: 'transactions-capital',
+    title: 'Transactions & Capital',
+    icon: 'landmark',
+    shortDescription:
+      'Capital deployment and corporate transactions require structured documentation and clear execution strategy. We support our clients through every stage of a transaction, from initial structuring to final execution.',
+    summary:
+      'Capital deployment and corporate transactions require structured documentation and clear execution strategy. We support our clients through every stage of a transaction, from initial structuring to final execution.',
+    services: [
+      'Investment Support & Documentation',
+      'Mergers & Acquisitions',
+      'Corporate Reorganisations & Restructuring',
+    ],
+    detail:
+      'We align transaction documentation, commercial objectives, diligence and execution so capital can move with clarity and control.',
+    image: 'boardroom',
+  },
+  {
+    id: 'intellectual-property',
+    title: 'Intellectual Property',
+    icon: 'badge',
+    shortDescription:
+      'We advise on the full spectrum of intellectual property protection and enforcement, from brand identity to proprietary technology.',
+    summary:
+      'We advise on the full spectrum of intellectual property protection and enforcement, from brand identity to proprietary technology.',
+    services: [
+      'Patent Registration & Protection',
+      'Trademark Filings & Enforcement',
+      'Copyright Advisory',
+      'Trade Secret Protection',
+    ],
+    detail:
+      'Our advice helps clients identify, protect, commercialise and enforce the intellectual property that gives their businesses value.',
+    image: 'library',
+  },
+  {
+    id: 'cross-border-transactions',
+    title: 'Cross-Border Transactions',
+    icon: 'globe',
+    shortDescription:
+      'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
+    summary:
+      'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
+    services: [],
+    detail:
+      'We help clients coordinate local requirements, cross-border structures, regulatory obligations and transaction execution across jurisdictions.',
+    image: 'conference',
+  },
+  {
+    id: 'private-client-services',
+    title: 'Private Client Services',
+    icon: 'shield',
+    shortDescription:
+      'We work with founders and families to create durable legal structures that protect assets, plan for succession, and ensure continuity across generations.',
+    summary:
+      'We work with founders and families to create durable legal structures that protect assets, plan for succession, and ensure continuity across generations.',
+    services: [
+      'Trust Structures & Family Office Advisory',
+      'Succession Planning',
+      'Long-Term Asset Protection',
+    ],
+    detail:
+      'Our private client counsel is discreet, practical and designed around long-term protection, continuity and family priorities.',
+    image: 'library',
+  },
+];
+
+export const lumminaApproach = [
+  {
+    title: 'Structure Before Speed',
+    icon: 'building' as const,
+    text: 'We design the legal architecture before executing documentation. A durable structure always precedes scale.',
+  },
+  {
+    title: 'Governance as a System',
+    icon: 'briefcase' as const,
+    text: 'We treat governance as operational infrastructure, not a compliance formality. Ownership, control, and documentation must align.',
+  },
+  {
+    title: 'Intentional Drafting',
+    icon: 'file' as const,
+    text: 'Contracts are not mere administrative paperwork. They are risk allocation instruments built to withstand scrutiny, time, and dispute.',
+  },
+];
+
+export const homePracticeAreas = practiceAreaGroups;
 
 export const homeStats: Stat[] = [
   { value: '14', label: 'Practice Areas' },
@@ -516,10 +635,10 @@ export const homeStats: Stat[] = [
 ];
 
 export const resultStats: Stat[] = [
-  { value: '$21M', label: 'Debt-to-equity conversion transaction experience' },
-  { value: 'NGN 500M+', label: 'Debt recoveries referenced in managing partner experience' },
+  { value: '14', label: 'Practice Areas' },
+  { value: '$21M', label: 'Debt-to-Equity Transaction Experience' },
+  { value: 'NGN 500M+', label: 'Debt Recoveries Referenced in Firm Experience' },
   { value: '$2M+', label: 'International client recovery experience' },
-  { value: '14', label: 'Practice areas supporting client needs' },
 ];
 
 export const foundationValues = [
@@ -542,267 +661,6 @@ export const foundationValues = [
     title: 'Our Approach',
     icon: 'compass' as const,
     text: 'We align legal strategy with commercial realities, operational impact and long-term value.',
-  },
-];
-
-export const cultureValues = [
-  {
-    title: 'Clarity',
-    icon: 'compass' as const,
-    text: 'We communicate clearly so clients can make stronger decisions with confidence.',
-  },
-  {
-    title: 'Commercial Intelligence',
-    icon: 'briefcase' as const,
-    text: 'We understand the business pressure and operational realities behind the legal question.',
-  },
-  {
-    title: 'Trust',
-    icon: 'handshake' as const,
-    text: 'We build lasting relationships through consistency, responsiveness and ethical practice.',
-  },
-  {
-    title: 'Strategic Foresight',
-    icon: 'eye' as const,
-    text: 'We look beyond the immediate issue to help clients protect long-term value and growth.',
-  },
-];
-
-const portrait = (photoId: string) =>
-  `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=520&h=640&q=85`;
-
-export const attorneys: Attorney[] = [
-  {
-    id: 'faith-zekeri',
-    name: 'Faith Zekeri',
-    position: 'Managing Partner',
-    practiceArea: 'Litigation',
-    location: 'Lagos',
-    email: brand.email,
-    linkedin: 'https://www.linkedin.com/',
-    portrait: '/assets/faith-zekeri.png',
-    bio: 'Faith Zekeri is a resourceful lawyer with a proven track record in litigation, alternative dispute resolution and corporate/commercial law. She advises on contracts, corporate governance, regulatory compliance and company secretarial services.',
-    education: ['LL.B., Kogi State University', 'B.L., Nigerian Law School, Kano Branch'],
-    admissions: ['Nigerian Bar', 'Associate, Institute of Chartered Secretaries and Administrators of Nigeria'],
-    practices: ['Litigation', 'Alternative Dispute Resolution (ADR)', 'Business Law', 'Company Secretarial & Compliance'],
-  },
-  {
-    id: 'adaeze-okafor',
-    name: 'Adaeze Okafor',
-    position: 'Partner',
-    practiceArea: 'Business Law',
-    location: 'Lagos',
-    email: 'adaeze.okafor@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1580489944761-15a19d654956'),
-    bio: 'Adaeze advises businesses on commercial agreements, governance and transaction readiness.',
-    education: ['LL.B., University of Lagos', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Business Law', 'Startup Law', 'Company Secretarial & Compliance'],
-  },
-  {
-    id: 'tunde-balogun',
-    name: 'Tunde Balogun',
-    position: 'Partner',
-    practiceArea: 'Banking & Finance',
-    location: 'Lagos',
-    email: 'tunde.balogun@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1560250097-0b93528c311a'),
-    bio: 'Tunde supports finance transactions, debt restructuring and banking-sector advisory.',
-    education: ['LL.B., Obafemi Awolowo University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Banking & Finance', 'Debt Recovery', 'Business Law'],
-  },
-  {
-    id: 'amina-yusuf',
-    name: 'Amina Yusuf',
-    position: 'Counsel',
-    practiceArea: 'Technology Law',
-    location: 'Lagos',
-    email: 'amina.yusuf@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1607746882042-944635dfe10e'),
-    bio: 'Amina advises technology companies, startups and media clients on digital products and contracts.',
-    education: ['LL.B., Ahmadu Bello University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Technology Law', 'Startup Law', 'Entertainment & Media Law'],
-  },
-  {
-    id: 'chinedu-nwosu',
-    name: 'Chinedu Nwosu',
-    position: 'Counsel',
-    practiceArea: 'Real Estate & Property Law',
-    location: 'Lagos',
-    email: 'chinedu.nwosu@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1507003211169-0a1dd7228f2d'),
-    bio: 'Chinedu works on property transactions, title review and real estate dispute strategy.',
-    education: ['LL.B., University of Nigeria', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Real Estate & Property Law', 'Litigation'],
-  },
-  {
-    id: 'nkechi-adebayo',
-    name: 'Nkechi Adebayo',
-    position: 'Associate',
-    practiceArea: 'Intellectual Property',
-    location: 'Lagos',
-    email: 'nkechi.adebayo@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1494790108377-be9c29b29330'),
-    bio: 'Nkechi supports brand owners, creators and companies on IP protection and commercial use.',
-    education: ['LL.B., Babcock University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Intellectual Property', 'Entertainment & Media Law'],
-  },
-  {
-    id: 'david-eko',
-    name: 'David Eko',
-    position: 'Associate',
-    practiceArea: 'Employment & Labour Law',
-    location: 'Lagos',
-    email: 'david.eko@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1519085360753-af0119f7cbe7'),
-    bio: 'David assists employers and executives with workplace documentation and dispute response.',
-    education: ['LL.B., University of Benin', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Employment & Labour Law', 'Business Law'],
-  },
-  {
-    id: 'mariam-lawal',
-    name: 'Mariam Lawal',
-    position: 'Associate',
-    practiceArea: 'Family Law & Private Client Services',
-    location: 'Lagos',
-    email: 'mariam.lawal@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1534528741775-53994a69daeb'),
-    bio: 'Mariam supports private clients and families with discreet, practical legal advice.',
-    education: ['LL.B., Lagos State University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Family Law & Private Client Services', 'Alternative Dispute Resolution (ADR)'],
-  },
-  {
-    id: 'oluwaseun-ibrahim',
-    name: 'Oluwaseun Ibrahim',
-    position: 'Associate',
-    practiceArea: 'Energy & Natural Resources',
-    location: 'Lagos',
-    email: 'oluwaseun.ibrahim@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1568602471122-7832951cc4c5'),
-    bio: 'Oluwaseun works on energy contracts, compliance review and regulated project support.',
-    education: ['LL.B., University of Ibadan', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Energy & Natural Resources', 'Company Secretarial & Compliance'],
-  },
-  {
-    id: 'ifeoma-eze',
-    name: 'Ifeoma Eze',
-    position: 'Associate',
-    practiceArea: 'Debt Recovery',
-    location: 'Lagos',
-    email: 'ifeoma.eze@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1573496359142-b8d87734a5a2'),
-    bio: 'Ifeoma assists clients with recovery strategy, settlement negotiation and enforcement preparation.',
-    education: ['LL.B., University of Abuja', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Debt Recovery', 'Litigation'],
-  },
-  {
-    id: 'kene-obasi',
-    name: 'Kene Obasi',
-    position: 'Associate',
-    practiceArea: 'Alternative Dispute Resolution (ADR)',
-    location: 'Lagos',
-    email: 'kene.obasi@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1544723795-3fb6469f5b39'),
-    bio: 'Kene supports mediation, arbitration and pre-action dispute strategy.',
-    education: ['LL.B., Afe Babalola University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Alternative Dispute Resolution (ADR)', 'Litigation'],
-  },
-  {
-    id: 'zainab-musa',
-    name: 'Zainab Musa',
-    position: 'Associate',
-    practiceArea: 'Company Secretarial & Compliance',
-    location: 'Lagos',
-    email: 'zainab.musa@lummina.com',
-    linkedin: 'https://www.linkedin.com/',
-    portrait: portrait('photo-1524504388940-b1c1722653e1'),
-    bio: 'Zainab supports company records, compliance tracking and regulatory filings.',
-    education: ['LL.B., Nile University', 'B.L., Nigerian Law School'],
-    admissions: ['Nigerian Bar'],
-    practices: ['Company Secretarial & Compliance', 'Business Law'],
-  },
-];
-
-export const leadership: TeamMember[] = [
-  {
-    id: 'faith-zekeri',
-    name: 'Faith Zekeri',
-    role: 'Managing Partner',
-    portrait: '/assets/faith-zekeri.png',
-    focus: 'Litigation, ADR, corporate/commercial law and company secretarial services.',
-  },
-  {
-    id: 'adaeze-okafor',
-    name: 'Adaeze Okafor',
-    role: 'Business Law Lead',
-    portrait: attorneys[1].portrait,
-    focus: 'Commercial agreements, governance and startup advisory.',
-  },
-  {
-    id: 'tunde-balogun',
-    name: 'Tunde Balogun',
-    role: 'Finance and Recovery Lead',
-    portrait: attorneys[2].portrait,
-    focus: 'Banking, finance, restructuring and debt recovery strategy.',
-  },
-  {
-    id: 'amina-yusuf',
-    name: 'Amina Yusuf',
-    role: 'Technology and Media Counsel',
-    portrait: attorneys[3].portrait,
-    focus: 'Technology, startup, entertainment and media-sector advisory.',
-  },
-];
-
-export const widerTeam = [
-  {
-    title: 'Legal Professionals',
-    icon: 'briefcase' as const,
-    text: 'Experienced lawyers with diverse expertise across Lummina practice areas.',
-  },
-  {
-    title: 'Client Services',
-    icon: 'heart' as const,
-    text: 'A responsive service culture built around clarity, trust and practical guidance.',
-  },
-  {
-    title: 'Compliance Support',
-    icon: 'file' as const,
-    text: 'Systems and documentation that help clients meet statutory obligations.',
-  },
-  {
-    title: 'Research',
-    icon: 'book' as const,
-    text: 'Thoughtful legal research that strengthens strategy and advocacy.',
-  },
-  {
-    title: 'Technology',
-    icon: 'network' as const,
-    text: 'Modern tools that support efficient, secure and effective legal service.',
-  },
-  {
-    title: 'Community Impact',
-    icon: 'users' as const,
-    text: 'A commitment to professional development, advocacy and social responsibility.',
   },
 ];
 
@@ -833,8 +691,10 @@ export const offices: Office[] = [
   {
     city: 'Lagos',
     name: 'Lagos Office',
-    address: ['12 Oluseyi Aweda Street', 'Magodo Phase 1, Lagos'],
-    phone: brand.phone,
+    address: ['Plot 5, Block 94, The Providence Street,', 'Lekki Phase 1, Lagos State.'],
+    mapUrl:
+      'https://maps.google.com/?q=Plot+5,+Block+94,+The+Providence+Street,+Lekki+Phase+1,+Lagos+State',
+    phones: brand.phones,
   },
 ];
 
@@ -965,60 +825,6 @@ export const insights: Insight[] = [
       'A founder-focused checklist covering incorporation, equity, contracts, IP and investor preparedness.',
     image: 'boardroom',
   },
-  {
-    id: 'company-secretarial',
-    category: 'Articles',
-    date: 'June 14, 2026',
-    title: 'Company Secretarial Compliance for Growing Teams',
-    summary:
-      'Why governance records, filings and board discipline matter before a company faces scrutiny.',
-    image: 'library',
-  },
-  {
-    id: 'adr-commercial-disputes',
-    category: 'Publications',
-    date: 'May 29, 2026',
-    title: 'Using ADR to Resolve Commercial Disputes Efficiently',
-    summary:
-      'When mediation, arbitration and structured negotiation may protect time, cost and commercial relationships.',
-    image: 'scales',
-  },
-  {
-    id: 'creative-sector-rights',
-    category: 'Events',
-    date: 'May 21, 2026',
-    title: 'Creative Sector Briefing: Contracts, Rights and Revenue',
-    summary:
-      'A private session for creators and media founders on licensing, ownership and negotiation basics.',
-    image: 'conference',
-  },
-  {
-    id: 'tech-contracting',
-    category: 'Articles',
-    date: 'April 30, 2026',
-    title: 'Technology Contracts and Data Risk for Digital Products',
-    summary:
-      'Key contract and privacy considerations for companies building or procuring digital tools.',
-    image: 'library',
-  },
-  {
-    id: 'real-estate-title',
-    category: 'Publications',
-    date: 'April 11, 2026',
-    title: 'Real Estate Due Diligence Before You Commit',
-    summary:
-      'A concise overview of title, possession, authority and documentation issues in property transactions.',
-    image: 'columns',
-  },
-  {
-    id: 'employment-policies',
-    category: 'Events',
-    date: 'March 24, 2026',
-    title: 'Employment Policy Clinic for SMEs',
-    summary:
-      'A practical event on employment contracts, workplace policies and managing people-related risk.',
-    image: 'boardroom',
-  },
 ];
 
 export const footerColumns: FooterColumn[] = [
@@ -1027,14 +833,13 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: 'Our Firm', to: '/about' },
       { label: 'Our Values', to: '/about#foundation' },
-      { label: 'Leadership', to: '/our-team#leadership' },
-      { label: 'Careers', to: '/our-team#careers' },
+      { label: 'Our Team', to: '/our-team' },
       { label: 'Insights', to: '/insights' },
     ],
   },
   {
     title: 'Practice Areas',
-    links: practiceAreas.slice(0, 8).map((area) => ({
+    links: practiceAreaGroups.map((area) => ({
       label: area.title,
       to: `/practice-areas#${area.id}`,
     })),

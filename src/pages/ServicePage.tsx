@@ -1,9 +1,11 @@
+import { useMemo } from 'react';
 import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { PracticeAreaCard } from '../components/cards/PracticeAreaCard';
 import { SecondaryButton } from '../components/common/SecondaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
 import { images, insights, practiceAreas } from '../data/site';
+import { mapPracticeAreaRecord, usePublishedCollection } from '../hooks/usePublishedContent';
 import type { ServicePage as ServicePageData } from '../types';
 
 type ServicePageProps = {
@@ -11,8 +13,21 @@ type ServicePageProps = {
 };
 
 export const ServicePage = ({ page }: ServicePageProps) => {
+  const practiceAreaRecords = usePublishedCollection('practice-areas');
+  const currentPracticeAreas = useMemo(() => {
+    if (practiceAreaRecords === null) return practiceAreas;
+    const recordsBySlug = new Map(
+      practiceAreaRecords
+        .filter((record) => typeof record.slug === 'string')
+        .map((record) => [record.slug as string, record]),
+    );
+    return practiceAreas.map((area) => {
+      const record = recordsBySlug.get(area.id);
+      return record ? mapPracticeAreaRecord(record, area) : area;
+    });
+  }, [practiceAreaRecords]);
   const relatedPracticeAreas = page.practiceAreaIds
-    .map((id) => practiceAreas.find((area) => area.id === id))
+    .map((id) => currentPracticeAreas.find((area) => area.id === id))
     .filter((area): area is (typeof practiceAreas)[number] => Boolean(area));
   const relatedInsights = (page.insightIds ?? [])
     .map((id) => insights.find((insight) => insight.id === id))
@@ -45,7 +60,7 @@ export const ServicePage = ({ page }: ServicePageProps) => {
 
           <div className="grid gap-4 sm:grid-cols-2">
             {page.highlights.map((highlight) => (
-              <div key={highlight} className="luxury-card flex gap-3 p-6">
+              <div key={highlight} className="luxury-card flex min-w-0 gap-3 p-6">
                 <span aria-hidden="true" className="mt-2 h-2 w-2 shrink-0 bg-gold" />
                 <p className="font-semibold leading-7 text-ink">{highlight}</p>
               </div>
@@ -89,7 +104,7 @@ export const ServicePage = ({ page }: ServicePageProps) => {
             </SectionHeading>
             <div className="mt-12 grid gap-6 lg:grid-cols-3">
               {relatedInsights.map((insight) => (
-                <article key={insight.id} className="luxury-card flex h-full flex-col p-7">
+                <article key={insight.id} className="luxury-card flex h-full min-w-0 flex-col p-7">
                   <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">
                     {insight.category} <span aria-hidden="true">|</span> {insight.date}
                   </p>
@@ -97,7 +112,7 @@ export const ServicePage = ({ page }: ServicePageProps) => {
                     {insight.title}
                   </h2>
                   <p className="mt-4 leading-7 text-ink/70">{insight.summary}</p>
-                  <SecondaryButton to={`/insights#${insight.id}`} dark className="mt-6">
+                  <SecondaryButton to={'/insights/' + insight.id} dark className="mt-6">
                     Read {insight.title}
                   </SecondaryButton>
                 </article>

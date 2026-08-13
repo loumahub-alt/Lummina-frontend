@@ -8,12 +8,19 @@ type InsightCardProps = {
 };
 
 export const InsightCard = ({ insight, featured = false }: InsightCardProps) => {
-  const image = images[insight.image];
+  const fallbackImage = images[insight.image];
+  const image = insight.thumbnailUrl || insight.imageUrl
+    ? {
+        ...fallbackImage,
+        src: insight.thumbnailUrl ?? insight.imageUrl ?? fallbackImage.src,
+        alt: insight.thumbnailAlt ?? insight.imageAlt ?? fallbackImage.alt,
+      }
+    : fallbackImage;
 
   return (
     <article
       id={insight.id}
-      className={`luxury-card group overflow-hidden ${
+      className={`luxury-card group min-w-0 ${
         featured ? 'grid md:grid-cols-[1.05fr_0.95fr]' : ''
       }`}
     >
@@ -28,7 +35,7 @@ export const InsightCard = ({ insight, featured = false }: InsightCardProps) => 
           style={{ objectPosition: image.position }}
         />
       </div>
-      <div className={featured ? 'p-8 md:p-10' : 'p-6'}>
+      <div className={`min-w-0 ${featured ? 'p-8 md:p-10' : 'p-6'}`}>
         <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">
           {insight.category} <span aria-hidden="true">|</span> {insight.date}
         </p>
@@ -40,7 +47,7 @@ export const InsightCard = ({ insight, featured = false }: InsightCardProps) => 
           {insight.title}
         </h3>
         <p className="mt-4 leading-7 text-ink/70">{insight.summary}</p>
-        <SecondaryButton to={`/insights#${insight.id}`} dark className="mt-6">
+        <SecondaryButton to={'/insights/' + insight.id} dark className="mt-6">
           Read Article
         </SecondaryButton>
       </div>

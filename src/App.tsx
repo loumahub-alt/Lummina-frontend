@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { Footer } from './components/layout/Footer';
 import { Header } from './components/layout/Header';
@@ -13,16 +13,23 @@ import { AttorneysPage } from './pages/AttorneysPage';
 import { ConsultationPage } from './pages/ConsultationPage';
 import { HomePage } from './pages/HomePage';
 import { InsightsPage } from './pages/InsightsPage';
-import { OurTeamPage } from './pages/OurTeamPage';
+import { InsightDetailPage } from './pages/InsightDetailPage';
 import { PracticeAreasPage } from './pages/PracticeAreasPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { SearchPage } from './pages/SearchPage';
 import { ServicePage } from './pages/ServicePage';
 import { servicePages } from './data/site';
 import { CookieConsentBanner } from './components/common/CookieConsentBanner';
+import { AdminApp } from './admin/AdminApp';
 
 export const App = () => {
   usePageSeo();
+  const location = useLocation();
+
+  if (location.pathname.startsWith('/admin')) {
+    return <AdminApp />;
+  }
 
   return (
     <TransitionProvider>
@@ -36,11 +43,12 @@ export const App = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/practice-areas" element={<PracticeAreasPage />} />
-            <Route path="/attorneys" element={<AttorneysPage />} />
-            <Route path="/our-team" element={<OurTeamPage />} />
+            <Route path="/our-team" element={<AttorneysPage />} />
             <Route path="/results" element={<ResultsPage />} />
             <Route path="/insights" element={<InsightsPage />} />
+            <Route path="/insights/:slug" element={<InsightDetailPage />} />
             <Route path="/consultation" element={<ConsultationPage />} />
+            <Route path="/search" element={<SearchPage />} />
             {servicePages.map((page) => (
               <Route
                 key={page.slug}
