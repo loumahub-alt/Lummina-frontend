@@ -176,7 +176,7 @@ export const LiveNewsletterPage = () => {
       if (!subject) throw new Error('Enter a newsletter subject before saving.');
       if (!html) throw new Error('Upload or enter an HTML template before saving.');
       if (html.length > 900000) throw new Error('The HTML template must be 900,000 characters or smaller.');
-      if (/<script\b|on[a-z]+\s*=|javascript:/i.test(html)) throw new Error('Remove scripts, event handlers, or javascript links from the newsletter template.');
+      if (/<script\b|\bon[a-z]+\s*=|javascript:/i.test(html)) throw new Error('Remove scripts, event handlers, or javascript links from the newsletter template.');
       const savedTemplate = await api.admin.saveNewsletterTemplate({ subject, html });
       setTemplate({ subject: savedTemplate.subject, html: savedTemplate.html, updatedAt: savedTemplate.updatedAt });
       setTemplateDirty(false);
