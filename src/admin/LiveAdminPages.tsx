@@ -4,7 +4,11 @@ import { api, ApiError, type DashboardData } from '../services/api';
 
 const surface = 'rounded-[3px] border border-[#5F021F]/10 bg-[#FFF9EF] shadow-[0_14px_45px_rgba(95,2,31,0.07)]';
 const input = 'mt-2 min-h-11 w-full rounded-[2px] border border-[#5F021F]/15 bg-white/70 px-3 text-sm text-ink outline-none transition focus:border-gold';
-const apiError = (reason: unknown, fallback: string) => reason instanceof ApiError ? reason.message : fallback;
+const apiError = (reason: unknown, fallback: string) => {
+  if (!(reason instanceof ApiError)) return reason instanceof Error ? reason.message : fallback;
+  const details = Object.values(reason.errors ?? {}).flat().join(' ');
+  return details ? reason.message + ' ' + details : reason.message;
+};
 const dateText = (value: unknown) => {
   if (!value) return '—';
   const date = new Date(String(value));
@@ -167,7 +171,13 @@ export const LiveNewsletterPage = () => {
     setError('');
     setMessage('');
     try {
-      const savedTemplate = await api.admin.saveNewsletterTemplate({ subject: template.subject.trim(), html: template.html.trim() });
+      const subject = template.subject.trim();
+      const html = template.html.trim();
+      if (!subject) throw new Error('Enter a newsletter subject before saving.');
+      if (!html) throw new Error('Upload or enter an HTML template before saving.');
+      if (html.length > 900000) throw new Error('The HTML template must be 900,000 characters or smaller.');
+      if (/<script\b|on[a-z]+\s*=|javascript:/i.test(html)) throw new Error('Remove scripts, event handlers, or javascript links from the newsletter template.');
+      const savedTemplate = await api.admin.saveNewsletterTemplate({ subject, html });
       setTemplate({ subject: savedTemplate.subject, html: savedTemplate.html, updatedAt: savedTemplate.updatedAt });
       setTemplateDirty(false);
       setMessage('Newsletter template saved.');
