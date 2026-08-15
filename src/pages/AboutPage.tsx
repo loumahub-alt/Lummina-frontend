@@ -2,8 +2,12 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { PrimaryButton } from '../components/common/PrimaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { foundationValues, globalPresence, images, milestones } from '../data/site';
+import { coreValues, globalPresence, images, milestones, mission, practicePhilosophy, vision } from '../data/site';
 import { iconMap } from '../utils/icons';
+
+const MissionIcon = iconMap[mission.icon];
+const VisionIcon = iconMap[vision.icon];
+const PracticePhilosophyIcon = iconMap[practicePhilosophy.icon];
 
 export const AboutPage = () => (
   <>
@@ -18,10 +22,7 @@ export const AboutPage = () => (
 
     <section id="foundation" className="cream-section py-20">
       <div className="container-shell">
-        <SectionHeading
-          align="center"
-          title="Clarity. Structure. Strategic Growth."
-        >
+        <SectionHeading align="center" eyebrow="Our Foundation" title="Clarity. Structure. Strategic Growth.">
           <p>
             Lummina helps emerging and evolving businesses build, protect and scale through
             commercially intelligent legal advisory, while supporting investors and private
@@ -29,17 +30,47 @@ export const AboutPage = () => (
           </p>
         </SectionHeading>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {foundationValues.map((value) => {
-            const Icon = iconMap[value.icon];
-            return (
-              <article key={value.title} className="luxury-card p-8 text-center">
-                <Icon aria-hidden="true" className="mx-auto h-12 w-12 text-gold-dark stroke-[1.4]" />
-                <h2 className="mt-6 font-serif text-3xl font-medium text-ink">{value.title}</h2>
-                <p className="mt-4 leading-7 text-ink/68">{value.text}</p>
-              </article>
-            );
-          })}
+        <div className="mt-14 grid gap-6 lg:grid-cols-2">
+          <article className="luxury-card p-8 md:p-10">
+            <div className="flex items-center gap-4">
+              <MissionIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
+              <h2 className="font-serif text-3xl font-medium text-ink">Our Mission</h2>
+            </div>
+            <ul className="mt-7 space-y-4 leading-7 text-ink/68">
+              {mission.points.map((point) => <li key={point} className="flex gap-3"><span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-dark" />{point}</li>)}
+            </ul>
+          </article>
+
+          <article className="luxury-card p-8 md:p-10">
+            <div className="flex items-center gap-4">
+              <VisionIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
+              <h2 className="font-serif text-3xl font-medium text-ink">Our Vision</h2>
+            </div>
+            <p className="mt-7 text-lg leading-8 text-ink/68">{vision.text}</p>
+          </article>
+
+          <article className="luxury-card p-8 md:p-10 lg:col-span-2">
+            <div className="flex items-center gap-4">
+              <PracticePhilosophyIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
+              <h2 className="font-serif text-3xl font-medium text-ink">Our Practice Philosophy</h2>
+            </div>
+            <p className="mt-7 max-w-4xl text-lg leading-8 text-ink/68">{practicePhilosophy.intro}</p>
+            <ul className="mt-7 grid gap-4 md:grid-cols-2 leading-7 text-ink/68">
+              {practicePhilosophy.principles.map((principle) => <li key={principle} className="flex gap-3"><span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-dark" />{principle}</li>)}
+            </ul>
+          </article>
+        </div>
+
+        <div className="mt-16">
+          <SectionHeading align="center" eyebrow="What Guides Us" title="Our Core Values">
+            <p>Our values shape how we think, advise, communicate, and serve every client.</p>
+          </SectionHeading>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {coreValues.map((value) => {
+              const Icon = iconMap[value.icon];
+              return <article key={value.title} className="luxury-card p-8 text-center"><Icon aria-hidden="true" className="mx-auto h-10 w-10 text-gold-dark stroke-[1.4]" /><h3 className="mt-5 font-serif text-2xl font-medium text-ink">{value.title}</h3><p className="mt-4 leading-7 text-ink/68">{value.text}</p></article>;
+            })}
+          </div>
         </div>
       </div>
     </section>

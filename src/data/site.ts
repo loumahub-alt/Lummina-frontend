@@ -641,26 +641,52 @@ export const resultStats: Stat[] = [
   { value: '$2M+', label: 'International client recovery experience' },
 ];
 
-export const foundationValues = [
+export const mission = {
+  icon: 'target' as const,
+  points: [
+    "To provide innovative, practical, and bespoke legal solutions tailored to each client's unique circumstances.",
+    'To build lasting relationships grounded in trust, integrity, and exceptional service delivery.',
+    'To contribute meaningfully to the evolution of the Nigerian legal system through thought leadership and advocacy.',
+    'To create positive impact within our communities through ethical, responsible practice.',
+  ],
+};
+
+export const vision = {
+  icon: 'eye' as const,
+  text: 'To be a trusted partner for individuals, businesses, and institutions in Nigeria and beyond, renowned for delivering bespoke legal solutions that drive sustainable success.',
+};
+
+export const practicePhilosophy = {
+  icon: 'compass' as const,
+  intro: 'Every matter entrusted to Lummina is handled with professional rigor, ethical responsibility, and strategic foresight. We approach legal work not as a transactional service, but as a long-term partnership.',
+  principles: [
+    'Ethical and transparent legal practice.',
+    'Structured case assessment before strategy execution.',
+    'Clear, consistent communication at every stage.',
+    'Long-term legal protection as the default orientation.',
+  ],
+};
+
+export const coreValues = [
   {
-    title: 'Our Mission',
-    icon: 'target' as const,
-    text: 'To help emerging and evolving businesses build, protect and scale through commercially intelligent legal advisory.',
+    title: 'Integrity',
+    icon: 'scale' as const,
+    text: 'We hold ourselves to the highest ethical standards in everything we do.',
   },
   {
-    title: 'Our Vision',
-    icon: 'eye' as const,
-    text: 'To be the law firm that businesses building toward scale trust for clarity, structure and strategic foresight.',
+    title: 'Client-Centered Service',
+    icon: 'users' as const,
+    text: 'Your objectives guide our strategy. We design solutions around your goals, not a generic playbook.',
   },
   {
-    title: 'Our Values',
-    icon: 'values' as const,
-    text: 'Clarity, structure, trust, excellence and strategic foresight guide our work.',
+    title: 'Excellence',
+    icon: 'trophy' as const,
+    text: 'We approach every mandate with precision, professionalism, and meticulous attention to detail.',
   },
   {
-    title: 'Our Approach',
-    icon: 'compass' as const,
-    text: 'We align legal strategy with commercial realities, operational impact and long-term value.',
+    title: 'Innovation',
+    icon: 'lightbulb' as const,
+    text: 'We apply forward-thinking legal strategies and modern approaches to solve complex challenges efficiently.',
   },
 ];
 
