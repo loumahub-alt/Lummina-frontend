@@ -108,13 +108,13 @@ export const SearchPage = () => {
             </div>
             <button type="submit" disabled={!ready || !query.trim()} className="inline-flex min-h-14 items-center justify-center gap-3 border border-orange/80 bg-gold px-6 py-4 text-xs font-extrabold uppercase tracking-[0.1em] text-bordeaux disabled:cursor-not-allowed disabled:opacity-50"><SearchIcon className="h-4 w-4" />Search</button>
           </form>
-          {!hasAnalyticsConsent() && <p className="mt-4 text-xs text-white/55">Search results work normally. Search analytics is recorded only after analytics consent.</p>}
+          {!hasAnalyticsConsent() && <p className="mt-4 text-xs text-white/55">Search results work normally.</p>}
         </div>
       </section>
 
       <section className="cream-section min-h-[28rem] py-16 md:py-20">
         <div className="container-shell max-w-5xl">
-          {!submittedQuery && <div className="rounded-[2px] border border-light-line bg-white/65 p-8 text-center text-ink/60">Enter a search term to explore the published website content.</div>}
+          {!submittedQuery && <div className="rounded-[2px] border border-light-line bg-white/65 p-8 text-center text-ink/60">Enter a search term to explore.</div>}
           {submittedQuery && <div className="flex flex-col gap-3 border-b border-light-line pb-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="eyebrow text-gold-dark">Search results</p><h2 className="mt-2 font-serif text-4xl text-ink">Results for “{submittedQuery}”</h2></div><p className="text-sm text-ink/55">{matches.length} {matches.length === 1 ? 'result' : 'results'}</p></div>}
           {submittedQuery && matches.length > 0 && <div className="mt-8 grid gap-5 md:grid-cols-2">{matches.map((result, index) => <article key={result.type + '-' + result.id} className="luxury-card flex min-w-0 flex-col p-7"><p className="text-xs font-extrabold uppercase tracking-[0.13em] text-gold-dark">{result.type}</p><h3 className="mt-4 font-serif text-3xl leading-tight text-ink">{result.title}</h3>{result.excerpt && <p className="mt-4 line-clamp-4 leading-7 text-ink/70">{result.excerpt}</p>}<TransitionLink to={result.href} onClick={() => trackEvent('search_result_click', { query: submittedQuery, searchId, resultId: result.id, resultType: result.type, resultPosition: index + 1, resultTitle: result.title })} className="group mt-6 inline-flex items-center gap-3 self-start border-b border-gold/70 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark">View result<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></TransitionLink></article>)}</div>}
           {submittedQuery && matches.length === 0 && <div className="mt-8 rounded-[2px] border border-light-line bg-white/65 p-8"><h2 className="font-serif text-3xl text-ink">No published content matched that search.</h2><p className="mt-3 max-w-2xl leading-7 text-ink/65">Try a practice area, legal service, team member, business topic or insight title.</p></div>}
