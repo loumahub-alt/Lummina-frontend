@@ -1,4 +1,7 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '') || (import.meta.env.DEV ? 'http://localhost:8000/api' : '/api');
+const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, '');
+// Keep production sessions first-party. The Vercel rewrite proxies /api to the
+// backend, avoiding third-party cookie restrictions in Safari and similar browsers.
+const API_BASE_URL = import.meta.env.PROD ? '/api' : configuredApiBaseUrl || 'http://localhost:8000/api';
 let csrfToken = '';
 
 export class ApiError extends Error {
