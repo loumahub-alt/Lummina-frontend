@@ -139,6 +139,10 @@
   ],
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "https://lummina-ten.vercel.app/api/public/sitemap.xml"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://lummina-ten.vercel.app/api/:path*"
     },

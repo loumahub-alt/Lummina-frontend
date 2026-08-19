@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { App } from './App';
 import './index.css';
+import { PreloadedContentProvider, getBrowserPreloadedContent } from './context/PreloadedContentContext';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <PreloadedContentProvider value={getBrowserPreloadedContent()}>
+      <RouterProvider router={router} />
+    </PreloadedContentProvider>
   </React.StrictMode>,
 );

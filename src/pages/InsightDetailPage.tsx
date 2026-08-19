@@ -11,6 +11,7 @@ import { api, ApiError } from '../services/api';
 import type { InsightCategory } from '../types';
 import { applySeo } from '../utils/seo';
 import { contentAssetFromRecord } from '../utils/contentAssets';
+import { usePreloadedItem } from '../context/PreloadedContentContext';
 import { NotFoundPage } from './NotFoundPage';
 
 type RemoteInsight = Record<string, unknown>;
@@ -59,14 +60,18 @@ const formatDate = (value: unknown, fallback: string) => {
 export const InsightDetailPage = () => {
   const { slug = '' } = useParams();
   const fallback = insights.find((item) => item.id === slug);
-  const [remoteInsight, setRemoteInsight] = useState<RemoteInsight | null>(null);
-  const [remoteStatus, setRemoteStatus] = useState<'idle' | 'loaded' | 'not-found' | 'error'>('idle');
-  const [loading, setLoading] = useState(!fallback);
+  const preloadedInsight = usePreloadedItem('insights', slug);
+  const [remoteInsight, setRemoteInsight] = useState<RemoteInsight | null>(preloadedInsight);
+  const [remoteStatus, setRemoteStatus] = useState<'idle' | 'loaded' | 'not-found' | 'error'>(preloadedInsight ? 'loaded' : 'idle');
+  const [loading, setLoading] = useState(!fallback && !preloadedInsight);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!slug) return undefined;
     let active = true;
+    setRemoteInsight(preloadedInsight);
+    setRemoteStatus(preloadedInsight ? 'loaded' : 'idle');
+    setLoading(!fallback && !preloadedInsight);
 
     api.public
       .item('insights', slug)
@@ -88,7 +93,7 @@ export const InsightDetailPage = () => {
     return () => {
       active = false;
     };
-  }, [slug]);
+  }, [fallback, preloadedInsight, slug]);
 
   const insight = useMemo<InsightDetail | null>(() => {
     if ((!fallback && !remoteInsight) || remoteStatus === 'not-found') return null;

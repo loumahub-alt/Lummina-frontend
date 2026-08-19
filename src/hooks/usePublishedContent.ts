@@ -3,11 +3,13 @@ import { api } from '../services/api';
 import { brand, offices, practiceAreaGroups } from '../data/site';
 import type { PracticeArea, Stat } from '../types';
 import { iconMap } from '../utils/icons';
+import { usePreloadedCollection } from '../context/PreloadedContentContext';
 
 export type PublishedRecord = Record<string, unknown>;
 
 export const usePublishedCollection = (resource: string) => {
-  const [records, setRecords] = useState<PublishedRecord[] | null>(null);
+  const preloadedRecords = usePreloadedCollection(resource);
+  const [records, setRecords] = useState<PublishedRecord[] | null>(preloadedRecords);
 
   useEffect(() => {
     let active = true;
@@ -24,7 +26,7 @@ export const usePublishedCollection = (resource: string) => {
     return () => {
       active = false;
     };
-  }, [resource]);
+  }, [preloadedRecords, resource]);
 
   return records;
 };

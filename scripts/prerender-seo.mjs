@@ -1,11 +1,21 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createServer } from 'vite';
 
 const siteUrl = 'https://www.lumminalaw.com';
 const distRoot = join(process.cwd(), 'dist');
 const template = readFileSync(join(distRoot, 'index.html'), 'utf8');
 
-const routes = [
+const baseRoutes = [
+  {
+    path: '/',
+    title: 'Lummina Law Firm Lagos | Legal Clarity for Businesses',
+    description:
+      'Lummina Law Firm is a modern, commercially minded law firm helping founders, businesses, investors and private clients build, protect and scale with clarity, structure and strategic foresight.',
+  },
   {
     path: '/about',
     title: 'About Lummina Law Firm | Commercial Legal Advisory Lagos',
@@ -111,6 +121,74 @@ const routes = [
 
 const escapeJson = (value) => JSON.stringify(value).replace(/</g, '\\u003c');
 
+const escapeHtml = (value) => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
+const apiBaseUrl = (process.env.PRERENDER_API_URL ?? process.env.VITE_API_BASE_URL ?? `${siteUrl}/api`).replace(/\/$/, '');
+
+const loadPreloadedContent = async () => {
+  const resources = ['practice-areas', 'team', 'results', 'statistics', 'testimonials', 'insights'];
+  const collections = {};
+
+  await Promise.all(resources.map(async (resource) => {
+    try {
+      const response = await fetch(`${apiBaseUrl}/public/${resource}`, {
+        headers: { accept: 'application/json' },
+      });
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (Array.isArray(payload.data)) collections[resource] = payload.data;
+    } catch {
+      // The build remains usable with bundled fallback content when the CMS is unavailable.
+    }
+  }));
+
+  const items = {
+    insights: Object.fromEntries(
+      (collections.insights ?? [])
+        .filter((item) => typeof item.slug === 'string' && item.slug.trim())
+        .map((item) => [item.slug, item]),
+    ),
+  };
+
+  return { collections, items };
+};
+
+const articleRoutesFrom = (content) => {
+  const knownRoutes = new Map(baseRoutes.filter((route) => route.type === 'article').map((route) => [route.path, route]));
+
+  for (const record of content.collections?.insights ?? []) {
+    if (typeof record.slug !== 'string' || !record.slug.trim()) continue;
+    const path = `/insights/${encodeURIComponent(record.slug)}`;
+    const seo = record.seo && typeof record.seo === 'object' && !Array.isArray(record.seo) ? record.seo : {};
+    const knownRoute = knownRoutes.get(path);
+    const imageValue = record.image && typeof record.image === 'object' && !Array.isArray(record.image)
+      ? record.image.url ?? record.image.secure_url ?? record.image.secureUrl
+      : undefined;
+    knownRoutes.set(path, {
+      ...(knownRoute ?? { path, type: 'article' }),
+      title: typeof seo.title === 'string' && seo.title.trim()
+        ? seo.title
+        : knownRoute?.title ?? `${String(record.title ?? 'Lummina Insight')} | Lummina Law Firm`,
+      description: typeof seo.description === 'string' && seo.description.trim()
+        ? seo.description
+        : knownRoute?.description ?? String(record.excerpt ?? ''),
+      image: typeof imageValue === 'string' && imageValue.trim()
+        ? imageValue
+        : knownRoute?.image,
+      publishedTime: typeof record.publishedAt === 'string'
+        ? record.publishedAt
+        : knownRoute?.publishedTime,
+    });
+  }
+
+  return [...knownRoutes.values()];
+};
+
 const schemaFor = (route) => {
   const graph = [
     {
@@ -188,31 +266,67 @@ const schemaFor = (route) => {
 
 const replace = (html, pattern, value) => html.replace(pattern, value);
 
-for (const route of routes) {
-  const canonical = `${siteUrl}${route.path}`;
-  const image = route.image ?? `${siteUrl}/assets/lummina-og.png`;
-  let html = template;
+const vite = await createServer({
+  server: { middlewareMode: true, hmr: false, ws: false },
+  appType: 'custom',
+  logLevel: 'error',
+});
 
-  html = replace(html, /<title>[\s\S]*?<\/title>/, `<title>${route.title}</title>`);
-  html = replace(html, /<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${route.description}" />`);
-  html = replace(html, /<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${canonical}" />`);
-  html = replace(html, /<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${route.title}" />`);
-  html = replace(html, /<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${route.description}" />`);
-  html = replace(html, /<meta property="og:type" content="[^"]*" \/>/, `<meta property="og:type" content="${route.type === 'article' ? 'article' : 'website'}" />`);
-  html = replace(html, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${canonical}" />`);
-  html = replace(html, /<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${image}" />`);
-  html = replace(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${route.title}" />`);
-  html = replace(html, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${route.description}" />`);
+try {
+  const { App } = await vite.ssrLoadModule('/src/App.tsx');
+  const { PreloadedContentProvider } = await vite.ssrLoadModule('/src/context/PreloadedContentContext.tsx');
+  const preloadedContent = await loadPreloadedContent();
+  const routes = [
+    ...baseRoutes.filter((route) => route.type !== 'article'),
+    ...articleRoutesFrom(preloadedContent),
+  ];
+
+  for (const route of routes) {
+    const canonicalUrl = `${siteUrl}${route.path}`;
+    const canonical = escapeHtml(canonicalUrl);
+    const title = escapeHtml(route.title);
+    const description = escapeHtml(route.description);
+    const image = escapeHtml(route.image ?? `${siteUrl}/assets/lummina-og.png`);
+    let html = template;
+
+    const router = createMemoryRouter([
+      { path: '*', element: React.createElement(App) },
+    ], { initialEntries: [route.path] });
+    const renderedPage = renderToStaticMarkup(
+      React.createElement(
+        PreloadedContentProvider,
+        { value: preloadedContent },
+        React.createElement(RouterProvider, { router }),
+      ),
+    );
+    router.dispose();
+    html = html.replace('<div id="root"></div>', `<div id="root">${renderedPage}</div>`);
+
+    html = replace(html, /<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
+    html = replace(html, /<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${description}" />`);
+    html = replace(html, /<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${canonical}" />`);
+    html = replace(html, /<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${title}" />`);
+    html = replace(html, /<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${description}" />`);
+    html = replace(html, /<meta property="og:type" content="[^"]*" \/>/, `<meta property="og:type" content="${route.type === 'article' ? 'article' : 'website'}" />`);
+    html = replace(html, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${canonical}" />`);
+    html = replace(html, /<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${image}" />`);
+    html = replace(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${title}" />`);
+    html = replace(html, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${description}" />`);
   html = replace(html, /<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${image}" />`);
   if (route.type === 'article') {
-    const articleMeta = `<meta property="article:published_time" content="${route.publishedTime}" /><meta property="article:modified_time" content="${route.publishedTime}" /><meta property="article:author" content="Lummina Law Firm" /><meta property="article:section" content="Legal Insights" />`;
+    const publishedTime = escapeHtml(route.publishedTime ?? '');
+    const articleMeta = `<meta property="article:published_time" content="${publishedTime}" /><meta property="article:modified_time" content="${publishedTime}" /><meta property="article:author" content="Lummina Law Firm" /><meta property="article:section" content="Legal Insights" />`;
     html = html.replace('</head>', articleMeta + '</head>');
   }
   html = replace(html, /<script id="lummina-structured-data" type="application\/ld\+json">[\s\S]*?<\/script>/, `<script id="lummina-structured-data" type="application/ld+json">${escapeJson(schemaFor(route))}</script>`);
+  html = html.replace('</head>', `<script>window.__LUMMINA_PRERENDER_DATA__=${escapeJson(preloadedContent)};</script></head>`);
 
   const outputPath = join(distRoot, route.path.slice(1), 'index.html');
   mkdirSync(dirname(outputPath), { recursive: true });
   writeFileSync(outputPath, html);
-}
+  }
 
-console.log(`Prerendered SEO metadata for ${routes.length} routes.`);
+  console.log(`Prerendered route HTML and SEO metadata for ${routes.length} routes.`);
+} finally {
+  await vite.close();
+}
