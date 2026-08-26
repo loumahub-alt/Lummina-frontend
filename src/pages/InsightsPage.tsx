@@ -118,10 +118,14 @@ export const InsightsPage = () => {
 
     return publishedRecords.map((record, index) => {
       const fallback = insights.find((item) => item.id === record.slug) ?? insights[index] ?? insights[0];
-      const type = typeof record.type === 'string' ? record.type.toLowerCase() : '';
-      const category: InsightCategory = type === 'publication'
+      const type = typeof record.type === 'string'
+        ? record.type.trim().toLowerCase()
+        : typeof record.category === 'string'
+          ? record.category.trim().toLowerCase()
+          : '';
+      const category: InsightCategory = type === 'publication' || type === 'publications'
         ? 'Publications'
-        : type === 'event'
+        : type === 'event' || type === 'events'
           ? 'Events'
           : 'Articles';
       const fallbackImage = typeof record.slug === 'string'
@@ -148,15 +152,15 @@ export const InsightsPage = () => {
     });
   }, [publishedRecords]);
 
-  const featuredInsight = activeCategory === 'Latest Insights'
-    ? insightItems.find((insight) => insight.featured) ?? insightItems[0]
-    : undefined;
   const filteredInsights = useMemo(() => {
     if (activeCategory === 'Latest Insights') {
-      return insightItems;
+      return insightItems.filter((insight) => insight.category !== 'Events');
     }
     return insightItems.filter((insight) => insight.category === activeCategory);
   }, [activeCategory, insightItems]);
+  const featuredInsight = activeCategory === 'Latest Insights'
+    ? filteredInsights.find((insight) => insight.featured) ?? filteredInsights[0]
+    : undefined;
   const gridInsights = filteredInsights.filter((insight) => insight.id !== featuredInsight?.id);
 
   return (
@@ -174,13 +178,11 @@ export const InsightsPage = () => {
             {categories.map((category) => (
               <button
                 key={category}
-                id={
-                  category === 'Publications'
-                    ? 'publications'
-                    : category === 'Events'
-                      ? 'events'
+                  id={
+                    category === 'Publications'
+                      ? 'publications'
                       : undefined
-                }
+                  }
                 type="button"
                 role="tab"
                 aria-selected={activeCategory === category}

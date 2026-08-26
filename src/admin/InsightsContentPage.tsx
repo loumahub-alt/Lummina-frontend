@@ -128,7 +128,8 @@ export const InsightsContentPage = () => {
       .map((value) => String(value ?? '').toLowerCase())
       .join(' ');
     const matchesQuery = !query.trim() || searchable.includes(query.trim().toLowerCase());
-    const matchesType = typeFilter === 'all' || String(record.type ?? 'article') === typeFilter;
+    const recordType = String(record.type ?? 'article').trim().toLowerCase();
+    const matchesType = typeFilter === 'all' || recordType === typeFilter;
     const matchesStatus = statusFilter === 'all' || String(record.status ?? 'draft') === statusFilter;
     return matchesQuery && matchesType && matchesStatus;
   }), [query, records, statusFilter, typeFilter]);
