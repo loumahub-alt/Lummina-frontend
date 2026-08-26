@@ -4,7 +4,6 @@ import { InsightCard } from '../components/cards/InsightCard';
 import { NewsletterForm } from '../components/forms/NewsletterForm';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { TransitionLink } from '../components/transitions';
 import { images, insights } from '../data/site';
 import { usePublishedCollection } from '../hooks/usePublishedContent';
 import { contentAssetFromRecord } from '../utils/contentAssets';
@@ -64,34 +63,22 @@ const EventGallery = ({ events }: { events: Insight[] }) => {
 
           return (
             <article key={event.id} className="luxury-card group overflow-hidden">
-              <TransitionLink to={'/insights/' + event.id} className="block">
-                <div className="aspect-[4/3] overflow-hidden bg-bordeaux/10">
-                  <img
-                    src={imageUrl}
-                    alt={imageAlt}
-                    width={fallbackImage.width}
-                    height={fallbackImage.height}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                </div>
-              </TransitionLink>
+              <div className="aspect-[4/3] overflow-hidden bg-bordeaux/10">
+                <img
+                  src={imageUrl}
+                  alt={imageAlt}
+                  width={fallbackImage.width}
+                  height={fallbackImage.height}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+              </div>
               <div className="p-6">
                 <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">
                   Events <span aria-hidden="true">|</span> {event.date}
                 </p>
-                <h3 className="mt-3 font-serif text-2xl font-medium leading-tight text-ink">
-                  <TransitionLink to={'/insights/' + event.id} className="transition hover:text-gold-dark">
-                    {event.title}
-                  </TransitionLink>
-                </h3>
+                <h3 className="mt-3 font-serif text-2xl font-medium leading-tight text-ink">{event.title}</h3>
                 {event.summary && <p className="mt-3 leading-7 text-ink/65">{event.summary}</p>}
-                <TransitionLink
-                  to={'/insights/' + event.id}
-                  className="mt-5 inline-flex text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark hover:text-bordeaux"
-                >
-                  View event details <span aria-hidden="true" className="ml-2">→</span>
-                </TransitionLink>
               </div>
             </article>
           );
@@ -141,7 +128,11 @@ export const InsightsPage = () => {
         category,
         date: publishedAt ? new Date(publishedAt).toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: 'numeric' }) : fallback.date,
         title: typeof record.title === 'string' ? record.title : fallback.title,
-        summary: typeof record.excerpt === 'string' ? record.excerpt : fallback.summary,
+        summary: typeof record.excerpt === 'string' && record.excerpt.trim()
+          ? record.excerpt
+          : category === 'Events'
+            ? ''
+            : fallback.summary,
         image: fallbackImage ?? fallback.image,
         imageUrl: image.url || undefined,
         imageAlt: image.alt || undefined,
