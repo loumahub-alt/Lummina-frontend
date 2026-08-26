@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { InsightCard } from '../components/cards/InsightCard';
 import { NewsletterForm } from '../components/forms/NewsletterForm';
@@ -25,7 +27,35 @@ const categoryFromHash = (hash: string): InsightFilter | null => {
   return null;
 };
 
+const eventImageFor = (event: Insight) => {
+  const fallbackImage = images[event.image];
+  return {
+    ...fallbackImage,
+    src: event.imageUrl ?? event.thumbnailUrl ?? fallbackImage.src,
+    alt: event.imageAlt ?? event.thumbnailAlt ?? event.title,
+  };
+};
+
 const EventGallery = ({ events }: { events: Insight[] }) => {
+  const [selectedEvent, setSelectedEvent] = useState<Insight | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!selectedEvent) return;
+
+    document.body.classList.add('modal-open');
+    closeButtonRef.current?.focus();
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedEvent(null);
+    };
+    window.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.body.classList.remove('modal-open');
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [selectedEvent]);
+
   if (events.length === 0) {
     return (
       <section id="events" className="mt-10 border border-light-line bg-white/45 px-6 py-16 text-center sm:px-10">
@@ -39,7 +69,8 @@ const EventGallery = ({ events }: { events: Insight[] }) => {
   }
 
   return (
-    <section id="events" className="mt-10" aria-labelledby="events-gallery-title">
+    <>
+      <section id="events" className="mt-10" aria-labelledby="events-gallery-title">
       <div className="flex flex-col justify-between gap-5 border-b border-light-line pb-7 sm:flex-row sm:items-end">
         <div>
           <p className="eyebrow">Events</p>
@@ -57,22 +88,27 @@ const EventGallery = ({ events }: { events: Insight[] }) => {
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {events.map((event) => {
-          const fallbackImage = images[event.image];
-          const imageUrl = event.imageUrl ?? event.thumbnailUrl ?? fallbackImage.src;
-          const imageAlt = event.imageAlt ?? event.thumbnailAlt ?? event.title;
+          const image = eventImageFor(event);
 
           return (
             <article key={event.id} className="luxury-card group overflow-hidden">
-              <div className="aspect-[4/3] overflow-hidden bg-bordeaux/10">
+              <button
+                type="button"
+                onClick={() => setSelectedEvent(event)}
+                aria-label={`View larger image for ${event.title}`}
+                className="block w-full cursor-zoom-in text-left focus-visible:outline-gold-dark"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-bordeaux/10">
                 <img
-                  src={imageUrl}
-                  alt={imageAlt}
-                  width={fallbackImage.width}
-                  height={fallbackImage.height}
+                  src={image.src}
+                  alt={image.alt}
+                  width={image.width}
+                  height={image.height}
                   loading="lazy"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
-              </div>
+                </div>
+              </button>
               <div className="p-6">
                 <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">
                   Events <span aria-hidden="true">|</span> {event.date}
@@ -84,7 +120,53 @@ const EventGallery = ({ events }: { events: Insight[] }) => {
           );
         })}
       </div>
-    </section>
+      </section>
+      {selectedEvent && createPortal(
+        // The modal is rendered into document.body so it is not constrained by
+        // the page transition wrapper's transform containing block.
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="event-image-modal-title"
+      className="fixed inset-0 z-[70] overflow-y-auto bg-wine/90 p-4 backdrop-blur-md sm:p-8"
+      onClick={() => setSelectedEvent(null)}
+    >
+      <div className="flex min-h-full items-center justify-center">
+        <div
+          className="relative w-full max-w-6xl rounded-[2px] border border-champagne/20 bg-[#170009]/90 p-3 shadow-luxe sm:p-5"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            ref={closeButtonRef}
+            onClick={() => setSelectedEvent(null)}
+            aria-label="Close enlarged event image"
+            className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-[2px] border border-champagne/25 bg-wine/85 text-champagne transition hover:border-gold hover:text-gold-bright"
+          >
+            <X aria-hidden="true" className="h-5 w-5" />
+          </button>
+          <img
+            src={eventImageFor(selectedEvent).src}
+            alt={eventImageFor(selectedEvent).alt}
+            width={eventImageFor(selectedEvent).width}
+            height={eventImageFor(selectedEvent).height}
+            className="mx-auto max-h-[78vh] w-auto max-w-full object-contain"
+          />
+          <div className="px-2 pb-2 pt-4 text-champagne sm:px-4 sm:pb-3">
+            <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-bright">
+              Events <span aria-hidden="true">|</span> {selectedEvent.date}
+            </p>
+            <h2 id="event-image-modal-title" className="mt-2 font-serif text-3xl font-medium text-white sm:text-4xl">
+              {selectedEvent.title}
+            </h2>
+            {selectedEvent.summary && <p className="mt-2 leading-7 text-champagne/75">{selectedEvent.summary}</p>}
+          </div>
+        </div>
+      </div>
+    </div>,
+        document.body,
+      )}
+    </>
   );
 };
 
