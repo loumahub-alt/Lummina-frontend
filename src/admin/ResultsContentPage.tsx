@@ -215,7 +215,7 @@ export const ResultsContentPage = () => {
 
             <div className="mt-7 grid gap-5 md:grid-cols-2">
               <label className="block text-sm font-bold md:col-span-2">Matter title *<input required className={input} value={editor.title} onChange={(event) => update('title', event.target.value)} placeholder="Describe the representative matter" /></label>
-              <label className="block text-sm font-bold">Headline figure *<input required className={input} value={editor.headlineFigure} onChange={(event) => update('headlineFigure', event.target.value)} placeholder="e.g. $21M or NGN 500M+" /></label>
+              <label className="block text-sm font-bold">Headline descriptor *<input required className={input} value={editor.headlineFigure} onChange={(event) => update('headlineFigure', event.target.value)} placeholder="e.g. Representative or Board-Level" /></label>
               <label className="block text-sm font-bold">Category *<input required className={input} value={editor.category} onChange={(event) => update('category', event.target.value)} placeholder="e.g. Debt Recovery" /></label>
               <label className="block text-sm font-bold">Jurisdiction<input className={input} value={editor.jurisdiction} onChange={(event) => update('jurisdiction', event.target.value)} placeholder="Nigeria" /></label>
               <label className="block text-sm font-bold">Display order<input type="number" min="0" className={input} value={editor.displayOrder} onChange={(event) => update('displayOrder', event.target.value)} /></label>

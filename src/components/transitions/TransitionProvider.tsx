@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   useBlocker,
@@ -38,7 +38,11 @@ const shouldAnimateRouteChange = (currentLocation: Location, nextLocation: Locat
   currentLocation.pathname !== nextLocation.pathname ||
   currentLocation.search !== nextLocation.search;
 
-export const TransitionProvider = ({ children }: PropsWithChildren) => {
+type TransitionProviderProps = PropsWithChildren<{
+  fixedChildren?: ReactNode;
+}>;
+
+export const TransitionProvider = ({ children, fixedChildren }: TransitionProviderProps) => {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<TransitionPhase>('covered');
 
@@ -224,6 +228,7 @@ export const TransitionProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <TransitionContext.Provider value={value}>
+      {fixedChildren}
       <div className="route-transition-shell" data-transition-phase={phase}>
         {children}
       </div>

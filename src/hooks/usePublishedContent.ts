@@ -7,6 +7,16 @@ import { usePreloadedCollection } from '../context/PreloadedContentContext';
 
 export type PublishedRecord = Record<string, unknown>;
 
+const monetaryFigurePattern = /^\s*(?:[$€£]|(?:USD|NGN|GBP|EUR)\b)/i;
+
+// Public matter summaries should not turn confidential or jurisdiction-specific
+// figures into promotional claims. Keep non-monetary descriptors such as
+// "Board-Level" or "Strategic" intact.
+export const publicFigure = (value: unknown, fallback = 'Representative') => {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return text && !monetaryFigurePattern.test(text) ? text : fallback;
+};
+
 export const usePublishedCollection = (resource: string) => {
   const preloadedRecords = usePreloadedCollection(resource);
   const [records, setRecords] = useState<PublishedRecord[] | null>(preloadedRecords);
@@ -49,6 +59,7 @@ export const mapPracticeAreaRecord = (record: PublishedRecord, fallback: Practic
   const fullDescription = typeof record.fullDescription === 'string'
     ? record.fullDescription
     : fallback.summary;
+  const publishedServices = servicesFromRecord(record.services);
 
   return {
     ...fallback,
@@ -62,7 +73,9 @@ export const mapPracticeAreaRecord = (record: PublishedRecord, fallback: Practic
       : fallback.shortDescription,
     summary: fullDescription,
     detail: fullDescription,
-    services: servicesFromRecord(record.services),
+    // Keep the public card useful when older CMS records are incomplete, while
+    // preserving any additional service labels maintained in the CMS.
+    services: Array.from(new Set([...fallback.services, ...publishedServices])),
   };
 };
 
@@ -89,7 +102,7 @@ export const mapPublishedStatistics = (
   if (records === null) return [];
 
   return records.map((record) => ({
-    value: typeof record.value === 'string' ? record.value : '',
+    value: publicFigure(record.value, 'Experience'),
     label: typeof record.label === 'string' ? record.label : '',
     description: typeof record.supportingText === 'string' ? record.supportingText : undefined,
   }));

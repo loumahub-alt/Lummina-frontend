@@ -19,6 +19,7 @@ import { ResultsPage } from './pages/ResultsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { SearchPage } from './pages/SearchPage';
 import { ServicePage } from './pages/ServicePage';
+import { PrivacyPolicyPage, ProfessionalNoticePage, TermsOfUsePage } from './pages/LegalPages';
 import { servicePages } from './data/site';
 import { CookieConsentBanner } from './components/common/CookieConsentBanner';
 import { AdminApp } from './admin/AdminApp';
@@ -32,11 +33,9 @@ export const App = () => {
   }
 
   return (
-    <TransitionProvider>
+    <TransitionProvider fixedChildren={<Header />}>
       <div className="min-h-screen overflow-x-hidden bg-navy">
         <ScrollToTop />
-
-        <Header />
 
         <PageTransition>
           <Routes>
@@ -48,6 +47,9 @@ export const App = () => {
             <Route path="/insights" element={<InsightsPage />} />
             <Route path="/insights/:slug" element={<InsightDetailPage />} />
             <Route path="/consultation" element={<ConsultationPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-of-use" element={<TermsOfUsePage />} />
+            <Route path="/professional-notice" element={<ProfessionalNoticePage />} />
             <Route path="/search" element={<SearchPage />} />
             {servicePages.map((page) => (
               <Route

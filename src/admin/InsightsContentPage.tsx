@@ -99,6 +99,7 @@ export const InsightsContentPage = () => {
   const [records, setRecords] = useState<InsightRecord[]>([]);
   const [editor, setEditor] = useState<InsightEditor | null>(null);
   const [query, setQuery] = useState('');
+  const [typeFilter, setTypeFilter] = useState<'all' | InsightType>('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -127,9 +128,10 @@ export const InsightsContentPage = () => {
       .map((value) => String(value ?? '').toLowerCase())
       .join(' ');
     const matchesQuery = !query.trim() || searchable.includes(query.trim().toLowerCase());
+    const matchesType = typeFilter === 'all' || String(record.type ?? 'article') === typeFilter;
     const matchesStatus = statusFilter === 'all' || String(record.status ?? 'draft') === statusFilter;
-    return matchesQuery && matchesStatus;
-  }), [query, records, statusFilter]);
+    return matchesQuery && matchesType && matchesStatus;
+  }), [query, records, statusFilter, typeFilter]);
 
   const openNew = () => {
     setError('');
@@ -180,6 +182,10 @@ export const InsightsContentPage = () => {
     if (!editor) return;
     if (!editor.title.trim() || !editor.excerpt.trim() || !editor.content.trim()) {
       setError('Title, excerpt and article content are required.');
+      return;
+    }
+    if (nextStatus === 'published' && editor.type === 'event' && !editor.imageUrl && !editor.imageFile) {
+      setError('Upload an event photo before publishing this event.');
       return;
     }
 
@@ -266,8 +272,30 @@ export const InsightsContentPage = () => {
       <section className={surface + ' overflow-hidden'}>
         <div className="flex flex-col gap-3 border-b border-[#5F021F]/8 p-4 sm:flex-row sm:items-center sm:justify-between">
           <label className="relative block max-w-md flex-1"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" /><input value={query} onChange={(event) => setQuery(event.target.value)} className="h-10 w-full rounded-[2px] border border-[#5F021F]/12 bg-white/60 pl-10 pr-3 text-sm outline-none focus:border-gold" placeholder="Search insights, authors or types…" /></label>
-          <div className="flex items-center gap-2">{['all', 'published', 'draft', 'review'].map((value) => <button type="button" key={value} onClick={() => setStatusFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (statusFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All' : displayStatus(value)}</button>)}</div>
+          <div className="flex flex-wrap items-center gap-2">
+            {(['all', 'article', 'publication', 'event'] as const).map((value) => <button type="button" key={value} onClick={() => setTypeFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (typeFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All types' : displayStatus(value)}</button>)}
+            <span className="mx-1 h-5 w-px bg-[#5F021F]/12" aria-hidden="true" />
+            {['all', 'published', 'draft', 'review'].map((value) => <button type="button" key={value} onClick={() => setStatusFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (statusFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All statuses' : displayStatus(value)}</button>)}
+          </div>
         </div>
+
+        {typeFilter === 'event' && filtered.length > 0 && <div className="border-b border-[#5F021F]/8 bg-[#5F021F]/[.025] p-5 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold-dark">Events gallery preview</p><h2 className="mt-2 font-serif text-3xl text-bordeaux">Published and draft event photos</h2><p className="mt-2 text-sm leading-6 text-ink/55">Select an event to edit its photo, caption, publication status or details.</p></div>
+            <span className="text-xs font-bold uppercase tracking-[0.1em] text-ink/45">{filtered.length} {filtered.length === 1 ? 'event' : 'events'}</span>
+          </div>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((record) => {
+              const id = String(record.id ?? record._id ?? record.title);
+              const thumbnail = contentAssetFromRecord(record, 'thumbnail');
+              const image = thumbnail.url || contentAssetFromRecord(record, 'image').url;
+              return <button type="button" key={'gallery-' + id} onClick={() => void openEdit(record)} className="group overflow-hidden rounded-[3px] border border-[#5F021F]/10 bg-[#FFF9EF] text-left shadow-[0_8px_24px_rgba(95,2,31,0.06)] transition hover:-translate-y-0.5 hover:border-gold-dark">
+                <div className="aspect-[4/3] overflow-hidden bg-bordeaux/10">{image ? <img src={image} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /> : <div className="grid h-full place-items-center text-gold-dark"><ImagePlus className="h-8 w-8" /></div>}</div>
+                <div className="p-4"><p className="truncate font-bold text-bordeaux">{String(record.title ?? 'Untitled event')}</p><p className="mt-1 text-xs text-ink/50">{displayStatus(record.status)} · Order {String(record.displayOrder ?? 0)}</p></div>
+              </button>;
+            })}
+          </div>
+        </div>}
 
         {loading ? <p className="p-10 text-center text-sm text-ink/55">Loading insights…</p> : filtered.length === 0 ? <div className="p-12 text-center"><FileText className="mx-auto h-8 w-8 text-gold-dark" /><p className="mt-4 text-sm text-ink/55">No insights match these filters.</p></div> : (
           <div className="divide-y divide-[#5F021F]/8">
@@ -291,7 +319,7 @@ export const InsightsContentPage = () => {
 
           <div className="mt-7 grid gap-5 md:grid-cols-2">
             <label className="block text-sm font-bold md:col-span-2">Title *<input required className={input} value={editor.title} onChange={(event) => update('title', event.target.value)} placeholder="e.g. Building Stronger Legal Foundations for Nigerian Businesses" /></label>
-            <label className="block text-sm font-bold">Content type<select className={input} value={editor.type} onChange={(event) => update('type', event.target.value)}><option value="article">Article</option><option value="publication">Publication</option><option value="event">Event</option></select></label>
+            <label className="block text-sm font-bold">Content type<select className={input} value={editor.type} onChange={(event) => update('type', event.target.value)}><option value="article">Article</option><option value="publication">Publication</option><option value="event">Event</option></select>{editor.type === 'event' && <span className="mt-2 block text-xs font-normal leading-5 text-gold-dark">Events appear in the public gallery. Upload an event photo below before publishing.</span>}</label>
             <label className="block text-sm font-bold">Author / byline<input className={input} value={editor.author} onChange={(event) => update('author', event.target.value)} placeholder="Lummina Law Firm" /></label>
             <label className="block text-sm font-bold">Publication date<input type="date" className={input} value={editor.publishedAt} onChange={(event) => update('publishedAt', event.target.value)} /></label>
             <label className="block text-sm font-bold">Read time<input className={input} value={editor.readTime} onChange={(event) => update('readTime', event.target.value)} placeholder="5 min read" /></label>
@@ -300,8 +328,8 @@ export const InsightsContentPage = () => {
             <label className="block text-sm font-bold md:col-span-2">Excerpt / summary *<textarea required className={input + ' min-h-24 py-3'} value={editor.excerpt} onChange={(event) => update('excerpt', event.target.value)} placeholder="Short summary shown on the public Insights card and used for search previews." /></label>
             <label className="block text-sm font-bold md:col-span-2">Article content *<textarea required className={input + ' min-h-64 py-3'} value={editor.content} onChange={(event) => update('content', event.target.value)} placeholder="Write the full article. Use a blank line between paragraphs." /></label>
 
-            <div><span className="block text-sm font-bold">Cover image</span><label className="mt-2 flex min-h-36 cursor-pointer items-center gap-4 rounded-[2px] border border-dashed border-[#5F021F]/20 bg-white/60 p-4 hover:border-gold-dark">{editor.imageUrl ? <img src={editor.imageUrl} alt="Cover image preview" className="h-24 w-36 rounded-[2px] object-cover" /> : <ImagePlus className="h-8 w-8 text-gold-dark" />}<span className="text-sm text-ink/60"><Upload className="mr-2 inline h-4 w-4" />Choose cover image<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => selectImage(event, 'image')} /></span></label><input className={input} value={editor.imageAlt} onChange={(event) => update('imageAlt', event.target.value)} placeholder="Cover image alt text" /><p className="mt-2 text-xs text-ink/45">Used on the article detail page. Uploads to Cloudinary when saved.</p></div>
-            <div><span className="block text-sm font-bold">Thumbnail</span><label className="mt-2 flex min-h-36 cursor-pointer items-center gap-4 rounded-[2px] border border-dashed border-[#5F021F]/20 bg-white/60 p-4 hover:border-gold-dark">{editor.thumbnailUrl ? <img src={editor.thumbnailUrl} alt="Thumbnail preview" className="h-24 w-36 rounded-[2px] object-cover" /> : <ImagePlus className="h-8 w-8 text-gold-dark" />}<span className="text-sm text-ink/60"><Upload className="mr-2 inline h-4 w-4" />Choose thumbnail<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => selectImage(event, 'thumbnail')} /></span></label><input className={input} value={editor.thumbnailAlt} onChange={(event) => update('thumbnailAlt', event.target.value)} placeholder="Thumbnail alt text" /><p className="mt-2 text-xs text-ink/45">Used for the Insights listing cards. A separate crop is recommended.</p></div>
+            <div><span className="block text-sm font-bold">{editor.type === 'event' ? 'Event photo *' : 'Cover image'}</span><label className="mt-2 flex min-h-36 cursor-pointer items-center gap-4 rounded-[2px] border border-dashed border-[#5F021F]/20 bg-white/60 p-4 hover:border-gold-dark">{editor.imageUrl ? <img src={editor.imageUrl} alt="Event or cover image preview" className="h-24 w-36 rounded-[2px] object-cover" /> : <ImagePlus className="h-8 w-8 text-gold-dark" />}<span className="text-sm text-ink/60"><Upload className="mr-2 inline h-4 w-4" />{editor.type === 'event' ? 'Choose event photo' : 'Choose cover image'}<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => selectImage(event, 'image')} /></span></label><input className={input} value={editor.imageAlt} onChange={(event) => update('imageAlt', event.target.value)} placeholder={editor.type === 'event' ? 'Event photo alt text' : 'Cover image alt text'} /><p className="mt-2 text-xs text-ink/45">{editor.type === 'event' ? 'Displayed in the public Events gallery. Uploads to Cloudinary when saved.' : 'Used on the article detail page. Uploads to Cloudinary when saved.'}</p></div>
+            <div><span className="block text-sm font-bold">{editor.type === 'event' ? 'Gallery thumbnail (optional)' : 'Thumbnail'}</span><label className="mt-2 flex min-h-36 cursor-pointer items-center gap-4 rounded-[2px] border border-dashed border-[#5F021F]/20 bg-white/60 p-4 hover:border-gold-dark">{editor.thumbnailUrl ? <img src={editor.thumbnailUrl} alt="Thumbnail preview" className="h-24 w-36 rounded-[2px] object-cover" /> : <ImagePlus className="h-8 w-8 text-gold-dark" />}<span className="text-sm text-ink/60"><Upload className="mr-2 inline h-4 w-4" />Choose thumbnail<input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => selectImage(event, 'thumbnail')} /></span></label><input className={input} value={editor.thumbnailAlt} onChange={(event) => update('thumbnailAlt', event.target.value)} placeholder="Thumbnail alt text" /><p className="mt-2 text-xs text-ink/45">{editor.type === 'event' ? 'Optional alternate crop for the gallery. The event photo above is the required public image.' : 'Used for the Insights listing cards. A separate crop is recommended.'}</p></div>
 
             <label className="block text-sm font-bold">Publication status<select className={input} value={editor.status} onChange={(event) => update('status', event.target.value)}><option value="draft">Draft</option><option value="review">Review</option><option value="published">Published</option></select></label>
             <div className="flex items-end gap-2 pb-2 text-xs text-ink/50"><CalendarDays className="h-4 w-4 text-gold-dark" /> Published records appear on the public website.</div>

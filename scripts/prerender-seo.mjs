@@ -36,9 +36,8 @@ const baseRoutes = [
   },
   {
     path: '/results',
-    title: 'Commercial Legal Results | Lummina Law Firm Lagos',
-    description:
-      'Representative Lummina outcomes and case highlights. Past results do not guarantee future outcomes.',
+    title: 'Representative Matters | Lummina Law Firm Lagos',
+    description: 'Representative matters and legal experience from Lummina Law Firm in Lagos, Nigeria.',
   },
   {
     path: '/insights',
@@ -50,6 +49,24 @@ const baseRoutes = [
     title: 'Schedule a Consultation | Lummina Law Firm',
     description:
       'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+  },
+  {
+    path: '/privacy-policy',
+    title: 'Privacy Policy | Lummina Law Firm',
+    description:
+      'Learn how Lummina Law Firm handles information submitted through this website and consultation forms.',
+  },
+  {
+    path: '/terms-of-use',
+    title: 'Terms of Use | Lummina Law Firm',
+    description:
+      'Read the terms that apply when you use the Lummina Law Firm website and its published information.',
+  },
+  {
+    path: '/professional-notice',
+    title: 'Professional Notice | Lummina Law Firm',
+    description:
+      'Important information about website content, professional services, representative matters and lawyer-client relationships.',
   },
   {
     path: '/insights/business-law-nigeria',
@@ -128,6 +145,12 @@ const escapeHtml = (value) => String(value)
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&#39;');
 
+const monetaryFigurePattern = /^\s*(?:(?:US)?[$€£]|(?:USD|NGN|GBP|EUR)\b)/i;
+const publicFigure = (value, fallback = 'Representative') => {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return text && !monetaryFigurePattern.test(text) ? text : fallback;
+};
+
 const apiBaseUrl = (process.env.PRERENDER_API_URL ?? process.env.VITE_API_BASE_URL ?? `${siteUrl}/api`).replace(/\/$/, '');
 
 const loadPreloadedContent = async () => {
@@ -147,15 +170,27 @@ const loadPreloadedContent = async () => {
     }
   }));
 
+  // Do not expose monetary matter figures in the public prerender payload.
+  // The visible React components apply the same policy at render time.
+  const publicCollections = Object.fromEntries(Object.entries(collections).map(([resource, records]) => {
+    if (resource === 'statistics') {
+      return [resource, records.map((record) => ({ ...record, value: publicFigure(record.value, 'Experience') }))];
+    }
+    if (resource === 'results') {
+      return [resource, records.map((record) => ({ ...record, headlineFigure: publicFigure(record.headlineFigure) }))];
+    }
+    return [resource, records];
+  }));
+
   const items = {
     insights: Object.fromEntries(
-      (collections.insights ?? [])
+      (publicCollections.insights ?? [])
         .filter((item) => typeof item.slug === 'string' && item.slug.trim())
         .map((item) => [item.slug, item]),
     ),
   };
 
-  return { collections, items };
+  return { collections: publicCollections, items };
 };
 
 const articleRoutesFrom = (content) => {

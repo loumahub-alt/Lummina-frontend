@@ -212,7 +212,7 @@ export const StatisticsContentPage = () => {
             </div>
 
             <div className="mt-7 grid gap-5 md:grid-cols-2">
-              <label className="block text-sm font-bold">Figure / value *<input required className={input} value={editor.value} onChange={(event) => update('value', event.target.value)} placeholder="e.g. $21M or 14" /></label>
+              <label className="block text-sm font-bold">Figure / value *<input required className={input} value={editor.value} onChange={(event) => update('value', event.target.value)} placeholder="e.g. Experience or 14" /></label>
               <label className="block text-sm font-bold">Label *<input required className={input} value={editor.label} onChange={(event) => update('label', event.target.value)} placeholder="Describe what the figure represents" /></label>
               <label className="block text-sm font-bold md:col-span-2">Supporting text<textarea className={input + ' min-h-28 py-3'} value={editor.supportingText} onChange={(event) => update('supportingText', event.target.value)} placeholder="Context or qualification shown below the figure." /></label>
               <label className="block text-sm font-bold">Verification date *<input required type="date" className={input} value={editor.verifiedAt} onChange={(event) => update('verifiedAt', event.target.value)} /></label>

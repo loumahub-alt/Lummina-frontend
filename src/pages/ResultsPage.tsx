@@ -6,7 +6,7 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
 import { images } from '../data/site';
-import { mapPublishedStatistics, usePublishedCollection, type PublishedRecord } from '../hooks/usePublishedContent';
+import { mapPublishedStatistics, publicFigure, usePublishedCollection, type PublishedRecord } from '../hooks/usePublishedContent';
 import type { ResultItem, Testimonial } from '../types';
 
 const publishedResults = (records: PublishedRecord[] | null): ResultItem[] => {
@@ -16,7 +16,7 @@ const publishedResults = (records: PublishedRecord[] | null): ResultItem[] => {
     return {
       id: typeof record.slug === 'string' ? record.slug : String(record.id ?? record._id ?? index),
       category: typeof record.category === 'string' ? record.category : '',
-      value: typeof record.headlineFigure === 'string' ? record.headlineFigure : '',
+      value: publicFigure(record.headlineFigure),
       title: typeof record.title === 'string' ? record.title : '',
       description: typeof record.shortDescription === 'string' ? record.shortDescription : '',
       industry: typeof record.jurisdiction === 'string' ? record.jurisdiction : '',
@@ -47,9 +47,9 @@ export const ResultsPage = () => {
   return (
   <>
     <PageHero
-      eyebrow="Results"
-      title="Commercial Outcomes. Strategic Impact."
-      description="Our representative matters show how preparation, commercial awareness and sound judgment can support stronger business outcomes."
+      eyebrow="Representative Matters"
+      title="Representative Matters. Strategic Impact."
+      description="Our representative matters show how preparation, commercial awareness and sound judgment shape the way we advise clients."
       image={images.scales}
     />
 
@@ -65,11 +65,12 @@ export const ResultsPage = () => {
       <div className="container-shell">
         <SectionHeading
           eyebrow="Representative Matters"
-          title="Case outcomes shaped by preparation, strategy and judgment."
+          title="Representative matters shaped by preparation, strategy and judgment."
         >
           <p>
-            These matters reflect representative experience and outcomes in specific
-            circumstances. They are not promises, guarantees or predictions.
+            These summaries describe representative experience in specific circumstances. They
+            are not promises, guarantees, predictions or a substitute for advice on a particular
+            matter.
           </p>
         </SectionHeading>
         <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -81,9 +82,11 @@ export const ResultsPage = () => {
           id="results-disclaimer"
           className="mt-10 rounded-lg border border-light-line bg-paper/80 p-6 text-sm leading-7 text-ink/70 shadow-soft"
         >
-          Past results do not guarantee, warrant or predict a similar outcome in any future
-          matter. Each matter depends on its facts, applicable law, forum, opposing parties
-          and many other variables.
+          The figures and matter descriptions on this page are general summaries of
+          representative experience. They should not be read as a success rate, a promise of a
+          particular result or advice on a specific matter. Client confidentiality, professional
+          obligations, the facts, applicable law, evidence and forum may limit what can be
+          published about any matter.
         </div>
       </div>
     </section>

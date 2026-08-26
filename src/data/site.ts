@@ -300,9 +300,9 @@ export const seo: Record<string, SeoEntry> = {
       'Meet the Lummina team and search legal professionals by role, name and practice area.',
   },
   '/results': {
-    title: 'Commercial Legal Results | Lummina Law Firm Lagos',
+    title: 'Representative Matters | Lummina Law Firm Lagos',
     description:
-      'Representative Lummina outcomes and case highlights. Past results do not guarantee future outcomes.',
+      'Representative matters and legal experience from Lummina Law Firm in Lagos, Nigeria.',
   },
   '/insights': {
     title: 'Legal Insights Nigeria | Lummina Law Firm',
@@ -313,6 +313,21 @@ export const seo: Record<string, SeoEntry> = {
     title: 'Schedule a Consultation | Lummina Law Firm',
     description:
       'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+  },
+  '/privacy-policy': {
+    title: 'Privacy Policy | Lummina Law Firm',
+    description:
+      'Learn how Lummina Law Firm handles information submitted through this website and consultation forms.',
+  },
+  '/terms-of-use': {
+    title: 'Terms of Use | Lummina Law Firm',
+    description:
+      'Read the terms that apply when you use the Lummina Law Firm website and its published information.',
+  },
+  '/professional-notice': {
+    title: 'Professional Notice | Lummina Law Firm',
+    description:
+      'Important information about website content, professional services, representative matters and lawyer-client relationships.',
   },
   '/search': {
     title: 'Search | Lummina Law Firm',
@@ -528,7 +543,7 @@ export const practiceAreaGroups: PracticeArea[] = [
     image: 'boardroom',
   },
   {
-    id: 'real-estate-property-law',
+    id: 'real-estate-property',
     title: 'Real Estate & Property',
     icon: 'building',
     shortDescription:
@@ -550,6 +565,8 @@ export const practiceAreaGroups: PracticeArea[] = [
       'Capital deployment and corporate transactions require structured documentation and clear execution strategy. We support our clients through every stage of a transaction, from initial structuring to final execution.',
     services: [
       'Investment Support & Documentation',
+      'Transaction Structuring & Due Diligence',
+      'Shareholder, Investment & Financing Documentation',
       'Mergers & Acquisitions',
       'Corporate Reorganisations & Restructuring',
     ],
@@ -583,7 +600,13 @@ export const practiceAreaGroups: PracticeArea[] = [
       'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
     summary:
       'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
-    services: [],
+    services: [
+      'Cross-Border Commercial Agreements',
+      'International Investment Structuring',
+      'Multi-Jurisdiction Due Diligence',
+      'Regulatory & Entity Coordination',
+      'Cross-Border M&A Support',
+    ],
     detail:
       'We help clients coordinate local requirements, cross-border structures, regulatory obligations and transaction execution across jurisdictions.',
     image: 'conference',
@@ -609,19 +632,19 @@ export const practiceAreaGroups: PracticeArea[] = [
 
 export const lumminaApproach = [
   {
-    title: 'Structure Before Speed',
+    title: 'Architecture Before Execution',
     icon: 'building' as const,
-    text: 'We design the legal architecture before executing documentation. A durable structure always precedes scale.',
+    text: 'We begin with ownership, decision rights and risk allocation so the documents serve the business rather than lead it.',
   },
   {
-    title: 'Governance as a System',
+    title: 'Governance That Works in Practice',
     icon: 'briefcase' as const,
-    text: 'We treat governance as operational infrastructure, not a compliance formality. Ownership, control, and documentation must align.',
+    text: 'We turn governance into usable routines, records and controls that support confident decisions as the business evolves.',
   },
   {
-    title: 'Intentional Drafting',
+    title: 'Drafting With Purpose',
     icon: 'file' as const,
-    text: 'Contracts are not mere administrative paperwork. They are risk allocation instruments built to withstand scrutiny, time, and dispute.',
+    text: 'Every agreement should make responsibilities, leverage and next steps clear before pressure turns a small gap into a dispute.',
   },
 ];
 
@@ -629,16 +652,16 @@ export const homePracticeAreas = practiceAreaGroups;
 
 export const homeStats: Stat[] = [
   { value: '14', label: 'Practice Areas' },
-  { value: '$21M', label: 'Debt-to-Equity Transaction Experience' },
-  { value: 'NGN 500M+', label: 'Debt Recoveries Referenced in Firm Experience' },
+  { value: 'Experience', label: 'Debt-to-Equity Transaction Experience' },
+  { value: 'Experience', label: 'Debt Recoveries Referenced in Firm Experience' },
   { value: 'Lagos', label: 'Nigeria-Based Counsel' },
 ];
 
 export const resultStats: Stat[] = [
   { value: '14', label: 'Practice Areas' },
-  { value: '$21M', label: 'Debt-to-Equity Transaction Experience' },
-  { value: 'NGN 500M+', label: 'Debt Recoveries Referenced in Firm Experience' },
-  { value: '$2M+', label: 'International client recovery experience' },
+  { value: 'Experience', label: 'Debt-to-Equity Transaction Experience' },
+  { value: 'Experience', label: 'Debt Recoveries Referenced in Firm Experience' },
+  { value: 'Experience', label: 'International client recovery experience' },
 ];
 
 export const mission = {
@@ -748,7 +771,7 @@ export const resultItems: ResultItem[] = [
   {
     id: 'debt-equity-conversion',
     category: 'Debt Recovery',
-    value: '$21M',
+    value: 'Representative',
     title: 'Debt-to-equity conversion support for a high-value commercial matter',
     description:
       'Experience includes facilitating a major debt-to-equity conversion while balancing business continuity, governance and recovery strategy.',
@@ -757,7 +780,7 @@ export const resultItems: ResultItem[] = [
   {
     id: 'local-debt-recoveries',
     category: 'Recovery Strategy',
-    value: 'NGN 500M+',
+    value: 'Representative',
     title: 'Debt recoveries for local clients across commercial matters',
     description:
       'Representative experience includes structured recovery strategy, negotiation and dispute planning for significant local client debts.',
@@ -766,7 +789,7 @@ export const resultItems: ResultItem[] = [
   {
     id: 'international-recovery',
     category: 'Cross-Border Recovery',
-    value: '$2M+',
+    value: 'Representative',
     title: 'Recovery support for international client interests',
     description:
       'Experience includes advising on recovery considerations for international clients with Nigerian commercial touchpoints.',
@@ -882,7 +905,7 @@ export const footerColumns: FooterColumn[] = [
 ];
 
 export const legalLinks: NavigationItem[] = [
-  { label: 'Privacy Policy', to: '/consultation#privacy-note' },
-  { label: 'Terms of Use', to: '/consultation#privacy-note' },
-  { label: 'Attorney Advertising', to: '/results#results-disclaimer' },
+  { label: 'Privacy Policy', to: '/privacy-policy' },
+  { label: 'Terms of Use', to: '/terms-of-use' },
+  { label: 'Professional Notice', to: '/professional-notice' },
 ];
