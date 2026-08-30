@@ -22,6 +22,8 @@ export const brand = {
   phones: ['+234 201 330 7508', '+234 706 047 9068'],
   phoneInternational: '+234 201 330 7508',
   whatsapp: 'https://wa.me/2347060479068',
+  bookingUrl: 'https://outlook.office.com/bookwithme/user/5ffc9548fa4742dbaa23a2e2b03296c3@lumminalaw.com/meetingtype/mKmW4JJLA0mMN-9omeaIHA2?anonymous&ismsaljsauthenabled&ep=mcard',
+  requestServicesUrl: 'https://forms.cloud.microsoft/r/RiCrNAurut',
   website: 'www.lumminalaw.com',
   siteUrl: 'https://www.lumminalaw.com',
   logoDark: '/assets/lummina-logo-dark-transparent.png',

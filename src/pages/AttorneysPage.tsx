@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { Filter, Search } from 'lucide-react';
 import { AttorneyCard } from '../components/cards/AttorneyCard';
 import { AttorneyProfileModal } from '../components/common/AttorneyProfileModal';
 import { PageHero } from '../components/common/PageHero';
@@ -10,6 +10,7 @@ import type { Attorney } from '../types';
 
 export const AttorneysPage = () => {
   const [role, setRole] = useState('all');
+  const [practiceArea, setPracticeArea] = useState('all');
   const [query, setQuery] = useState('');
   const [selectedAttorney, setSelectedAttorney] = useState<Attorney | null>(null);
   const publishedRecords = usePublishedCollection('team');
@@ -52,6 +53,10 @@ export const AttorneysPage = () => {
     });
   }, [publishedRecords]);
   const roleFilters = useMemo(() => Array.from(new Set(team.map((attorney) => attorney.position.trim()).filter(Boolean))).sort(), [team]);
+  const practiceAreaFilters = useMemo(
+    () => Array.from(new Set(team.flatMap((attorney) => attorney.practices))).filter(Boolean).sort(),
+    [team],
+  );
 
   const filteredAttorneys = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -60,11 +65,15 @@ export const AttorneysPage = () => {
       const roleMatch =
         role === 'all' ||
         attorney.position === role;
-      const queryMatch = attorney.name.toLowerCase().includes(normalizedQuery);
+      const practiceAreaMatch =
+        practiceArea === 'all' ||
+        attorney.practices.includes(practiceArea);
+      const searchText = [attorney.name, attorney.position, ...attorney.practices].join(' ').toLowerCase();
+      const queryMatch = searchText.includes(normalizedQuery);
 
-      return roleMatch && queryMatch;
+      return roleMatch && practiceAreaMatch && queryMatch;
     });
-  }, [query, role, team]);
+  }, [practiceArea, query, role, team]);
 
   return (
     <>
@@ -98,9 +107,9 @@ export const AttorneysPage = () => {
             </div>
           </div>
 
-          <div className="mt-8 max-w-2xl">
+          <div className="mt-8 grid max-w-4xl gap-5 md:grid-cols-[minmax(0,1.2fr)_minmax(15rem,0.8fr)]">
             <label className="relative block">
-              <span className="text-sm font-bold text-ink">Search by team member name</span>
+              <span className="text-sm font-bold text-ink">Search by name, role or practice area</span>
               <Search
                 aria-hidden="true"
                 className="pointer-events-none absolute bottom-4 left-4 h-5 w-5 text-ink/40"
@@ -110,10 +119,26 @@ export const AttorneysPage = () => {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 className="mt-2 min-h-[3.25rem] w-full rounded-[2px] border border-light-line bg-white/80 py-4 pl-12 pr-4 text-ink outline-none transition focus:border-gold"
-                placeholder="Search team members"
+                placeholder="Search the team directory"
               />
             </label>
+            <label className="relative block">
+              <span className="text-sm font-bold text-ink">Filter by practice area</span>
+              <Filter aria-hidden="true" className="pointer-events-none absolute bottom-4 left-4 h-5 w-5 text-ink/40" />
+              <select
+                value={practiceArea}
+                onChange={(event) => setPracticeArea(event.target.value)}
+                className="mt-2 min-h-[3.25rem] w-full rounded-[2px] border border-light-line bg-white/80 py-4 pl-12 pr-4 text-ink outline-none transition focus:border-gold"
+              >
+                <option value="all">All practice areas</option>
+                {practiceAreaFilters.map((filter) => <option key={filter} value={filter}>{filter}</option>)}
+              </select>
+            </label>
           </div>
+
+          <p className="mt-5 text-sm text-ink/60" aria-live="polite">
+            Showing {filteredAttorneys.length} {filteredAttorneys.length === 1 ? 'team member' : 'team members'}
+          </p>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
             {filteredAttorneys.map((attorney) => (

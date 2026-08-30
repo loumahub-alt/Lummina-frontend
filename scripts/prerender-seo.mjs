@@ -51,6 +51,12 @@ const baseRoutes = [
       'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
   },
   {
+    path: '/search',
+    title: 'Search | Lummina Law Firm',
+    description:
+      'Search published practice areas, team profiles, representative results and legal insights from Lummina Law Firm.',
+  },
+  {
     path: '/privacy-policy',
     title: 'Privacy Policy | Lummina Law Firm',
     description:
@@ -145,6 +151,11 @@ const escapeHtml = (value) => String(value)
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&#39;');
 
+const sitemapUrl = (path, lastmod) => {
+  const lastmodTag = lastmod ? `\n    <lastmod>${escapeHtml(lastmod)}</lastmod>` : '';
+  return `  <url>\n    <loc>${escapeHtml(`${siteUrl}${path}`)}</loc>${lastmodTag}\n  </url>`;
+};
+
 const monetaryFigurePattern = /^\s*(?:(?:US)?[$€£]|(?:USD|NGN|GBP|EUR)\b)/i;
 const publicFigure = (value, fallback = 'Representative') => {
   const text = typeof value === 'string' ? value.trim() : '';
@@ -161,6 +172,7 @@ const loadPreloadedContent = async () => {
     try {
       const response = await fetch(`${apiBaseUrl}/public/${resource}`, {
         headers: { accept: 'application/json' },
+        signal: AbortSignal.timeout(5000),
       });
       if (!response.ok) return;
       const payload = await response.json();
@@ -358,10 +370,18 @@ try {
 
   const outputPath = join(distRoot, route.path.slice(1), 'index.html');
   mkdirSync(dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, html);
+    writeFileSync(outputPath, html);
   }
 
-  console.log(`Prerendered route HTML and SEO metadata for ${routes.length} routes.`);
+  const sitemap = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...routes.map((route) => sitemapUrl(route.path, route.publishedTime)),
+    '</urlset>',
+  ].join('\n');
+  writeFileSync(join(distRoot, 'sitemap.xml'), sitemap);
+
+  console.log(`Prerendered route HTML, SEO metadata and sitemap for ${routes.length} routes.`);
 } finally {
   await vite.close();
 }

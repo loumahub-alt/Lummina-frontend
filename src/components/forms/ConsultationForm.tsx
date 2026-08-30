@@ -37,6 +37,15 @@ const initialValues: FormValues = {
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const minimumConsultationDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export const ConsultationForm = () => {
   const practiceAreaRecords = usePublishedCollection('practice-areas');
   const practiceAreas = useMemo(() => mapPublishedPracticeAreas(practiceAreaRecords), [practiceAreaRecords]);
@@ -44,6 +53,7 @@ export const ConsultationForm = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const minimumDate = useMemo(minimumConsultationDate, []);
 
   const setValue = <Key extends keyof FormValues>(key: Key, value: FormValues[Key]) => {
     setValues((current) => ({ ...current, [key]: value }));
@@ -60,6 +70,7 @@ export const ConsultationForm = () => {
     if (!values.practiceArea) nextErrors.practiceArea = 'Select a practice area.';
     if (!values.method) nextErrors.method = 'Select a consultation method.';
     if (!values.date) nextErrors.date = 'Preferred date is required.';
+    else if (values.date < minimumDate) nextErrors.date = 'Choose a future date.';
     if (!values.time) nextErrors.time = 'Preferred time is required.';
     if (!values.message.trim()) nextErrors.message = 'Tell us briefly how we can help.';
     if (!values.consent) nextErrors.consent = 'Consent is required before submitting.';
@@ -104,7 +115,7 @@ export const ConsultationForm = () => {
   const inputClass =
     'mt-2 min-h-12 w-full rounded-[2px] border border-light-line bg-white/75 px-4 text-ink outline-none transition placeholder:text-ink/40 focus:border-gold focus:bg-white';
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate aria-busy={isSubmitting}>
       <div className="grid gap-5 md:grid-cols-2">
         <Field label="First name" required error={errors.firstName}>
           <input
@@ -166,7 +177,7 @@ export const ConsultationForm = () => {
           >
             <option value="">Select a practice area</option>
             {practiceAreas.map((area) => (
-              <option key={area.id} value={area.title}>
+              <option key={area.id} value={area.id}>
                 {area.title}
               </option>
             ))}
@@ -189,6 +200,7 @@ export const ConsultationForm = () => {
           <input
             id="date"
             type="date"
+            min={minimumDate}
             value={values.date}
             onChange={(event) => setValue('date', event.target.value)}
             className={inputClass}
@@ -249,7 +261,7 @@ export const ConsultationForm = () => {
       </PrimaryButton>
 
       {success && (
-        <p className="flex items-center gap-2 rounded-[2px] border border-gold/45 bg-gold/10 p-4 text-sm font-semibold text-ink">
+        <p role="status" aria-live="polite" className="flex items-center gap-2 rounded-[2px] border border-gold/45 bg-gold/10 p-4 text-sm font-semibold text-ink">
           <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-gold-dark" />
           Thank you. Your consultation request has been received and our team will respond shortly.
         </p>

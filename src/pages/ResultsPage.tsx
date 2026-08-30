@@ -5,12 +5,12 @@ import { TestimonialCard } from '../components/cards/TestimonialCard';
 import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { images } from '../data/site';
+import { images, resultItems, resultStats, testimonials } from '../data/site';
 import { mapPublishedStatistics, publicFigure, usePublishedCollection, type PublishedRecord } from '../hooks/usePublishedContent';
 import type { ResultItem, Testimonial } from '../types';
 
 const publishedResults = (records: PublishedRecord[] | null): ResultItem[] => {
-  if (records === null) return [];
+  if (records === null) return resultItems;
 
   return records.map((record, index) => {
     return {
@@ -26,7 +26,7 @@ const publishedResults = (records: PublishedRecord[] | null): ResultItem[] => {
 };
 
 const publishedTestimonials = (records: PublishedRecord[] | null): Testimonial[] => {
-  if (records === null) return [];
+  if (records === null) return testimonials;
   return records.map((record, index) => ({
     quote: typeof record.testimonial === 'string' ? record.testimonial : '',
     name: record.identityMode === 'named' && typeof record.clientDisplayName === 'string' ? record.clientDisplayName : 'Anonymous Client',
@@ -41,7 +41,7 @@ export const ResultsPage = () => {
   const statisticRecords = usePublishedCollection('statistics');
   const testimonialRecords = usePublishedCollection('testimonials');
   const results = useMemo(() => publishedResults(resultRecords), [resultRecords]);
-  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords), [statisticRecords]);
+  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords, resultStats), [statisticRecords]);
   const testimonialItems = useMemo(() => publishedTestimonials(testimonialRecords), [testimonialRecords]);
 
   return (
@@ -56,7 +56,7 @@ export const ResultsPage = () => {
     <section className="border-b border-dark-line bg-wine">
       <div className="container-shell grid gap-y-4 py-10 md:grid-cols-2 lg:grid-cols-4">
         {statistics.map((stat) => (
-          <StatCard key={stat.value} stat={stat} />
+          <StatCard key={`${stat.label}-${stat.value}`} stat={stat} />
         ))}
       </div>
     </section>

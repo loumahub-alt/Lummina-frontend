@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   audienceSegments,
+  homeStats,
   images,
   messagePillars,
 } from '../data/site';
@@ -16,7 +17,7 @@ export const HomePage = () => {
   const practiceAreaRecords = usePublishedCollection('practice-areas');
   const statisticRecords = usePublishedCollection('statistics');
   const practiceAreas = useMemo(() => mapPublishedPracticeAreas(practiceAreaRecords), [practiceAreaRecords]);
-  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords), [statisticRecords]);
+  const statistics = useMemo(() => mapPublishedStatistics(statisticRecords, homeStats), [statisticRecords]);
 
   return <>
     <section className="relative isolate overflow-hidden border-b border-dark-line luxury-dark">
@@ -41,7 +42,7 @@ export const HomePage = () => {
           <p className="mt-6 max-w-2xl text-[0.98rem] leading-7 text-champagne/90 sm:mt-7 sm:text-base sm:leading-8 md:text-lg md:leading-9">
             Lummina helps emerging and evolving businesses build, protect and scale through
             commercially intelligent legal advisory. We advise founders, investors and private
-            clients with clarity, structure and strategic foresight.
+            clients with commercially grounded structure and strategic foresight.
           </p>
           <div className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-5">
             <PrimaryButton to="/consultation">
@@ -179,7 +180,7 @@ export const HomePage = () => {
     <section className="border-b border-dark-line bg-wine">
       <div className="container-shell grid gap-y-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
         {statistics.map((stat) => (
-          <StatCard key={stat.label} stat={stat} />
+          <StatCard key={`${stat.label}-${stat.value}`} stat={stat} />
         ))}
       </div>
     </section>

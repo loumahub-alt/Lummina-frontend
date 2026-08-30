@@ -98,8 +98,9 @@ export const mapPublishedPracticeAreas = (
 
 export const mapPublishedStatistics = (
   records: PublishedRecord[] | null,
+  fallback: Stat[] = [],
 ): Stat[] => {
-  if (records === null) return [];
+  if (records === null) return fallback;
 
   return records.map((record) => ({
     value: publicFigure(record.value, 'Experience'),
