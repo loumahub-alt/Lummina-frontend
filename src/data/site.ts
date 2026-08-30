@@ -723,13 +723,6 @@ export const homeStats: Stat[] = [
   { value: 'Lagos', label: 'Nigeria-Based Counsel' },
 ];
 
-export const resultStats: Stat[] = [
-  { value: '14', label: 'Practice Areas' },
-  { value: 'Experience', label: 'Debt-to-Equity Transaction Experience' },
-  { value: 'Experience', label: 'Debt Recoveries Referenced in Firm Experience' },
-  { value: 'Experience', label: 'International client recovery experience' },
-];
-
 export const mission = {
   icon: 'target' as const,
   points: [
