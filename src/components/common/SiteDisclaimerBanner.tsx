@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const DISCLAIMER_STORAGE_KEY = 'lummina_disclaimer_acknowledged';
-
 export const SiteDisclaimerBanner = () => {
   const [visible, setVisible] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
-    try {
-      setVisible(window.localStorage.getItem(DISCLAIMER_STORAGE_KEY) !== 'true');
-    } catch {
-      setVisible(true);
-    }
+    setVisible(true);
   }, []);
 
   useEffect(() => {
@@ -28,11 +22,6 @@ export const SiteDisclaimerBanner = () => {
   if (!visible) return null;
 
   const acknowledge = () => {
-    try {
-      window.localStorage.setItem(DISCLAIMER_STORAGE_KEY, 'true');
-    } catch {
-      // The acknowledgement still applies for this visit if storage is unavailable.
-    }
     setVisible(false);
   };
 
