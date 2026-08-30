@@ -657,19 +657,24 @@ export const practiceAreaGroups: PracticeArea[] = [
 
 export const lumminaApproach = [
   {
-    title: 'Architecture Before Execution',
-    icon: 'building' as const,
-    text: 'We begin with ownership, decision rights and risk allocation so the documents serve the business rather than lead it.',
+    title: 'We Start With the Objective',
+    icon: 'target' as const,
+    text: 'Before recommending a solution, we understand what the client is trying to accomplish.',
   },
   {
-    title: 'Governance That Works in Practice',
+    title: 'We identify Material Risk',
+    icon: 'shield' as const,
+    text: 'We identify the risks that could materially affect the transaction, business or client.',
+  },
+  {
+    title: 'We Design for Execution',
     icon: 'briefcase' as const,
-    text: 'We turn governance into usable routines, records and controls that support confident decisions as the business evolves.',
+    text: 'We consider commercial realities, operational requirements and regulatory constraints, and design actionable solutions.',
   },
   {
-    title: 'Drafting With Purpose',
-    icon: 'file' as const,
-    text: 'Every agreement should make responsibilities, leverage and next steps clear before pressure turns a small gap into a dispute.',
+    title: 'We Stay Accountable to the Outcome',
+    icon: 'check' as const,
+    text: "We communicate clearly, manage matters deliberately and remain focused on the client's underlying objective.",
   },
 ];
 

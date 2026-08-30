@@ -2,7 +2,7 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { PrimaryButton } from '../components/common/PrimaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { coreValues, images, mission, practicePhilosophy, vision } from '../data/site';
+import { coreValues, images, lumminaApproach, mission, practicePhilosophy, vision } from '../data/site';
 import { iconMap } from '../utils/icons';
 
 const MissionIcon = iconMap[mission.icon];
@@ -115,25 +115,22 @@ export const AboutPage = () => (
       </div>
     </section>
 
-    <section className="relative isolate overflow-hidden luxury-dark py-20">
-      <img
-        src={images.boardroom.src}
-        alt=""
-        aria-hidden="true"
-        width={images.boardroom.width}
-        height={images.boardroom.height}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover opacity-24"
-        style={{ objectPosition: 'center right' }}
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(95,2,31,0.96),rgba(95,2,31,0.72))]" />
-      <div className="container-shell relative z-10">
-        <blockquote className="max-w-4xl font-serif text-4xl font-medium leading-tight text-white md:text-6xl">
-          "Built on clarity, trust, and strategy."
-        </blockquote>
-        <p className="mt-7 text-lg font-bold text-gold-bright">
-          The Lummina approach
-        </p>
+    <section className="luxury-dark py-20">
+      <div className="container-shell">
+        <SectionHeading eyebrow="How We Work" title="The Lummina Approach" dark align="center" />
+
+        <div className="mx-auto mt-12 grid max-w-6xl gap-6 md:grid-cols-2">
+          {lumminaApproach.map((item) => {
+            const Icon = iconMap[item.icon];
+            return (
+              <article key={item.title} className="rounded-[2px] border border-champagne/15 bg-champagne/5 p-8 shadow-luxe luxury-inset">
+                <Icon aria-hidden="true" className="h-10 w-10 text-gold-bright stroke-[1.4]" />
+                <h2 className="mt-6 font-serif text-3xl font-medium leading-tight text-white">{item.title}</h2>
+                <p className="mt-4 leading-7 text-muted">{item.text}</p>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
 
