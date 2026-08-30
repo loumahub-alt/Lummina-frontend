@@ -39,6 +39,7 @@ export const HomePage = () => {
           <h1 className="serif-heading max-w-4xl text-[2.9rem] leading-[0.94] sm:text-6xl md:text-7xl xl:text-[5.6rem]">
             Build the Foundation.
             <span className="block">Protect the Value.</span>
+            <span className="block">Plan for What Comes Next.</span>
           </h1>
           <p className="mt-6 max-w-2xl text-[0.98rem] leading-7 text-champagne/90 sm:mt-7 sm:text-base sm:leading-8 md:text-lg md:leading-9">
             Lummina is a law firm advising businesses, investors, asset owners and private clients
