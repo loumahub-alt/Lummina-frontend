@@ -118,22 +118,35 @@ export const MobileNavigation = () => {
                 <SearchIcon aria-hidden="true" className="h-4 w-4" />
               </TransitionLink>
               {navigation.map((item) => (
-                <TransitionLink
-                  key={item.label}
-                  to={item.to}
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `flex min-h-12 items-center justify-between rounded-[2px] border px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition ${
-                      item.cta
-                        ? 'mt-4 border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] text-bordeaux hover:border-champagne/80'
-                        : isActive
-                          ? 'border-gold/55 bg-champagne/10 text-gold-bright'
-                          : 'border-champagne/15 bg-black/10 text-champagne/80 hover:border-gold/55 hover:bg-champagne/10 hover:text-gold-bright'
-                    }`
-                  }
-                >
-                  {item.label}
-                </TransitionLink>
+                item.external && item.href ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={closeMenu}
+                    className="mt-4 flex min-h-12 items-center justify-between rounded-[2px] border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] text-bordeaux transition hover:border-champagne/80"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <TransitionLink
+                    key={item.label}
+                    to={item.to}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      `flex min-h-12 items-center justify-between rounded-[2px] border px-5 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition ${
+                        item.cta
+                          ? 'mt-4 border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] text-bordeaux hover:border-champagne/80'
+                          : isActive
+                            ? 'border-gold/55 bg-champagne/10 text-gold-bright'
+                            : 'border-champagne/15 bg-black/10 text-champagne/80 hover:border-gold/55 hover:bg-champagne/10 hover:text-gold-bright'
+                      }`
+                    }
+                  >
+                    {item.label}
+                  </TransitionLink>
+                )
               ))}
             </nav>
           </div>

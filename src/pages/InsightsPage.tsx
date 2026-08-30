@@ -12,18 +12,20 @@ import { contentAssetFromRecord } from '../utils/contentAssets';
 import type { InsightCategory } from '../types';
 import type { Insight } from '../types';
 
-const categories: Array<'Latest Insights' | InsightCategory> = [
-  'Latest Insights',
+const categories: InsightCategory[] = [
+  'Insights',
   'Articles',
-  'Publications',
+  'Newsletters',
   'Events',
+  'Resources',
 ];
 
 type InsightFilter = (typeof categories)[number];
 
 const categoryFromHash = (hash: string): InsightFilter | null => {
   if (hash === '#events') return 'Events';
-  if (hash === '#publications') return 'Publications';
+  if (hash === '#newsletters') return 'Newsletters';
+  if (hash === '#resources' || hash === '#publications') return 'Resources';
   return null;
 };
 
@@ -173,7 +175,7 @@ const EventGallery = ({ events }: { events: Insight[] }) => {
 export const InsightsPage = () => {
   const location = useLocation();
   const [activeCategory, setActiveCategory] = useState<InsightFilter>(
-    () => categoryFromHash(location.hash) ?? 'Latest Insights',
+    () => categoryFromHash(location.hash) ?? 'Insights',
   );
 
   useEffect(() => {
@@ -192,8 +194,12 @@ export const InsightsPage = () => {
         : typeof record.category === 'string'
           ? record.category.trim().toLowerCase()
           : '';
-      const category: InsightCategory = type === 'publication' || type === 'publications'
-        ? 'Publications'
+      const category: InsightCategory = type === 'newsletter' || type === 'newsletters'
+        ? 'Newsletters'
+        : type === 'resource' || type === 'resources' || type === 'publication' || type === 'publications'
+          ? 'Resources'
+          : type === 'insight' || type === 'insights'
+            ? 'Insights'
         : type === 'event' || type === 'events'
           ? 'Events'
           : 'Articles';
@@ -226,12 +232,9 @@ export const InsightsPage = () => {
   }, [publishedRecords]);
 
   const filteredInsights = useMemo(() => {
-    if (activeCategory === 'Latest Insights') {
-      return insightItems.filter((insight) => insight.category !== 'Events');
-    }
     return insightItems.filter((insight) => insight.category === activeCategory);
   }, [activeCategory, insightItems]);
-  const featuredInsight = activeCategory === 'Latest Insights'
+  const featuredInsight = activeCategory === 'Insights'
     ? filteredInsights.find((insight) => insight.featured) ?? filteredInsights[0]
     : undefined;
   const gridInsights = filteredInsights.filter((insight) => insight.id !== featuredInsight?.id);
@@ -240,8 +243,8 @@ export const InsightsPage = () => {
     <>
       <PageHero
         eyebrow="Insights"
-        title="Legal Insights for Businesses in Nigeria."
-        description="Practical legal thinking for founders, operators, investors and businesses navigating growth and complexity."
+        title="Thinking About the Issues Behind the Law."
+        description="Our perspectives on business, transactions, governance, regulation and the legal decisions that shape organisations."
         image={images.library}
       />
 
@@ -251,11 +254,7 @@ export const InsightsPage = () => {
             {categories.map((category) => (
               <button
                 key={category}
-                  id={
-                    category === 'Publications'
-                      ? 'publications'
-                      : undefined
-                  }
+                  id={category === 'Newsletters' ? 'newsletters' : category === 'Resources' ? 'resources' : undefined}
                 type="button"
                 role="tab"
                 aria-selected={activeCategory === category}
@@ -284,6 +283,15 @@ export const InsightsPage = () => {
                   <InsightCard key={insight.id} insight={insight} />
                 ))}
               </div>
+              {filteredInsights.length === 0 && (
+                <div className="mt-10 border border-light-line bg-white/45 px-6 py-16 text-center sm:px-10">
+                  <p className="eyebrow">{activeCategory}</p>
+                  <h2 className="mt-4 font-serif text-4xl font-medium text-ink">More materials are on the way.</h2>
+                  <p className="mx-auto mt-4 max-w-xl leading-7 text-ink/65">
+                    Published {activeCategory.toLowerCase()} will appear here as Lummina adds them.
+                  </p>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -293,11 +301,11 @@ export const InsightsPage = () => {
         <div className="container-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <SectionHeading
             eyebrow="Newsletter"
-            title="Receive concise legal updates from Lummina."
+            title="Would you like to receive Newsletters and updates from us? Subscribe below."
             dark
           >
             <p>
-              Get practical articles, publications and event invitations from our attorneys.
+              Receive practical perspectives and updates from Lummina.
             </p>
           </SectionHeading>
           <div className="rounded-[2px] border border-champagne/15 bg-champagne/5 p-7 shadow-luxe luxury-inset">

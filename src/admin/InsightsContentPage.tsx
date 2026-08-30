@@ -7,7 +7,7 @@ const surface = 'rounded-[3px] border border-[#5F021F]/10 bg-[#FFF9EF] shadow-[0
 const input = 'mt-2 min-h-11 w-full rounded-[2px] border border-[#5F021F]/15 bg-white/70 px-3 text-sm text-ink outline-none transition focus:border-gold';
 
 type InsightRecord = Record<string, unknown>;
-type InsightType = 'article' | 'publication' | 'event';
+type InsightType = 'article' | 'publication' | 'newsletter' | 'resource' | 'event';
 type InsightStatus = 'draft' | 'review' | 'published';
 
 type InsightAsset = {
@@ -186,7 +186,7 @@ export const InsightsContentPage = () => {
       return;
     }
     if (editor.type !== 'event' && (!editor.excerpt.trim() || !editor.content.trim())) {
-      setError('Excerpt and article content are required for articles and publications.');
+      setError('Excerpt and article content are required for written insight types.');
       return;
     }
     if (nextStatus === 'published' && editor.type === 'event' && !editor.imageUrl && !editor.imageFile) {
@@ -266,7 +266,7 @@ export const InsightsContentPage = () => {
         <div>
           <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-gold-dark">Website Content / Editorial</p>
           <h1 className="mt-3 font-serif text-4xl leading-tight text-bordeaux md:text-5xl">Insights</h1>
-          <p className="mt-3 max-w-2xl leading-7 text-ink/60">Create, edit, publish and delete articles, publications and events shown on the public Insights page.</p>
+          <p className="mt-3 max-w-2xl leading-7 text-ink/60">Create, edit, publish and delete insights, articles, newsletters, resources and events shown on the public website.</p>
         </div>
         <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center gap-2 border border-bordeaux bg-bordeaux px-4 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-bright hover:bg-[#4B0019]"><Plus className="h-4 w-4" /> Add insight</button>
       </div>
@@ -278,7 +278,7 @@ export const InsightsContentPage = () => {
         <div className="flex flex-col gap-3 border-b border-[#5F021F]/8 p-4 sm:flex-row sm:items-center sm:justify-between">
           <label className="relative block max-w-md flex-1"><Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" /><input value={query} onChange={(event) => setQuery(event.target.value)} className="h-10 w-full rounded-[2px] border border-[#5F021F]/12 bg-white/60 pl-10 pr-3 text-sm outline-none focus:border-gold" placeholder="Search insights, authors or types…" /></label>
           <div className="flex flex-wrap items-center gap-2">
-            {(['all', 'article', 'publication', 'event'] as const).map((value) => <button type="button" key={value} onClick={() => setTypeFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (typeFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All types' : displayStatus(value)}</button>)}
+            {(['all', 'article', 'publication', 'newsletter', 'resource', 'event'] as const).map((value) => <button type="button" key={value} onClick={() => setTypeFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (typeFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All types' : displayStatus(value)}</button>)}
             <span className="mx-1 h-5 w-px bg-[#5F021F]/12" aria-hidden="true" />
             {['all', 'published', 'draft', 'review'].map((value) => <button type="button" key={value} onClick={() => setStatusFilter(value)} className={'rounded-[2px] px-3 py-2 text-xs font-bold ' + (statusFilter === value ? 'bg-bordeaux text-gold-bright' : 'bg-[#5F021F]/5 text-ink/55')}>{value === 'all' ? 'All statuses' : displayStatus(value)}</button>)}
           </div>
@@ -324,7 +324,7 @@ export const InsightsContentPage = () => {
 
           <div className="mt-7 grid gap-5 md:grid-cols-2">
             <label className="block text-sm font-bold md:col-span-2">Title *<input required className={input} value={editor.title} onChange={(event) => update('title', event.target.value)} placeholder="e.g. Building Stronger Legal Foundations for Nigerian Businesses" /></label>
-            <label className="block text-sm font-bold">Content type<select className={input} value={editor.type} onChange={(event) => update('type', event.target.value)}><option value="article">Article</option><option value="publication">Publication</option><option value="event">Event</option></select>{editor.type === 'event' && <span className="mt-2 block text-xs font-normal leading-5 text-gold-dark">Events appear in the public gallery. Upload an event photo below before publishing.</span>}</label>
+            <label className="block text-sm font-bold">Content type<select className={input} value={editor.type} onChange={(event) => update('type', event.target.value)}><option value="article">Article</option><option value="publication">Publication</option><option value="newsletter">Newsletter</option><option value="resource">Resource</option><option value="event">Event</option></select>{editor.type === 'event' && <span className="mt-2 block text-xs font-normal leading-5 text-gold-dark">Events appear in the public gallery. Upload an event photo below before publishing.</span>}</label>
             <label className="block text-sm font-bold">Author / byline<input className={input} value={editor.author} onChange={(event) => update('author', event.target.value)} placeholder="Lummina Law Firm" /></label>
             <label className="block text-sm font-bold">Publication date<input type="date" className={input} value={editor.publishedAt} onChange={(event) => update('publishedAt', event.target.value)} /></label>
             <label className="block text-sm font-bold">Read time<input className={input} value={editor.readTime} onChange={(event) => update('readTime', event.target.value)} placeholder="5 min read" /></label>

@@ -11,11 +11,14 @@ import { usePageSeo } from './hooks/usePageSeo';
 import { AboutPage } from './pages/AboutPage';
 import { AttorneysPage } from './pages/AttorneysPage';
 import { ConsultationPage } from './pages/ConsultationPage';
+import { ExternalCounselPage } from './pages/ExternalCounselPage';
 import { HomePage } from './pages/HomePage';
+import { HowWeWorkPage } from './pages/HowWeWorkPage';
 import { InsightsPage } from './pages/InsightsPage';
 import { InsightDetailPage } from './pages/InsightDetailPage';
 import { PracticeAreasPage } from './pages/PracticeAreasPage';
 import { ResultsPage } from './pages/ResultsPage';
+import { ResourcesPage } from './pages/ResourcesPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { SearchPage } from './pages/SearchPage';
 import { ServicePage } from './pages/ServicePage';
@@ -47,6 +50,9 @@ export const App = () => {
             <Route path="/insights" element={<InsightsPage />} />
             <Route path="/insights/:slug" element={<InsightDetailPage />} />
             <Route path="/consultation" element={<ConsultationPage />} />
+            <Route path="/how-we-work" element={<HowWeWorkPage />} />
+            <Route path="/external-counsel" element={<ExternalCounselPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-of-use" element={<TermsOfUsePage />} />
             <Route path="/professional-notice" element={<ProfessionalNoticePage />} />

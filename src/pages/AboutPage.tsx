@@ -2,7 +2,7 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { PrimaryButton } from '../components/common/PrimaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { coreValues, globalPresence, images, milestones, mission, practicePhilosophy, vision } from '../data/site';
+import { coreValues, images, mission, practicePhilosophy, vision } from '../data/site';
 import { iconMap } from '../utils/icons';
 
 const MissionIcon = iconMap[mission.icon];
@@ -13,8 +13,8 @@ export const AboutPage = () => (
   <>
     <PageHero
       eyebrow="About Us"
-      title="The Legal Infrastructure Partner for Businesses Building Toward Scale."
-      description="Lummina Law Firm is a modern, commercially minded law firm helping emerging and evolving businesses navigate legal and regulatory complexity with clarity, structure and strategic foresight."
+      title="A Law Firm Built Around How You Actually Operate."
+      description="We advise and support businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that shape value. We combine legal expertise with commercial and financial awareness to advise on matters where law intersects with ownership, capital, governance, regulation and business strategy."
       image={images.columns}
       ctaLabel="Meet Our Team"
       ctaTo="/our-team"
@@ -24,13 +24,21 @@ export const AboutPage = () => (
       <div className="container-shell">
         <SectionHeading align="center" eyebrow="Our Foundation" title="Clarity. Structure. Strategic Growth.">
           <p>
-            Lummina helps emerging and evolving businesses build, protect and scale through
-            commercially intelligent legal advisory, while supporting investors and private
-            clients through the decisions that matter.
+            We believe legal advice should help clients make better decisions. That means
+            understanding the objective, identifying the material risks, considering the commercial
+            consequences and designing a solution that can actually be implemented.
           </p>
         </SectionHeading>
 
         <div className="mt-14 grid gap-6 lg:grid-cols-2">
+          <article className="luxury-card p-8 md:p-10">
+            <div className="flex items-center gap-4">
+              <VisionIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
+              <h2 className="font-serif text-3xl font-medium text-ink">Our Vision</h2>
+            </div>
+            <p className="mt-7 text-lg leading-8 text-ink/68">{vision.text}</p>
+          </article>
+
           <article className="luxury-card p-8 md:p-10">
             <div className="flex items-center gap-4">
               <MissionIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
@@ -39,14 +47,6 @@ export const AboutPage = () => (
             <ul className="mt-7 space-y-4 leading-7 text-ink/68">
               {mission.points.map((point) => <li key={point} className="flex gap-3"><span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-gold-dark" />{point}</li>)}
             </ul>
-          </article>
-
-          <article className="luxury-card p-8 md:p-10">
-            <div className="flex items-center gap-4">
-              <VisionIcon aria-hidden="true" className="h-10 w-10 text-gold-dark stroke-[1.4]" />
-              <h2 className="font-serif text-3xl font-medium text-ink">Our Vision</h2>
-            </div>
-            <p className="mt-7 text-lg leading-8 text-ink/68">{vision.text}</p>
           </article>
 
           <article className="luxury-card p-8 md:p-10 lg:col-span-2">
@@ -91,19 +91,21 @@ export const AboutPage = () => (
         <div>
           <p className="eyebrow text-gold-bright">Our Story</p>
           <h2 className="mt-5 font-serif text-5xl font-medium leading-tight text-white md:text-6xl">
-            Built for businesses that are building.
+            Built for people that are building.
           </h2>
           <div className="gold-divider mt-7" />
           <div className="mt-7 space-y-5 leading-8 text-muted">
             <p>
-              Lummina was built to be more than a source of legal output. We are a legal
-              infrastructure partner helping clients establish the structure, governance and
-              protection required for sustainable growth.
+              Legal issues are not experienced in isolation. A contract affects operations. A
+              financing decision affects ownership. A regulatory requirement affects processes. A
+              governance failure can become a financial problem.
             </p>
+            <p>Lummina was established around that reality.</p>
             <p>
-              Our advice combines legal expertise with commercial awareness. We consider the
-              operational impact, investor readiness, execution speed and long-term value behind
-              every matter, from business foundations to transactions and complex disputes.
+              We advise with the understanding that legal decisions are value decisions. Our role
+              is to bring sound legal acumen into those decisions early enough to protect value,
+              reduce avoidable risk and create room for execution and growth, while providing
+              hands-on support.
             </p>
           </div>
           <PrimaryButton to="/practice-areas" className="mt-9">
@@ -136,50 +138,13 @@ export const AboutPage = () => (
     </section>
 
     <section className="cream-section py-20">
-      <div className="container-shell grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
-        <SectionHeading eyebrow="Milestones" title="A modern firm for businesses building toward scale.">
+      <div className="container-shell">
+        <SectionHeading align="center" eyebrow="Our Purpose" title="Legal judgment for decisions that matter.">
           <p>
-            Our practice is designed around clarity, strategic foresight, lasting relationships
-            and the practical realities of growth.
+            To provide legal judgment that helps businesses and individuals make consequential
+            decisions with greater clarity, stronger protection and better outcomes.
           </p>
         </SectionHeading>
-        <div className="space-y-6">
-          {milestones.map((milestone) => (
-            <article
-              key={milestone.year}
-            className="luxury-card grid gap-4 border-l-4 border-l-gold p-6 sm:grid-cols-[6rem_1fr]"
-            >
-              <p className="font-serif text-3xl font-medium text-gold-dark">{milestone.year}</p>
-              <div>
-                <h3 className="font-serif text-2xl font-medium text-ink">{milestone.title}</h3>
-                <p className="mt-2 leading-7 text-ink/70">{milestone.text}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section className="border-y border-dark-line luxury-dark py-20">
-      <div className="container-shell py-16">
-        <SectionHeading
-          eyebrow="Global Presence"
-          title="Commercially minded counsel from Lagos, Nigeria."
-          dark
-          align="center"
-        >
-          <p>
-            We support founders, companies, investors, private clients and institutions across
-            Nigeria and selected international touchpoints.
-          </p>
-        </SectionHeading>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {globalPresence.map((market) => (
-            <div key={market} className="rounded-[2px] border border-champagne/15 bg-champagne/5 p-5 text-center font-bold text-champagne">
-              {market}
-            </div>
-          ))}
-        </div>
       </div>
     </section>
 

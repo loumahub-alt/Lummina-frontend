@@ -8,6 +8,9 @@ type PageHeroProps = {
   image: ImageAsset;
   ctaLabel?: string;
   ctaTo?: string;
+  ctaHref?: string;
+  ctaTarget?: string;
+  ctaRel?: string;
   centered?: boolean;
 };
 
@@ -18,6 +21,9 @@ export const PageHero = ({
   image,
   ctaLabel,
   ctaTo,
+  ctaHref,
+  ctaTarget,
+  ctaRel,
   centered = false,
 }: PageHeroProps) => (
   <section className="relative isolate overflow-hidden border-b border-dark-line luxury-dark">
@@ -41,8 +47,14 @@ export const PageHero = ({
         <p className="mt-6 max-w-xl text-base leading-8 text-white/84 md:text-lg">
           {description}
         </p>
-        {ctaLabel && ctaTo && (
-          <PrimaryButton to={ctaTo} className="mt-9">
+        {ctaLabel && (ctaTo || ctaHref) && (
+          <PrimaryButton
+            to={ctaTo}
+            href={ctaHref}
+            target={ctaTarget}
+            rel={ctaRel}
+            className="mt-9"
+          >
             {ctaLabel}
           </PrimaryButton>
         )}

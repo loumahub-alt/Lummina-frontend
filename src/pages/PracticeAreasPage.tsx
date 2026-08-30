@@ -3,7 +3,7 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
 import { PracticeAreaCard } from '../components/cards/PracticeAreaCard';
-import { images, lumminaApproach } from '../data/site';
+import { brand, images, lumminaApproach } from '../data/site';
 import { mapPublishedPracticeAreas, usePublishedCollection } from '../hooks/usePublishedContent';
 import { iconMap } from '../utils/icons';
 
@@ -24,13 +24,13 @@ export const PracticeAreasPage = () => {
       <div className="container-shell">
         <SectionHeading
           eyebrow="Our Services"
-          title="Commercially intelligent legal support for what comes next."
+          title="What We Advise On"
           align="center"
         >
           <p>
-            From business foundations and property to capital, intellectual property, cross-border
-            matters and private client structures, our advice is built for decisions that need to
-            hold up over time.
+            From establishing a business and formalising its governance to negotiating transactions,
+            managing regulatory exposure and resolving disputes, we advise on the legal decisions
+            that shape direction and protect value.
           </p>
         </SectionHeading>
         <div className="mt-12 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
@@ -76,7 +76,13 @@ export const PracticeAreasPage = () => {
       </div>
     </section>
 
-    <CallToAction title="Need a tailored solution for your unique challenge?" />
+    <CallToAction
+      title="Need a tailored solution for your unique challenge?"
+      ctaLabel="Request Our Services"
+      ctaHref={brand.requestServicesUrl}
+      ctaTarget="_blank"
+      ctaRel="noopener noreferrer"
+    />
   </>
   );
 };

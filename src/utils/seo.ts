@@ -70,7 +70,10 @@ const getBreadcrumbs = (path: string, entry: SeoEntry) => {
     '/our-team': 'Our Team',
     '/results': 'Results',
     '/insights': 'Insights',
-    '/consultation': 'Schedule a Consultation',
+    '/consultation': 'Contact',
+    '/how-we-work': 'How We Work',
+    '/external-counsel': 'External Counsel',
+    '/resources': 'Resources',
   };
   const serviceMatch = pathname.match(/^\/services\/([^/]+)$/);
   const currentLabel = labels[pathname] ??

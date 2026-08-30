@@ -5,6 +5,9 @@ import { TransitionLink } from '../transitions';
 type ButtonProps = {
   children: ReactNode;
   to?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
   onClick?: () => void;
@@ -17,6 +20,9 @@ const baseClass =
 export const PrimaryButton = ({
   children,
   to,
+  href,
+  target,
+  rel,
   type = 'button',
   disabled = false,
   onClick,
@@ -35,6 +41,10 @@ export const PrimaryButton = ({
 
   if (to) {
     return <TransitionLink to={to} className={buttonClass}>{content}</TransitionLink>;
+  }
+
+  if (href) {
+    return <a href={href} target={target} rel={rel} className={buttonClass}>{content}</a>;
   }
 
   return (

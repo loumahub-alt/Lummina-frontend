@@ -79,8 +79,8 @@ export const AttorneysPage = () => {
     <>
       <PageHero
         eyebrow="Our Team"
-        title="The Lummina Team."
-        description="Meet the team and explore the profiles published by Lummina Law Firm."
+        title="The People Behind the Work."
+        description="Our lawyers bring together legal expertise, commercial awareness and experience across corporate, regulatory, transactional and contentious matters."
         image={images.conference}
       />
 

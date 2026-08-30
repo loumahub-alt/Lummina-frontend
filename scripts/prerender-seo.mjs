@@ -12,15 +12,15 @@ const template = readFileSync(join(distRoot, 'index.html'), 'utf8');
 const baseRoutes = [
   {
     path: '/',
-    title: 'Lummina Law Firm Lagos | Legal Clarity for Businesses',
+    title: 'Lummina Law Firm Lagos | Strategic Legal Counsel',
     description:
-      'Lummina Law Firm is a modern, commercially minded law firm helping founders, businesses, investors and private clients build, protect and scale with clarity, structure and strategic foresight.',
+      'Lummina is a law firm advising businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that protect value and enable long-term success.',
   },
   {
     path: '/about',
     title: 'About Lummina Law Firm | Commercial Legal Advisory Lagos',
     description:
-      'Learn how Lummina helps emerging and evolving businesses navigate legal and regulatory complexity with clarity, structure and strategic foresight.',
+      'We advise and support businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that shape value.',
   },
   {
     path: '/practice-areas',
@@ -41,14 +41,28 @@ const baseRoutes = [
   },
   {
     path: '/insights',
-    title: 'Legal Insights Nigeria | Lummina Law Firm',
-    description: 'Legal insights, publications and events from Lummina Law Firm in Lagos, Nigeria.',
+    title: 'Thinking About the Issues Behind the Law | Lummina Law Firm',
+    description: 'Our perspectives on business, transactions, governance, regulation and the legal decisions that shape organisations.',
   },
   {
     path: '/consultation',
-    title: 'Schedule a Consultation | Lummina Law Firm',
-    description:
-      'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+    title: "Let's Discuss the Matter | Lummina Law Firm",
+    description: 'If you have any legal need, tell Lummina Law Firm briefly about it and the firm will review the appropriate next step.',
+  },
+  {
+    path: '/how-we-work',
+    title: 'How We Work | Lummina Law Firm',
+    description: 'A clear process from first conversation to resolution, grounded in the objective, material risks and appropriate scope.',
+  },
+  {
+    path: '/external-counsel',
+    title: 'External Counsel | Lummina Law Firm',
+    description: 'Ongoing external counsel for businesses that need reliable legal support without maintaining a full internal legal department.',
+  },
+  {
+    path: '/resources',
+    title: 'Legal Resources | Lummina Law Firm',
+    description: 'Practical legal materials from Lummina Law Firm for framing business, commercial and private client questions.',
   },
   {
     path: '/search',

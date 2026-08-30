@@ -5,12 +5,22 @@ type CallToActionProps = {
   eyebrow?: string;
   title?: string;
   text?: string;
+  ctaLabel?: string;
+  ctaTo?: string;
+  ctaHref?: string;
+  ctaTarget?: string;
+  ctaRel?: string;
 };
 
 export const CallToAction = ({
   eyebrow = 'Build with clarity',
   title = 'A legal partner for every stage of growth.',
   text = 'Whether you are building, investing, evolving or protecting what matters, Lummina provides clear, commercially intelligent guidance for what comes next.',
+  ctaLabel = 'Schedule a Consultation',
+  ctaTo,
+  ctaHref,
+  ctaTarget,
+  ctaRel,
 }: CallToActionProps) => (
   <section className="relative isolate overflow-hidden border-y border-dark-line luxury-dark py-16">
     <img
@@ -30,8 +40,8 @@ export const CallToAction = ({
         {title}
       </h2>
       <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/80">{text}</p>
-      <PrimaryButton to="/consultation" className="mt-8">
-        Schedule a Consultation
+      <PrimaryButton to={ctaHref ? undefined : ctaTo ?? '/consultation'} href={ctaHref} target={ctaTarget} rel={ctaRel} className="mt-8">
+        {ctaLabel}
       </PrimaryButton>
     </div>
   </section>

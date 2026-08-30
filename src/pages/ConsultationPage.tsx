@@ -20,13 +20,12 @@ export const ConsultationPage = () => (
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(95,2,31,0.94),rgba(37,0,12,0.98))]" />
         <div className="relative z-10 mx-auto max-w-xl">
-          <p className="eyebrow text-gold-bright">Schedule a Consultation</p>
+          <p className="eyebrow text-gold-bright">Contact</p>
           <h1 className="mt-5 font-serif text-5xl font-medium leading-tight text-white md:text-7xl">
-            Trusted guidance through complexity.
+            Let's Discuss the Matter.
           </h1>
           <p className="mt-6 text-lg leading-8 text-white/80">
-            Tell us about your business, transaction or legal challenge. We will discuss the
-            decision in front of you and the practical path forward.
+            If you have any legal need, tell us briefly about it below.
           </p>
 
           <div className="mt-10">
@@ -54,7 +53,7 @@ export const ConsultationPage = () => (
       <div className="px-5 py-12 sm:px-8 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-4xl rounded-[2px] border border-light-line bg-paper/95 p-6 shadow-soft sm:p-8 lg:p-10">
           <h2 className="font-serif text-4xl font-medium leading-tight text-ink">
-            Start with clarity.
+            Tell us how we can help.
           </h2>
           <p className="mt-3 leading-7 text-ink/68">
             Required fields are marked with an asterisk.
@@ -104,6 +103,10 @@ export const ConsultationPage = () => (
           <div className="mt-8">
             <ConsultationForm />
           </div>
+          <p className="mt-7 border-t border-light-line pt-6 text-sm leading-7 text-ink/65">
+            All enquiries are treated confidentially and reviewed by the firm before an engagement
+            is accepted.
+          </p>
         </div>
       </div>
     </div>

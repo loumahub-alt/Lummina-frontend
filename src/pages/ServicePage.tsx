@@ -4,7 +4,7 @@ import { PageHero } from '../components/common/PageHero';
 import { PracticeAreaCard } from '../components/cards/PracticeAreaCard';
 import { SecondaryButton } from '../components/common/SecondaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { images, insights, practiceAreas } from '../data/site';
+import { brand, images, insights, practiceAreas } from '../data/site';
 import { mapPracticeAreaRecord, usePublishedCollection } from '../hooks/usePublishedContent';
 import type { ServicePage as ServicePageData } from '../types';
 
@@ -41,8 +41,10 @@ export const ServicePage = ({ page }: ServicePageProps) => {
         title={page.title}
         description={page.intro}
         image={heroImage}
-        ctaLabel="Schedule a Consultation"
-        ctaTo="/consultation"
+        ctaLabel="Request Our Services"
+        ctaHref={brand.requestServicesUrl}
+        ctaTarget="_blank"
+        ctaRel="noopener noreferrer"
       />
 
       <section className="cream-section py-20">

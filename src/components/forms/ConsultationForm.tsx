@@ -145,7 +145,7 @@ export const ConsultationForm = () => {
             autoComplete="email"
           />
         </Field>
-        <Field label="Phone number" required error={errors.phone}>
+        <Field label="Telephone" required error={errors.phone}>
           <input
             id="phone"
             type="tel"
@@ -157,7 +157,7 @@ export const ConsultationForm = () => {
         </Field>
       </div>
 
-      <Field label="Company or organisation">
+      <Field label="Organisation">
         <input
           id="company"
           value={values.company}
@@ -168,7 +168,7 @@ export const ConsultationForm = () => {
       </Field>
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Field label="Preferred practice area" required error={errors.practiceArea}>
+        <Field label="Type of Matter" required error={errors.practiceArea}>
           <select
             id="practiceArea"
             value={values.practiceArea}
@@ -217,7 +217,7 @@ export const ConsultationForm = () => {
         </Field>
       </div>
 
-      <Field label="Message" required error={errors.message}>
+      <Field label="Brief Description" required error={errors.message}>
         <textarea
           id="message"
           rows={6}
@@ -257,7 +257,7 @@ export const ConsultationForm = () => {
       </div>
 
       <PrimaryButton type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Sending Message' : 'Send Message'}
+        {isSubmitting ? 'Submitting Enquiry' : 'Submit Enquiry'}
       </PrimaryButton>
 
       {success && (

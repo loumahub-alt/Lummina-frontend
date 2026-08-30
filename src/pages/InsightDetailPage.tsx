@@ -41,8 +41,10 @@ const seoValue = (record: RemoteInsight, key: string) => {
 
 const categoryFor = (recordType: unknown, fallback: InsightCategory): InsightCategory => {
   const type = typeof recordType === 'string' ? recordType.toLowerCase() : '';
-  if (type === 'publication') return 'Publications';
-  if (type === 'event') return 'Events';
+  if (type === 'newsletter' || type === 'newsletters') return 'Newsletters';
+  if (type === 'resource' || type === 'resources' || type === 'publication' || type === 'publications') return 'Resources';
+  if (type === 'insight' || type === 'insights') return 'Insights';
+  if (type === 'event' || type === 'events') return 'Events';
   return fallback;
 };
 

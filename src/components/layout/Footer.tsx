@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, MessageCircle, Twitter } from 'lucide-react';
 import { brand, footerColumns, legalLinks, offices } from '../../data/site';
 import { usePublicContact } from '../../hooks/usePublishedContent';
 import { Logo } from '../common/Logo';
@@ -12,6 +12,7 @@ export const Footer = () => {
     { label: 'X', href: contact.social.x, icon: Twitter },
     { label: 'LinkedIn', href: contact.social.linkedin, icon: Linkedin },
     { label: 'Instagram', href: contact.social.instagram, icon: Instagram },
+    { label: 'WhatsApp', href: contact.whatsapp, icon: MessageCircle },
   ].filter((item) => item.href);
   const contactOffice = {
     ...offices[0],

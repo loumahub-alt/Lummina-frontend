@@ -32,14 +32,23 @@ export const DesktopNavigation = () => {
       >
         <Search aria-hidden="true" className="h-4 w-4" />
       </TransitionLink>
-      {cta && (
+      {cta && (cta.external && cta.href ? (
+        <a
+          href={cta.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="whitespace-nowrap border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] px-5 py-3.5 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-bordeaux transition duration-300 hover:-translate-y-0.5 hover:border-champagne/70"
+        >
+          {cta.label}
+        </a>
+      ) : (
         <TransitionLink
           to={cta.to}
           className="whitespace-nowrap border border-orange/80 bg-[linear-gradient(135deg,#FFBD3D,#FFA500)] px-5 py-3.5 text-[0.66rem] font-extrabold uppercase tracking-[0.1em] text-bordeaux transition duration-300 hover:-translate-y-0.5 hover:border-champagne/70"
         >
           {cta.label}
         </TransitionLink>
-      )}
+      ))}
     </nav>
   );
 };

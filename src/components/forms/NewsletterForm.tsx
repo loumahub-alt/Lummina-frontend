@@ -39,7 +39,7 @@ export const NewsletterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto]">
+    <form onSubmit={handleSubmit} className="mt-8 grid gap-4">
       <div>
         <label htmlFor="newsletter-email" className="text-sm font-bold text-white">
           Email address
@@ -54,10 +54,10 @@ export const NewsletterForm = () => {
           aria-describedby="newsletter-feedback"
         />
       </div>
-      <PrimaryButton type="submit" className="self-end">
+      <PrimaryButton type="submit" className="self-end justify-self-start">
         Subscribe
       </PrimaryButton>
-      <label className="flex gap-3 text-sm leading-6 text-muted sm:col-span-2">
+      <label className="flex gap-3 text-sm leading-6 text-muted">
         <input
           type="checkbox"
           checked={consent}
@@ -65,10 +65,10 @@ export const NewsletterForm = () => {
           className="mt-1 h-4 w-4 accent-gold"
         />
         <span>
-          I agree to receive legal updates and understand I can unsubscribe at any time.
+          I agree to receive Newsletters and Legal updates and understand that I can unsubscribe at any time.
         </span>
       </label>
-      <div id="newsletter-feedback" className="sm:col-span-2">
+      <div id="newsletter-feedback">
         {error && (
           <p className="flex items-center gap-2 text-sm font-semibold text-gold-bright">
             <AlertCircle aria-hidden="true" className="h-4 w-4" />

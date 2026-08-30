@@ -31,6 +31,8 @@ export type NavigationItem = {
   label: string;
   to: string;
   cta?: boolean;
+  href?: string;
+  external?: boolean;
 };
 
 export type SeoEntry = {
@@ -119,7 +121,7 @@ export type ResultItem = {
   matterDescription?: string;
 };
 
-export type InsightCategory = 'Articles' | 'Publications' | 'Events';
+export type InsightCategory = 'Insights' | 'Articles' | 'Newsletters' | 'Events' | 'Resources';
 
 export type Insight = {
   id: string;

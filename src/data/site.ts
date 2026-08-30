@@ -30,8 +30,7 @@ export const brand = {
   logoLight: '/assets/lummina-logo-light-transparent.png',
   loader: '/assets/lummina-loader.gif',
   copyright: '(c) 2026 Lummina Law Firm. All Rights Reserved.',
-  statement:
-    'Commercially intelligent legal advisory for businesses building toward scale.',
+  statement: 'Strategic legal counsel. Structured for growth.',
 };
 
 export const navigation: NavigationItem[] = [
@@ -42,7 +41,7 @@ export const navigation: NavigationItem[] = [
   { label: 'Results', to: '/results' },
   { label: 'Insights', to: '/insights' },
   { label: 'Contact', to: '/consultation' },
-  { label: 'Schedule a Consultation', to: '/consultation', cta: true },
+  { label: 'Schedule a Consultation', to: '/consultation', href: brand.bookingUrl, external: true, cta: true },
 ];
 
 export const images: ImageRegistry = {
@@ -113,20 +112,20 @@ export const messagePillars = [
 
 export const audienceSegments = [
   {
-    title: 'Founders & Startups',
-    text: 'Structure, governance, compliance, IP and growth protection for businesses taking shape.',
+    title: 'Founders & Emerging Businesses',
+    text: 'Legal structures, governance, contracts, compliance and transactions for businesses moving from opportunity to institution.',
   },
   {
-    title: 'Investors & Capital Deployers',
-    text: 'Transaction support, due diligence, structuring and protection for capital at work.',
+    title: 'Investors & Capital Providers',
+    text: 'Due diligence, transaction structuring, documentation and risk allocation for capital being deployed or raised.',
   },
   {
-    title: 'Established Businesses',
-    text: 'Governance, restructuring, compliance, transactions and risk management for evolving enterprises.',
+    title: 'Established & Evolving Businesses',
+    text: 'Governance, restructuring, compliance, commercial contracts and transactions as businesses enter new stages of complexity.',
   },
   {
-    title: 'Private Clients & Families',
-    text: 'Discreet asset protection, succession planning and continuity structures for the long term.',
+    title: 'Private Clients & Family Enterprises',
+    text: 'Discreet advice on wealth structuring, succession, asset protection and continuity.',
   },
 ];
 
@@ -282,14 +281,14 @@ export const servicePages: ServicePage[] = [
 
 export const seo: Record<string, SeoEntry> = {
   '/': {
-    title: 'Lummina Law Firm Lagos | Legal Clarity for Businesses',
+    title: 'Lummina Law Firm Lagos | Strategic Legal Counsel',
     description:
-      'Lummina Law Firm is a modern, commercially minded law firm helping founders, businesses, investors and private clients build, protect and scale with clarity, structure and strategic foresight.',
+      'Lummina is a law firm advising businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that protect value and enable long-term success.',
   },
   '/about': {
     title: 'About Lummina Law Firm | Commercial Legal Advisory Lagos',
     description:
-      'Learn how Lummina helps emerging and evolving businesses navigate legal and regulatory complexity with clarity, structure and strategic foresight.',
+      'We advise and support businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that shape value.',
   },
   '/practice-areas': {
     title: 'Commercial Law Firm Lagos | Practice Areas | Lummina Law Firm',
@@ -307,14 +306,26 @@ export const seo: Record<string, SeoEntry> = {
       'Representative matters and legal experience from Lummina Law Firm in Lagos, Nigeria.',
   },
   '/insights': {
-    title: 'Legal Insights Nigeria | Lummina Law Firm',
+    title: 'Thinking About the Issues Behind the Law | Lummina Law Firm',
     description:
-      'Legal insights, publications and events from Lummina Law Firm in Lagos, Nigeria.',
+      'Our perspectives on business, transactions, governance, regulation and the legal decisions that shape organisations.',
   },
   '/consultation': {
-    title: 'Schedule a Consultation | Lummina Law Firm',
+    title: "Let's Discuss the Matter | Lummina Law Firm",
     description:
-      'Speak with Lummina Law Firm about the legal structure, transaction, risk or growth decision in front of you.',
+      'If you have any legal need, tell Lummina Law Firm briefly about it and the firm will review the appropriate next step.',
+  },
+  '/how-we-work': {
+    title: 'How We Work | Lummina Law Firm',
+    description: 'A clear process from first conversation to resolution, grounded in the objective, material risks and appropriate scope.',
+  },
+  '/external-counsel': {
+    title: 'External Counsel | Lummina Law Firm',
+    description: 'Ongoing external counsel for businesses that need reliable legal support without maintaining a full internal legal department.',
+  },
+  '/resources': {
+    title: 'Legal Resources | Lummina Law Firm',
+    description: 'Practical legal materials from Lummina Law Firm for framing business, commercial and private client questions.',
   },
   '/privacy-policy': {
     title: 'Privacy Policy | Lummina Law Firm',
@@ -524,12 +535,12 @@ export const practiceAreas: PracticeArea[] = [
 export const practiceAreaGroups: PracticeArea[] = [
   {
     id: 'business-law',
-    title: 'Business Law',
+    title: 'Business, Corporate & Commercial',
     icon: 'briefcase',
     shortDescription:
-      'Durable businesses are built on sound legal foundations. We design and implement the legal infrastructure that makes sustainable growth possible.',
+      'We advise businesses throughout their lifecycle, from incorporation and structuring to governance, commercial contracting, employment, compliance and restructuring.',
     summary:
-      'Durable businesses are built on sound legal foundations. We design and implement the legal infrastructure that makes sustainable growth possible.',
+      'We advise businesses throughout their lifecycle, from incorporation and structuring to governance, commercial contracting, employment, compliance and restructuring.',
     services: [
       'Business Formation',
       'Corporate & Commercial Advisory',
@@ -539,9 +550,13 @@ export const practiceAreaGroups: PracticeArea[] = [
       'Commercial Documentation',
       'Company Secretarial Services',
       'Due Diligence',
+      'Employment & Workforce Advisory',
+      'Business Compliance',
+      'Regulatory Compliance & Engagement',
+      'Risk Management',
     ],
     detail:
-      'Clear ownership architecture and documented decision frameworks, contracts that allocate risk with precision, governance systems that scale as the business does, and regulatory compliance built into operations.',
+      'Our work is designed to give businesses the legal framework they need to operate confidently, make decisions efficiently and manage risk as they evolve.',
     image: 'boardroom',
   },
   {
@@ -549,10 +564,10 @@ export const practiceAreaGroups: PracticeArea[] = [
     title: 'Real Estate & Property',
     icon: 'building',
     shortDescription:
-      'Property is one of the most significant assets an individual or business will ever hold. We advise on acquisition, structuring, and long-term protection.',
+      'We advise on acquisitions, investments, financing, joint ventures, shareholder arrangements and real estate transactions from structuring through completion.',
     summary:
-      'Property is one of the most significant assets an individual or business will ever hold. We advise on acquisition, structuring, and long-term protection.',
-    services: ['Property Transactions', 'Title Due Diligence', 'Asset Structuring & Protection'],
+      'We help clients assess property risk early, structure acquisitions clearly, and protect the value and continuity of significant real estate assets.',
+    services: ['Joint Ventures', 'Debt & Equity Financing', 'Real Estate Transactions', 'Property Due Diligence', 'Development & Investment Structures'],
     detail:
       'We help clients assess property risk early, structure acquisitions clearly, and protect the value and continuity of significant real estate assets.',
     image: 'columns',
@@ -562,15 +577,15 @@ export const practiceAreaGroups: PracticeArea[] = [
     title: 'Transactions & Capital',
     icon: 'landmark',
     shortDescription:
-      'Capital deployment and corporate transactions require structured documentation and clear execution strategy. We support our clients through every stage of a transaction, from initial structuring to final execution.',
+      'Transactions create opportunities, but they also create legal, financial and operational exposure.',
     summary:
-      'Capital deployment and corporate transactions require structured documentation and clear execution strategy. We support our clients through every stage of a transaction, from initial structuring to final execution.',
+      'We align transaction documentation, commercial objectives, diligence and execution so capital can move with clarity and control.',
     services: [
       'Investment Support & Documentation',
-      'Transaction Structuring & Due Diligence',
-      'Shareholder, Investment & Financing Documentation',
       'Mergers & Acquisitions',
       'Corporate Reorganisations & Restructuring',
+      'Debt & Equity Financing',
+      'Shareholder Arrangements',
     ],
     detail:
       'We align transaction documentation, commercial objectives, diligence and execution so capital can move with clarity and control.',
@@ -581,14 +596,17 @@ export const practiceAreaGroups: PracticeArea[] = [
     title: 'Intellectual Property',
     icon: 'badge',
     shortDescription:
-      'We advise on the full spectrum of intellectual property protection and enforcement, from brand identity to proprietary technology.',
+      'We help clients identify, protect, commercialise and enforce the intellectual property that underpins their brands, products, innovations and competitive advantage.',
     summary:
-      'We advise on the full spectrum of intellectual property protection and enforcement, from brand identity to proprietary technology.',
+      'We help clients identify, protect, commercialise and enforce the intellectual property that underpins their brands, products, innovations and competitive advantage.',
     services: [
+      'Trademark Registration, Protection & Enforcement',
+      'Copyright Advisory & Protection',
       'Patent Registration & Protection',
-      'Trademark Filings & Enforcement',
-      'Copyright Advisory',
-      'Trade Secret Protection',
+      'Intellectual Property Due Diligence',
+      'IP Licensing & Commercialisation',
+      'Trade Secret & Confidential Information Protection',
+      'Intellectual Property Dispute Resolution',
     ],
     detail:
       'Our advice helps clients identify, protect, commercialise and enforce the intellectual property that gives their businesses value.',
@@ -599,15 +617,16 @@ export const practiceAreaGroups: PracticeArea[] = [
     title: 'Cross-Border Transactions',
     icon: 'globe',
     shortDescription:
-      'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
+      'We help businesses, investors and private clients navigate the legal and regulatory complexities of operating across jurisdictions.',
     summary:
-      'Operating across jurisdictions introduces layers of legal complexity that require both local depth and international perspective. We advise clients on multi-jurisdiction structuring, compliance, and execution.',
+      'We advise on cross-border structures, investments, transactions and local requirements, coordinating the legal work necessary to move matters forward efficiently and with clarity.',
     services: [
-      'Cross-Border Commercial Agreements',
-      'International Investment Structuring',
-      'Multi-Jurisdiction Due Diligence',
-      'Regulatory & Entity Coordination',
-      'Cross-Border M&A Support',
+      'Cross-border investments and transactions',
+      'International corporate structuring',
+      'Foreign investment and market entry',
+      'Regulatory and licensing requirements',
+      'Cross-border contracts and commercial arrangements',
+      'Due diligence and transaction support',
     ],
     detail:
       'We help clients coordinate local requirements, cross-border structures, regulatory obligations and transaction execution across jurisdictions.',
@@ -615,16 +634,20 @@ export const practiceAreaGroups: PracticeArea[] = [
   },
   {
     id: 'private-client-services',
-    title: 'Private Client Services',
+    title: 'Private Clients, Wealth & Succession',
     icon: 'shield',
     shortDescription:
-      'We work with founders and families to create durable legal structures that protect assets, plan for succession, and ensure continuity across generations.',
+      'Wealth planning is ultimately about continuity. We advise individuals, families and business owners on structures that protect assets, facilitate succession and preserve family and business interests across generations.',
     summary:
-      'We work with founders and families to create durable legal structures that protect assets, plan for succession, and ensure continuity across generations.',
+      'We advise individuals, families and business owners on structures that protect assets, facilitate succession and preserve family and business interests across generations.',
     services: [
-      'Trust Structures & Family Office Advisory',
+      'Estate Planning',
       'Succession Planning',
-      'Long-Term Asset Protection',
+      'Private Trusts',
+      'Family Governance',
+      'Family Business Succession',
+      'Asset Protection',
+      'Probate & Estate Administration',
     ],
     detail:
       'Our private client counsel is discreet, practical and designed around long-term protection, continuity and family priorities.',
@@ -648,6 +671,42 @@ export const lumminaApproach = [
     icon: 'file' as const,
     text: 'Every agreement should make responsibilities, leverage and next steps clear before pressure turns a small gap into a dispute.',
   },
+];
+
+export const howWeWorkSteps = [
+  {
+    title: 'Understand',
+    text: 'We begin by understanding the matter, the objective and the surrounding commercial context.',
+  },
+  {
+    title: 'Assess',
+    text: 'We identify the legal issues, material risks, dependencies and available options.',
+  },
+  {
+    title: 'Scope',
+    text: 'We agree the appropriate approach, deliverables, timelines and fees.',
+  },
+  {
+    title: 'Execute',
+    text: 'We handle the legal work with structured communication and disciplined follow-through.',
+  },
+  {
+    title: 'Advise Forward',
+    text: 'Where appropriate, we identify the next legal or governance issues before they become the next problem.',
+  },
+];
+
+export const externalCounselServices = [
+  'Commercial contracts',
+  'Corporate governance',
+  'Company secretarial',
+  'Regulatory compliance',
+  'Employment matters',
+  'Legal risk reviews',
+  'Commercial negotiations',
+  'Transaction support',
+  'Board and management advisory',
+  'External legal coordination',
 ];
 
 export const homePracticeAreas = practiceAreaGroups;
@@ -678,7 +737,7 @@ export const mission = {
 
 export const vision = {
   icon: 'eye' as const,
-  text: 'To be a trusted partner for individuals, businesses, and institutions in Nigeria and beyond, renowned for delivering bespoke legal solutions that drive sustainable success.',
+  text: 'To be a leading firm recognised for the quality of its counsel, the strength of its client relationships and its contribution to the businesses and institutions it advises.',
 };
 
 export const practicePhilosophy = {
@@ -701,7 +760,7 @@ export const coreValues = [
   {
     title: 'Client-Centered Service',
     icon: 'users' as const,
-    text: 'Your objectives guide our strategy. We design solutions around your goals, not a generic playbook.',
+    text: 'We design solutions around your goals. Your objectives guide our strategy.',
   },
   {
     title: 'Excellence',
@@ -850,7 +909,7 @@ export const testimonials: Testimonial[] = [
 export const insights: Insight[] = [
   {
     id: 'business-law-nigeria',
-    category: 'Articles',
+    category: 'Insights',
     date: 'July 18, 2026',
     title: 'Building Stronger Legal Foundations for Nigerian Businesses',
     summary:
@@ -869,7 +928,7 @@ export const insights: Insight[] = [
   },
   {
     id: 'startup-readiness',
-    category: 'Publications',
+    category: 'Resources',
     date: 'June 26, 2026',
     title: 'Startup Legal Readiness Checklist',
     summary:
@@ -885,6 +944,8 @@ export const footerColumns: FooterColumn[] = [
       { label: 'Our Firm', to: '/about' },
       { label: 'Our Values', to: '/about#foundation' },
       { label: 'Our Team', to: '/our-team' },
+      { label: 'How We Work', to: '/how-we-work' },
+      { label: 'External Counsel', to: '/external-counsel' },
       { label: 'Insights', to: '/insights' },
     ],
   },
@@ -896,12 +957,12 @@ export const footerColumns: FooterColumn[] = [
     })),
   },
   {
-    title: 'Resources',
+    title: 'Materials',
     links: [
       { label: 'Insights', to: '/insights' },
-      { label: 'Publications', to: '/insights#publications' },
+      { label: 'Newsletters', to: '/insights#newsletters' },
       { label: 'Events', to: '/insights#events' },
-      { label: 'Results', to: '/results' },
+      { label: 'Resources', to: '/resources' },
     ],
   },
 ];
@@ -909,5 +970,5 @@ export const footerColumns: FooterColumn[] = [
 export const legalLinks: NavigationItem[] = [
   { label: 'Privacy Policy', to: '/privacy-policy' },
   { label: 'Terms of Use', to: '/terms-of-use' },
-  { label: 'Professional Notice', to: '/professional-notice' },
+  { label: 'Disclaimer', to: '/professional-notice' },
 ];
