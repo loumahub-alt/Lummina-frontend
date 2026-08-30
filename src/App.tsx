@@ -25,6 +25,7 @@ import { ServicePage } from './pages/ServicePage';
 import { PrivacyPolicyPage, ProfessionalNoticePage, TermsOfUsePage } from './pages/LegalPages';
 import { servicePages } from './data/site';
 import { CookieConsentBanner } from './components/common/CookieConsentBanner';
+import { SiteDisclaimerBanner } from './components/common/SiteDisclaimerBanner';
 import { AdminApp } from './admin/AdminApp';
 
 export const App = () => {
@@ -70,6 +71,7 @@ export const App = () => {
 
         <Footer />
         <CookieConsentBanner />
+        <SiteDisclaimerBanner />
       </div>
     </TransitionProvider>
   );
