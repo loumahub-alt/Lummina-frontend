@@ -34,7 +34,7 @@ export const HomePage = () => {
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,#5F021F_0%,rgba(95,2,31,0.96)_34%,rgba(95,2,31,0.48)_68%,rgba(37,0,12,0.88)_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,transparent,rgba(37,0,12,0.92))]" />
-      <div className="container-shell relative z-10 grid min-h-[540px] items-center py-10 sm:min-h-[600px] sm:py-12 lg:min-h-[660px] lg:py-16">
+      <div className="container-shell relative z-10 grid min-h-[calc(100svh-82px)] items-center py-10 sm:min-h-[calc(100svh-82px)] sm:py-12 lg:min-h-[calc(100vh-82px)] lg:py-16">
         <div className="max-w-3xl">
           <h1 className="serif-heading max-w-4xl text-[2.9rem] leading-[0.94] sm:text-6xl md:text-7xl xl:text-[5.6rem]">
             Build the Foundation.
