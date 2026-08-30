@@ -79,8 +79,8 @@ export const AttorneysPage = () => {
     <>
       <PageHero
         eyebrow="Our Team"
-        title="The People Behind the Work."
-        description="Our lawyers bring together legal expertise, commercial awareness and experience across corporate, regulatory, transactional and contentious matters."
+        title="The People Behind the work."
+        description="We bring together legal expertise, commercial awareness and depth of experience across all our practice areas. We are fully equipped to deliver your desired results."
         image={images.conference}
       />
 

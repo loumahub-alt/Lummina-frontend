@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 const DISCLAIMER_STORAGE_KEY = 'lummina_disclaimer_acknowledged';
 
@@ -14,6 +15,16 @@ export const SiteDisclaimerBanner = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!visible) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [visible]);
+
   if (!visible) return null;
 
   const acknowledge = () => {
@@ -25,8 +36,8 @@ export const SiteDisclaimerBanner = () => {
     setVisible(false);
   };
 
-  return (
-    <div className="fixed inset-0 z-[90] grid place-items-center bg-bordeaux/70 px-4 py-6" role="presentation">
+  return createPortal((
+    <div className="fixed inset-y-0 left-0 right-auto z-[90] grid h-screen w-screen place-items-center bg-bordeaux/70 px-4 py-6" role="presentation">
       <section
         role="dialog"
         aria-modal="true"
@@ -71,5 +82,5 @@ export const SiteDisclaimerBanner = () => {
         </button>
       </section>
     </div>
-  );
+  ), document.body);
 };
