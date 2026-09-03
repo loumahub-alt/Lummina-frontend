@@ -16,6 +16,10 @@ type SearchResult = {
 const text = (value: unknown) => typeof value === 'string' ? value.trim() : '';
 const firstText = (record: Record<string, unknown>, keys: string[]) => keys.map((key) => text(record[key])).find(Boolean) ?? '';
 const listText = (value: unknown) => Array.isArray(value) ? value.map(text).filter(Boolean).join(' ') : '';
+const dateText = (value: unknown) => {
+  const date = new Date(String(value ?? ''));
+  return Number.isNaN(date.valueOf()) ? '' : date.toLocaleDateString('en-NG', { year: 'numeric', month: 'long', day: 'numeric' });
+};
 
 const recordId = (record: Record<string, unknown>, fallback: string) => text(record.slug) || text(record.id) || text(record._id) || fallback;
 
@@ -47,7 +51,8 @@ const searchEntries = (
     const id = recordId(record, 'insight-' + index);
     const title = firstText(record, ['title', 'name']);
     const excerpt = firstText(record, ['excerpt', 'content']);
-    return { id, type: 'Insight', title, excerpt, href: '/insights/' + id, searchText: [title, excerpt, record.type].map(text).join(' ') };
+    const isNewsletter = text(record.type).toLowerCase() === 'newsletter';
+    return { id, type: isNewsletter ? 'Newsletter' : 'Insight', title, excerpt, href: '/insights/' + id, searchText: [title, excerpt, record.type, record.publishedAt, dateText(record.publishedAt)].map(text).join(' ') };
   }),
 ].filter((entry) => entry.title);
 

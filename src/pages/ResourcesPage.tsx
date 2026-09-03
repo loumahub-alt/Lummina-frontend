@@ -26,6 +26,10 @@ export const ResourcesPage = () => {
           summary: typeof record.excerpt === 'string' ? record.excerpt : fallback.summary,
           imageUrl: image.url || undefined,
           imageAlt: image.alt || undefined,
+          ebookUrl: contentAssetFromRecord(record, 'ebook').url || undefined,
+          ebookFileName: record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
+            ? String((record.ebook as Record<string, unknown>).fileName ?? (record.ebook as Record<string, unknown>).originalName ?? '') || undefined
+            : undefined,
         };
       });
   }, [publishedRecords]);
@@ -35,7 +39,7 @@ export const ResourcesPage = () => {
       <PageHero
         eyebrow="Resources"
         title="Practical materials for decisions that matter."
-        description="Explore checklists and other materials prepared to help you frame legal and commercial questions before taking the next step."
+        description="Explore e-books and other practical materials prepared to help you frame legal and commercial questions before taking the next step."
         image={images.library}
       />
 

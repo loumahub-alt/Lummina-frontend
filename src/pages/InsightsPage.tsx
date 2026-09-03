@@ -177,6 +177,7 @@ export const InsightsPage = () => {
   const [activeCategory, setActiveCategory] = useState<InsightFilter>(
     () => categoryFromHash(location.hash) ?? 'Insights',
   );
+  const [newsletterQuery, setNewsletterQuery] = useState('');
 
   useEffect(() => {
     const category = categoryFromHash(location.hash);
@@ -215,6 +216,7 @@ export const InsightsPage = () => {
         id: typeof record.slug === 'string' ? record.slug : fallback.id,
         category,
         date: publishedAt ? new Date(publishedAt).toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: 'numeric' }) : fallback.date,
+        publishedAt: publishedAt || undefined,
         title: typeof record.title === 'string' ? record.title : fallback.title,
         summary: typeof record.excerpt === 'string' && record.excerpt.trim()
           ? record.excerpt
@@ -226,6 +228,10 @@ export const InsightsPage = () => {
         imageAlt: image.alt || undefined,
         thumbnailUrl: thumbnail.url || undefined,
         thumbnailAlt: thumbnail.alt || undefined,
+        ebookUrl: contentAssetFromRecord(record, 'ebook').url || undefined,
+        ebookFileName: record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
+          ? String((record.ebook as Record<string, unknown>).fileName ?? (record.ebook as Record<string, unknown>).originalName ?? '') || undefined
+          : undefined,
         featured: record.isFeatured === true || fallback.featured,
       };
     });
@@ -234,10 +240,15 @@ export const InsightsPage = () => {
   const filteredInsights = useMemo(() => {
     return insightItems.filter((insight) => insight.category === activeCategory);
   }, [activeCategory, insightItems]);
+  const visibleInsights = useMemo(() => {
+    if (activeCategory !== 'Newsletters' || !newsletterQuery.trim()) return filteredInsights;
+    const query = newsletterQuery.trim().toLowerCase();
+    return filteredInsights.filter((insight) => [insight.title, insight.summary, insight.date, insight.publishedAt].filter(Boolean).join(' ').toLowerCase().includes(query));
+  }, [activeCategory, filteredInsights, newsletterQuery]);
   const featuredInsight = activeCategory === 'Insights'
-    ? filteredInsights.find((insight) => insight.featured) ?? filteredInsights[0]
+    ? visibleInsights.find((insight) => insight.featured) ?? visibleInsights[0]
     : undefined;
-  const gridInsights = filteredInsights.filter((insight) => insight.id !== featuredInsight?.id);
+  const gridInsights = visibleInsights.filter((insight) => insight.id !== featuredInsight?.id);
 
   return (
     <>
@@ -274,6 +285,18 @@ export const InsightsPage = () => {
             <EventGallery events={filteredInsights} />
           ) : (
             <>
+              {activeCategory === 'Newsletters' && (
+                <div className="mt-10 border border-light-line bg-white/55 p-5 sm:flex sm:items-center sm:justify-between sm:gap-6">
+                  <div>
+                    <p className="eyebrow text-gold-dark">Newsletter archive</p>
+                    <p className="mt-2 text-sm leading-6 text-ink/65">Search past newsletters by title, topic or publication date.</p>
+                  </div>
+                  <label className="mt-4 block sm:mt-0 sm:w-80">
+                    <span className="sr-only">Search newsletters</span>
+                    <input value={newsletterQuery} onChange={(event) => setNewsletterQuery(event.target.value)} placeholder="Search by name or date" className="min-h-11 w-full rounded-[2px] border border-light-line bg-white px-4 text-sm text-ink outline-none focus:border-gold" />
+                  </label>
+                </div>
+              )}
               <div className="mt-10">
                 {featuredInsight && <InsightCard insight={featuredInsight} featured />}
               </div>
@@ -283,12 +306,12 @@ export const InsightsPage = () => {
                   <InsightCard key={insight.id} insight={insight} />
                 ))}
               </div>
-              {filteredInsights.length === 0 && (
+              {visibleInsights.length === 0 && (
                 <div className="mt-10 border border-light-line bg-white/45 px-6 py-16 text-center sm:px-10">
                   <p className="eyebrow">{activeCategory}</p>
-                  <h2 className="mt-4 font-serif text-4xl font-medium text-ink">More materials are on the way.</h2>
+                  <h2 className="mt-4 font-serif text-4xl font-medium text-ink">{activeCategory === 'Newsletters' && newsletterQuery.trim() ? 'No newsletters matched that search.' : 'More materials are on the way.'}</h2>
                   <p className="mx-auto mt-4 max-w-xl leading-7 text-ink/65">
-                    Published {activeCategory.toLowerCase()} will appear here as Lummina adds them.
+                    {activeCategory === 'Newsletters' && newsletterQuery.trim() ? 'Try another newsletter title or publication date.' : `Published ${activeCategory.toLowerCase()} will appear here as Lummina adds them.`}
                   </p>
                 </div>
               )}

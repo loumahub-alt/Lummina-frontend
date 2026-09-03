@@ -127,6 +127,7 @@ export type Insight = {
   id: string;
   category: InsightCategory;
   date: string;
+  publishedAt?: string;
   title: string;
   summary: string;
   image: keyof ImageRegistry;
@@ -134,6 +135,8 @@ export type Insight = {
   thumbnailUrl?: string;
   imageAlt?: string;
   thumbnailAlt?: string;
+  ebookUrl?: string;
+  ebookFileName?: string;
   featured?: boolean;
 };
 

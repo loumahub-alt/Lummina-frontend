@@ -25,6 +25,8 @@ type InsightDetail = {
   image: keyof typeof images;
   imageUrl?: string;
   imageAlt?: string;
+  ebookUrl?: string;
+  ebookFileName?: string;
   seoTitle: string;
   seoDescription: string;
   author: string;
@@ -103,6 +105,10 @@ export const InsightDetailPage = () => {
     const record = remoteInsight ?? {};
     const fallbackImage = fallback?.image ?? 'library';
     const image = contentAssetFromRecord(record, 'image');
+    const ebook = contentAssetFromRecord(record, 'ebook');
+    const ebookRecord = record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
+      ? record.ebook as Record<string, unknown>
+      : {};
     const summary = typeof record.excerpt === 'string'
       ? record.excerpt
       : fallback?.summary ?? '';
@@ -123,6 +129,8 @@ export const InsightDetailPage = () => {
       image: fallbackImage,
       imageUrl: image.url || fallback?.imageUrl,
       imageAlt: image.alt || fallback?.imageAlt,
+      ebookUrl: ebook.url || undefined,
+      ebookFileName: String(ebookRecord.fileName ?? ebookRecord.originalName ?? '') || undefined,
       seoTitle: seoValue(record, 'title') || title + ' | Lummina Law Firm',
       seoDescription: description,
       author: typeof record.author === 'string' && record.author.trim() ? record.author : 'Lummina Law Firm',
@@ -220,6 +228,16 @@ export const InsightDetailPage = () => {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+            {insight.category === 'Resources' && insight.ebookUrl && (
+              <div className="mt-10 border border-gold/40 bg-gold/10 p-6 sm:p-7">
+                <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-gold-dark">E-book</p>
+                <h2 className="mt-3 font-serif text-3xl font-medium text-ink">Read or download this resource.</h2>
+                {insight.ebookFileName && <p className="mt-2 text-sm text-ink/60">{insight.ebookFileName}</p>}
+                <a href={insight.ebookUrl} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-11 items-center justify-center border border-bordeaux bg-bordeaux px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-bright transition hover:bg-[#4B0019]">
+                  Open e-book
+                </a>
+              </div>
+            )}
           </article>
 
           <aside className="luxury-card p-6 lg:sticky lg:top-28">
