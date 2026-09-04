@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type ReactNode } from 'react';
-import { CalendarDays, Check, Clock3, Eye, FileCode2, Save, Send, ShieldCheck, Upload, Users, X } from 'lucide-react';
+import { CalendarDays, Check, Clock3, Copy, Eye, FileCode2, Image as ImageIcon, Save, Send, ShieldCheck, Upload, Users, X } from 'lucide-react';
 import { api, ApiError, type DashboardData } from '../services/api';
 
 const surface = 'rounded-[3px] border border-[#5F021F]/10 bg-[#FFF9EF] shadow-[0_14px_45px_rgba(95,2,31,0.07)]';
@@ -118,11 +118,16 @@ const ConsultationDetails = ({ consultation, onClose, loading }: { consultation:
 };
 
 type NewsletterTemplate = { subject: string; html: string; updatedAt: string | null };
+type NewsletterImage = Record<string, unknown>;
 
 export const LiveNewsletterPage = () => {
   const [items, setItems] = useState<Record<string, unknown>[] | null>(null);
+  const [images, setImages] = useState<NewsletterImage[]>([]);
   const [template, setTemplate] = useState<NewsletterTemplate>({ subject: '', html: '', updatedAt: null });
   const [templateLoading, setTemplateLoading] = useState(true);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageAlt, setImageAlt] = useState('');
+  const [copiedImageId, setCopiedImageId] = useState('');
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [sending, setSending] = useState(false);
@@ -132,10 +137,11 @@ export const LiveNewsletterPage = () => {
 
   useEffect(() => {
     let active = true;
-    Promise.all([api.admin.newsletter(), api.admin.newsletterTemplate()])
-      .then(([records, savedTemplate]) => {
+    Promise.all([api.admin.newsletter(), api.admin.newsletterTemplate(), api.admin.newsletterImages()])
+      .then(([records, savedTemplate, imageRecords]) => {
         if (!active) return;
         setItems(records);
+        setImages(imageRecords);
         setTemplate({ subject: savedTemplate.subject ?? '', html: savedTemplate.html ?? '', updatedAt: savedTemplate.updatedAt ?? null });
         setTemplateDirty(false);
       })
@@ -149,6 +155,50 @@ export const LiveNewsletterPage = () => {
   }, []);
 
   const subscribed = (items ?? []).filter((item) => item.status === 'subscribed');
+  const uploadNewsletterImage = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.currentTarget.value = '';
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError('Choose a JPG, PNG, or WebP image.');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Images must be 10MB or smaller.');
+      return;
+    }
+    const body = new FormData();
+    body.append('file', file);
+    if (imageAlt.trim()) body.append('altText', imageAlt.trim());
+    setImageUploading(true);
+    setError('');
+    setMessage('');
+    try {
+      const uploaded = await api.admin.uploadNewsletterImage(body);
+      setImages((current) => [uploaded, ...current]);
+      setImageAlt('');
+      setMessage('Image uploaded. Copy its URL into the HTML template.');
+    } catch (reason) {
+      setError(apiError(reason, 'Unable to upload the newsletter image.'));
+    } finally {
+      setImageUploading(false);
+    }
+  };
+  const copyImageUrl = async (image: NewsletterImage) => {
+    const url = String(image.url ?? '').trim();
+    const id = String(image.id ?? image._id ?? url);
+    if (!url) {
+      setError('This image does not have a hosted URL.');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedImageId(id);
+      window.setTimeout(() => setCopiedImageId((current) => current === id ? '' : current), 1800);
+    } catch {
+      setError('The image URL could not be copied. Select and copy it manually.');
+    }
+  };
   const updateTemplate = (key: 'subject' | 'html', value: string) => {
     setTemplate((current) => ({ ...current, [key]: value }));
     setTemplateDirty(true);
@@ -229,7 +279,114 @@ export const LiveNewsletterPage = () => {
     }
   };
 
-  return <><Header eyebrow="Clients / Newsletter" title="Newsletter" description="Upload and save an HTML template, publish it to the public Insights archive, then send it through Resend to subscribed recipients only." />{error && <ErrorNotice message={error} />}{message && <div className="mb-5 rounded-[3px] border border-[#6B6A24]/30 bg-[#6B6A24]/10 px-5 py-4 text-sm text-[#53541B]">{message}</div>}{!items || templateLoading ? <LoadingNotice /> : <><div className="grid gap-4 sm:grid-cols-3"><article className={surface + ' p-5'}><p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Subscribed records loaded</p><p className="mt-4 font-serif text-4xl text-bordeaux">{subscribed.length}</p></article><article className={surface + ' p-5'}><p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Total records loaded</p><p className="mt-4 font-serif text-4xl text-bordeaux">{items.length}</p></article><article className={surface + ' p-5'}><p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Template status</p><p className="mt-4 font-serif text-2xl text-bordeaux">{templateDirty ? 'Unsaved changes' : template.html.trim() ? 'Ready' : 'Not saved'}</p></article></div><section className={surface + ' mt-6 p-6 sm:p-8'}><div className="flex flex-col gap-4 border-b border-[#5F021F]/10 pb-6 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-xs font-extrabold uppercase tracking-[0.13em] text-gold-dark">Email template</p><h2 className="mt-2 font-serif text-3xl text-bordeaux">Prepare a newsletter</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Upload an HTML file or edit the template directly. The sender address is configured securely on the backend for Resend.</p></div><label className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 border border-gold-dark px-4 py-3 text-xs font-extrabold uppercase tracking-[0.08em] text-gold-dark hover:bg-gold/10"><Upload className="h-4 w-4" />Upload HTML<input type="file" accept=".html,.htm,.txt,text/html" onChange={uploadTemplate} className="sr-only" /></label></div><div className="mt-6 grid gap-6 lg:grid-cols-2"><div><label className="block text-sm font-bold">Email subject<input className={input} value={template.subject} onChange={(event) => updateTemplate('subject', event.target.value)} placeholder="Enter the newsletter subject" /></label><label className="mt-5 block text-sm font-bold">HTML template<textarea className={input + ' min-h-[22rem] py-3 font-mono text-xs leading-5'} value={template.html} onChange={(event) => updateTemplate('html', event.target.value)} placeholder="Paste or upload the newsletter HTML here" /></label><p className="mt-2 text-xs leading-5 text-ink/45">Use absolute URLs for images and links so email clients can load them.</p><div className="mt-5 flex flex-wrap items-center gap-3"><button type="button" onClick={() => void saveTemplate()} disabled={saving || publishing || sending} className="inline-flex min-h-11 items-center gap-2 border border-bordeaux bg-bordeaux px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-bright disabled:cursor-not-allowed disabled:opacity-50"><Save className="h-4 w-4" />{saving ? 'Saving…' : 'Save template'}</button><button type="button" onClick={() => void publishToInsights()} disabled={saving || publishing || sending || templateDirty || !template.html.trim() || !template.subject.trim()} className="inline-flex min-h-11 items-center gap-2 border border-gold-dark px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark disabled:cursor-not-allowed disabled:opacity-50"><Eye className="h-4 w-4" />{publishing ? 'Publishing…' : 'Publish to Insights'}</button><button type="button" onClick={() => void sendNewsletter()} disabled={saving || publishing || sending || templateDirty || !template.html.trim() || !template.subject.trim()} className="inline-flex min-h-11 items-center gap-2 border border-gold-dark px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark disabled:cursor-not-allowed disabled:opacity-50"><Send className="h-4 w-4" />{sending ? 'Sending…' : 'Send to subscribers'}</button></div>{templateDirty && <p className="mt-3 text-xs text-gold-dark">Save the template before publishing or sending.</p>}{template.updatedAt && <p className="mt-3 text-xs text-ink/45">Last saved {dateText(template.updatedAt)}</p>}</div><div><div className="flex items-center gap-2 text-sm font-bold text-bordeaux"><FileCode2 className="h-4 w-4 text-gold-dark" />Template preview</div><div className="mt-2 overflow-hidden rounded-[3px] border border-[#5F021F]/10 bg-white"><iframe title="Newsletter template preview" srcDoc={template.html || '<p style=&quot;font-family: sans-serif; padding: 24px; color: #666;&quot;>Upload or paste an HTML template to preview it.</p>'} sandbox="" className="h-[30rem] w-full" /></div></div></div></section><section className={surface + ' mt-6 overflow-hidden'}><div className="border-b border-[#5F021F]/10 px-5 py-4"><h2 className="font-serif text-2xl text-bordeaux">Subscriber records</h2><p className="mt-1 text-sm text-ink/55">Only records with subscribed status are included when sending.</p></div>{items.map((item) => <div key={String(item.id ?? item._id ?? item.email)} className="flex flex-col gap-2 border-t border-[#5F021F]/8 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"><span className="font-bold text-bordeaux">{String(item.email)}</span><span className="text-sm text-ink/55">{String(item.status)} · {dateText(item.consentedAt ?? item.createdAt)}</span></div>)}{!items.length && <Empty text="No subscribers have been recorded." />}</section></>}</>;
+  return (
+    <>
+      <Header
+        eyebrow="Clients / Newsletter"
+        title="Newsletter"
+        description="Upload and save an HTML template, publish it to the public Insights archive, then send it through Resend to subscribed recipients only."
+      />
+      {error && <ErrorNotice message={error} />}
+      {message && <div className="mb-5 rounded-[3px] border border-[#6B6A24]/30 bg-[#6B6A24]/10 px-5 py-4 text-sm text-[#53541B]">{message}</div>}
+      {!items || templateLoading ? <LoadingNotice /> : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <article className={surface + ' p-5'}>
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Subscribed records loaded</p>
+              <p className="mt-4 font-serif text-4xl text-bordeaux">{subscribed.length}</p>
+            </article>
+            <article className={surface + ' p-5'}>
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Total records loaded</p>
+              <p className="mt-4 font-serif text-4xl text-bordeaux">{items.length}</p>
+            </article>
+            <article className={surface + ' p-5'}>
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-ink/50">Template status</p>
+              <p className="mt-4 font-serif text-2xl text-bordeaux">{templateDirty ? 'Unsaved changes' : template.html.trim() ? 'Ready' : 'Not saved'}</p>
+            </article>
+          </div>
+
+          <section className={surface + ' mt-6 p-6 sm:p-8'}>
+            <div className="flex flex-col gap-4 border-b border-[#5F021F]/10 pb-6 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-gold-dark">Email template</p>
+                <h2 className="mt-2 font-serif text-3xl text-bordeaux">Prepare a newsletter</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Upload an HTML file or edit the template directly. The sender address is configured securely on the backend for Resend.</p>
+              </div>
+              <label className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 border border-gold-dark px-4 py-3 text-xs font-extrabold uppercase tracking-[0.08em] text-gold-dark hover:bg-gold/10">
+                <Upload className="h-4 w-4" />Upload HTML
+                <input type="file" accept=".html,.htm,.txt,text/html" onChange={uploadTemplate} className="sr-only" />
+              </label>
+            </div>
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <div>
+                <label className="block text-sm font-bold">Email subject<input className={input} value={template.subject} onChange={(event) => updateTemplate('subject', event.target.value)} placeholder="Enter the newsletter subject" /></label>
+                <label className="mt-5 block text-sm font-bold">HTML template<textarea className={input + ' min-h-[22rem] py-3 font-mono text-xs leading-5'} value={template.html} onChange={(event) => updateTemplate('html', event.target.value)} placeholder="Paste or upload the newsletter HTML here" /></label>
+                <p className="mt-2 text-xs leading-5 text-ink/45">Use absolute URLs for images and links so email clients can load them.</p>
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <button type="button" onClick={() => void saveTemplate()} disabled={saving || publishing || sending} className="inline-flex min-h-11 items-center gap-2 border border-bordeaux bg-bordeaux px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-bright disabled:cursor-not-allowed disabled:opacity-50"><Save className="h-4 w-4" />{saving ? 'Saving…' : 'Save template'}</button>
+                  <button type="button" onClick={() => void publishToInsights()} disabled={saving || publishing || sending || templateDirty || !template.html.trim() || !template.subject.trim()} className="inline-flex min-h-11 items-center gap-2 border border-gold-dark px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark disabled:cursor-not-allowed disabled:opacity-50"><Eye className="h-4 w-4" />{publishing ? 'Publishing…' : 'Publish to Insights'}</button>
+                  <button type="button" onClick={() => void sendNewsletter()} disabled={saving || publishing || sending || templateDirty || !template.html.trim() || !template.subject.trim()} className="inline-flex min-h-11 items-center gap-2 border border-gold-dark px-5 py-3 text-xs font-extrabold uppercase tracking-[0.1em] text-gold-dark disabled:cursor-not-allowed disabled:opacity-50"><Send className="h-4 w-4" />{sending ? 'Sending…' : 'Send to subscribers'}</button>
+                </div>
+                {templateDirty && <p className="mt-3 text-xs text-gold-dark">Save the template before publishing or sending.</p>}
+                {template.updatedAt && <p className="mt-3 text-xs text-ink/45">Last saved {dateText(template.updatedAt)}</p>}
+              </div>
+              <div>
+                <div className="flex items-center gap-2 text-sm font-bold text-bordeaux"><FileCode2 className="h-4 w-4 text-gold-dark" />Template preview</div>
+                <div className="mt-2 overflow-hidden rounded-[3px] border border-[#5F021F]/10 bg-white"><iframe title="Newsletter template preview" srcDoc={template.html || '<p style=&quot;font-family: sans-serif; padding: 24px; color: #666;&quot;>Upload or paste an HTML template to preview it.</p>'} sandbox="" className="h-[30rem] w-full" /></div>
+              </div>
+            </div>
+          </section>
+
+          <section className={surface + ' mt-6 p-6 sm:p-8'}>
+            <div className="flex flex-col gap-4 border-b border-[#5F021F]/10 pb-6 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.13em] text-gold-dark">Newsletter assets</p>
+                <h2 className="mt-2 font-serif text-3xl text-bordeaux">Image library</h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/60">Upload an image to Cloudinary, then copy its hosted URL into an <code className="rounded bg-[#5F021F]/[.06] px-1.5 py-0.5 text-xs text-bordeaux">&lt;img src=&quot;...&quot;&gt;</code> tag in your newsletter HTML.</p>
+              </div>
+              <label className={`inline-flex min-h-11 items-center justify-center gap-2 border border-gold-dark px-4 py-3 text-xs font-extrabold uppercase tracking-[0.08em] text-gold-dark ${imageUploading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-gold/10'}`}>
+                <Upload className="h-4 w-4" />{imageUploading ? 'Uploading…' : 'Upload image'}
+                <input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={uploadNewsletterImage} disabled={imageUploading} className="sr-only" />
+              </label>
+            </div>
+            <label className="mt-5 block max-w-xl text-sm font-bold">Image alt text (optional)<input className={input} value={imageAlt} onChange={(event) => setImageAlt(event.target.value)} placeholder="Describe the image for accessibility" /></label>
+            <p className="mt-2 text-xs leading-5 text-ink/45">JPG, PNG, or WebP only. Maximum file size is 10MB. Uploads are shared with the website media library.</p>
+            {images.length ? (
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {images.map((image, index) => {
+                  const url = String(image.url ?? '').trim();
+                  const imageId = String(image.id ?? image._id ?? url ?? index);
+                  if (!url) return null;
+                  return (
+                    <article key={imageId} className="overflow-hidden rounded-[3px] border border-[#5F021F]/10 bg-white/70">
+                      <div className="aspect-[16/9] bg-[#F4E7D6]">
+                        <img src={url} alt={String(image.altText ?? image.originalName ?? 'Newsletter asset')} loading="lazy" className="h-full w-full object-cover" />
+                      </div>
+                      <div className="p-4">
+                        <p className="truncate text-sm font-bold text-bordeaux" title={String(image.originalName ?? '')}>{String(image.originalName ?? 'Uploaded image')}</p>
+                        <p className="mt-2 break-all text-xs leading-5 text-ink/55">{url}</p>
+                        <button type="button" onClick={() => void copyImageUrl(image)} className="mt-4 inline-flex min-h-10 items-center gap-2 border border-gold-dark px-3 py-2 text-xs font-extrabold uppercase tracking-[0.08em] text-gold-dark hover:bg-gold/10">
+                          {copiedImageId === imageId ? <><Check className="h-4 w-4" />Copied</> : <><Copy className="h-4 w-4" />Copy URL</>}
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="mt-6 border border-dashed border-[#5F021F]/15 px-6 py-10 text-center text-sm text-ink/55"><ImageIcon className="mx-auto h-8 w-8 text-gold-dark" /><p className="mt-3">No newsletter images uploaded yet.</p></div>
+            )}
+          </section>
+
+          <section className={surface + ' mt-6 overflow-hidden'}>
+            <div className="border-b border-[#5F021F]/10 px-5 py-4"><h2 className="font-serif text-2xl text-bordeaux">Subscriber records</h2><p className="mt-1 text-sm text-ink/55">Only records with subscribed status are included when sending.</p></div>
+            {items.map((item) => <div key={String(item.id ?? item._id ?? item.email)} className="flex flex-col gap-2 border-t border-[#5F021F]/8 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"><span className="font-bold text-bordeaux">{String(item.email)}</span><span className="text-sm text-ink/55">{String(item.status)} · {dateText(item.consentedAt ?? item.createdAt)}</span></div>)}
+            {!items.length && <Empty text="No subscribers have been recorded." />}
+          </section>
+        </>
+      )}
+    </>
+  );
 };
 
 export const LiveSettingsPage = ({ type }: { type: 'seo' | 'contact' | 'general' }) => {
