@@ -35,7 +35,7 @@ const Header = ({ eyebrow, title, description }: { eyebrow: string; title: strin
 );
 
 const ErrorNotice = ({ message }: { message: string }) => <div className="rounded-[3px] border border-red-300/35 bg-red-50 px-5 py-4 text-sm text-red-800">{message}</div>;
-const LoadingNotice = () => <div className={surface + ' p-8 text-sm text-ink/55'}>Loading live data from the Node.js API…</div>;
+const LoadingNotice = () => <div role="status" aria-live="polite" className={surface + ' p-8 text-sm text-ink/55'}>Loading your workspace…</div>;
 
 export const LiveAnalyticsPage = ({ section = 'traffic' }: { section?: 'traffic' | 'pages' | 'interest' | 'sources' | 'search' | 'consent' }) => {
   const [data, setData] = useState<DashboardData | null>(null);

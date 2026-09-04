@@ -60,7 +60,7 @@ export const LiveDashboard = () => {
     <div>
       <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-gold-dark">Overview</p>
       <h1 className="mt-3 font-serif text-5xl text-bordeaux">Loading dashboard…</h1>
-      <p className="mt-3 leading-7 text-ink/60">Fetching current website intelligence from the Node.js analytics API.</p>
+      <p className="mt-3 leading-7 text-ink/60">Fetching the latest website intelligence.</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">{Array.from({ length: 5 }).map((_, index) => <div key={index} className={surface + ' h-36 animate-pulse bg-white/40'} />)}</div>
     </div>
   );
