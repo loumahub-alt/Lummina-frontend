@@ -715,10 +715,10 @@ export const externalCounselServices = [
 export const homePracticeAreas = practiceAreaGroups;
 
 export const homeStats: Stat[] = [
-  { value: '14', label: 'Practice Areas' },
-  { value: 'Experience', label: 'Debt-to-Equity Transaction Experience' },
-  { value: 'Experience', label: 'Debt Recoveries Referenced in Firm Experience' },
-  { value: 'Lagos', label: 'Nigeria-Based Counsel' },
+  { value: '14', label: 'Practice Areas', description: 'Legal support across the needs of growing businesses, founders and private clients.' },
+  { value: 'Representative', label: 'Debt-to-Equity Transactions', description: 'Representative commercial transaction experience.' },
+  { value: 'Representative', label: 'Commercial Debt Recoveries', description: 'Representative recovery strategy and dispute experience.' },
+  { value: 'Representative', label: 'International Recovery Matters', description: 'Representative cross-border recovery support.' },
 ];
 
 export const mission = {

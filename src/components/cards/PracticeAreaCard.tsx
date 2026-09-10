@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { iconMap } from '../../utils/icons';
 import type { PracticeArea } from '../../types';
-import { PrimaryButton } from '../common/PrimaryButton';
 import { brand } from '../../data/site';
 import { hasAnalyticsConsent, trackEvent } from '../../utils/analytics';
 
@@ -91,14 +91,15 @@ export const PracticeAreaCard = ({ area, detailed = false }: PracticeAreaCardPro
               </ul>
             </>
           )}
-          <PrimaryButton
+          <a
             href={brand.bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-7"
+            className="group/cta mt-7 inline-flex min-h-11 w-fit max-w-full items-center gap-2 border-b border-gold/70 px-0 py-2 text-xs font-extrabold uppercase tracking-[0.08em] text-gold-dark transition hover:border-bordeaux hover:text-bordeaux focus-visible:outline-gold-dark"
           >
-            Schedule a Consultation
-          </PrimaryButton>
+            <span>Schedule a Consultation</span>
+            <ArrowRight aria-hidden="true" className="h-4 w-4 text-gold-dark transition-transform group-hover/cta:translate-x-1" />
+          </a>
         </div>
       </div>
     </article>
