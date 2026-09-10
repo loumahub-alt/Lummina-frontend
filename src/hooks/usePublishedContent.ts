@@ -151,7 +151,7 @@ export const mapPublishedStatistics = (
   if (records === null) return fallback;
 
   return records.map((record) => ({
-    value: publicFigure(record.value, 'Experience'),
+    value: typeof record.value === 'string' ? record.value : String(record.value ?? ''),
     label: typeof record.label === 'string' ? record.label : '',
     description: typeof record.supportingText === 'string' ? record.supportingText : undefined,
   }));

@@ -175,9 +175,6 @@ const loadPreloadedContent = async () => {
   // Do not expose monetary matter figures in the public prerender payload.
   // The visible React components apply the same policy at render time.
   const publicCollections = Object.fromEntries(Object.entries(collections).map(([resource, records]) => {
-    if (resource === 'statistics') {
-      return [resource, records.map((record) => ({ ...record, value: publicFigure(record.value, 'Experience') }))];
-    }
     if (resource === 'results') {
       return [resource, records.map((record) => ({ ...record, headlineFigure: publicFigure(record.headlineFigure) }))];
     }
