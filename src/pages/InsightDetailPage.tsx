@@ -34,6 +34,45 @@ type InsightDetail = {
   modifiedTime?: string;
 };
 
+type ArticleBlock =
+  | { kind: 'heading'; text: string }
+  | { kind: 'paragraph'; text: string }
+  | { kind: 'list'; items: string[]; ordered: boolean };
+
+const parseArticleContent = (content: string): ArticleBlock[] => {
+  const blocks: ArticleBlock[] = [];
+
+  content
+    .replace(/\r\n?/g, '\n')
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .forEach((block) => {
+      const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+      if (lines.length === 0) return;
+
+      if (lines.length === 1 && /^#{1,3}\s+/.test(lines[0])) {
+        blocks.push({ kind: 'heading', text: lines[0].replace(/^#{1,3}\s+/, '') });
+        return;
+      }
+
+      const unorderedItems = lines.map((line) => line.match(/^[-*•]\s+(.+)$/)?.[1]);
+      const orderedItems = lines.map((line) => line.match(/^\d+[.)]\s+(.+)$/)?.[1]);
+      if (unorderedItems.every(Boolean)) {
+        blocks.push({ kind: 'list', items: unorderedItems as string[], ordered: false });
+        return;
+      }
+      if (orderedItems.every(Boolean)) {
+        blocks.push({ kind: 'list', items: orderedItems as string[], ordered: true });
+        return;
+      }
+
+      blocks.push({ kind: 'paragraph', text: lines.join(' ') });
+    });
+
+  return blocks;
+};
+
 const seoValue = (record: RemoteInsight, key: string) => {
   const value = record.seo;
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -174,10 +213,7 @@ export const InsightDetailPage = () => {
     return <NotFoundPage />;
   }
 
-  const paragraphs = insight.content
-    .split(/\n{2,}/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
+  const articleBlocks = parseArticleContent(insight.content);
 
   const shareUrl = typeof window !== 'undefined'
     ? window.location.href.split('#')[0]
@@ -214,19 +250,39 @@ export const InsightDetailPage = () => {
         ctaTo="/consultation"
       />
 
-      <section className="cream-section py-20">
-        <div className="container-shell grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-          <article className="max-w-3xl">
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark">
-              Lummina Law Firm
-            </p>
-            <h2 className="mt-4 font-serif text-4xl font-medium leading-tight text-ink md:text-5xl">
+      <section className="cream-section py-14 sm:py-16">
+        <div className="container-shell grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start lg:gap-10">
+          <article className="max-w-4xl rounded-[2px] border border-light-line bg-paper/75 p-6 shadow-soft sm:p-9 lg:p-10">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-light-line pb-5">
+              <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark">
+                By {insight.author}
+              </p>
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/50">
+                {insight.date}
+              </p>
+            </div>
+            <h2 className="mt-7 max-w-[34ch] font-serif text-3xl font-medium leading-tight text-ink md:text-4xl">
               Practical perspective for the decisions ahead.
             </h2>
-            <div className="mt-8 space-y-6 text-lg leading-9 text-ink/75">
-              {paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+            <div className="mt-7 max-w-[68ch] space-y-5 text-base leading-8 text-ink/75 sm:text-[1.0625rem] sm:leading-[1.85]">
+              {articleBlocks.map((block, index) => {
+                if (block.kind === 'heading') {
+                  return (
+                    <h3 key={`${block.kind}-${index}`} className="pt-3 font-serif text-2xl font-medium leading-tight text-bordeaux sm:text-3xl">
+                      {block.text}
+                    </h3>
+                  );
+                }
+                if (block.kind === 'list') {
+                  const List = block.ordered ? 'ol' : 'ul';
+                  return (
+                    <List key={`${block.kind}-${index}`} className={`${block.ordered ? 'list-decimal' : 'list-disc'} space-y-2 pl-6`}>
+                      {block.items.map((item, itemIndex) => <li key={`${item}-${itemIndex}`}>{item}</li>)}
+                    </List>
+                  );
+                }
+                return <p key={`${block.kind}-${index}`}>{block.text}</p>;
+              })}
             </div>
             {insight.category === 'Resources' && insight.ebookUrl && (
               <div className="mt-10 border border-gold/40 bg-gold/10 p-6 sm:p-7">

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { iconMap } from '../../utils/icons';
 import type { PracticeArea } from '../../types';
-import { SecondaryButton } from '../common/SecondaryButton';
+import { PrimaryButton } from '../common/PrimaryButton';
+import { brand } from '../../data/site';
 import { hasAnalyticsConsent, trackEvent } from '../../utils/analytics';
 
 type PracticeAreaCardProps = {
@@ -90,9 +91,14 @@ export const PracticeAreaCard = ({ area, detailed = false }: PracticeAreaCardPro
               </ul>
             </>
           )}
-          <SecondaryButton to={`/practice-areas#${area.id}`} dark className="mt-7">
-            Learn More
-          </SecondaryButton>
+          <PrimaryButton
+            href={brand.bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-7"
+          >
+            Schedule a Consultation
+          </PrimaryButton>
         </div>
       </div>
     </article>

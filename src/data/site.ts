@@ -38,7 +38,6 @@ export const navigation: NavigationItem[] = [
   { label: 'About', to: '/about' },
   { label: 'Practice Areas', to: '/practice-areas' },
   { label: 'Our Team', to: '/our-team' },
-  { label: 'Results', to: '/results' },
   { label: 'Insights', to: '/insights' },
   { label: 'Contact', to: '/consultation' },
   { label: 'Schedule a Consultation', to: '/consultation', href: brand.bookingUrl, external: true, cta: true },

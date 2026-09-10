@@ -1,13 +1,29 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
+
+const DISCLAIMER_STORAGE_KEY = 'lummina_site_disclaimer_confirmed';
+const LEGAL_PATHS = new Set(['/privacy-policy', '/terms-of-use']);
 
 export const SiteDisclaimerBanner = () => {
+  const { pathname } = useLocation();
   const [visible, setVisible] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const normalizedPathname = pathname.replace(/\/+$/, '') || '/';
+  const isLegalPage = LEGAL_PATHS.has(normalizedPathname);
 
   useEffect(() => {
-    setVisible(true);
-  }, []);
+    if (isLegalPage) {
+      setVisible(false);
+      return;
+    }
+
+    try {
+      setVisible(window.localStorage.getItem(DISCLAIMER_STORAGE_KEY) !== 'true');
+    } catch {
+      setVisible(true);
+    }
+  }, [isLegalPage]);
 
   useEffect(() => {
     if (!visible) return undefined;
@@ -22,6 +38,11 @@ export const SiteDisclaimerBanner = () => {
   if (!visible) return null;
 
   const acknowledge = () => {
+    try {
+      window.localStorage.setItem(DISCLAIMER_STORAGE_KEY, 'true');
+    } catch {
+      // Keep the confirmation for the current session if browser storage is unavailable.
+    }
     setVisible(false);
   };
 
@@ -32,7 +53,7 @@ export const SiteDisclaimerBanner = () => {
         aria-modal="true"
         aria-labelledby="site-disclaimer-title"
         aria-describedby="site-disclaimer-description"
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[3px] border border-gold/30 bg-[#FFF9EF] p-6 text-ink shadow-luxe sm:p-9"
+        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[3px] border border-gold/30 bg-[#FFF9EF] p-8 text-ink shadow-luxe sm:p-12"
       >
         <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-gold-dark">Disclaimer</p>
         <h2 id="site-disclaimer-title" className="mt-3 font-serif text-3xl font-medium text-bordeaux sm:text-4xl">
