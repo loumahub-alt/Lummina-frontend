@@ -12,7 +12,7 @@ const template = readFileSync(join(distRoot, 'index.html'), 'utf8');
 const baseRoutes = [
   {
     path: '/',
-    title: 'Lummina Law Firm Lagos | Strategic Legal Counsel',
+    title: 'Lummina Law Firm | Corporate & Commercial Lawyers in Nigeria',
     description:
       'Lummina is a law firm advising businesses, investors, asset owners and private clients on the legal structures, transactions and decisions that protect value and enable long-term success.',
   },
