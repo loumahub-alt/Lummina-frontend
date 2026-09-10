@@ -1,7 +1,6 @@
 import type {
   FooterColumn,
   ImageRegistry,
-  Insight,
   NavigationItem,
   Office,
   PracticeArea,
@@ -900,37 +899,6 @@ export const testimonials: Testimonial[] = [
       'Their guidance helped us move with greater confidence on compliance, governance and contract decisions.',
     name: 'Company Director',
     title: 'Corporate Governance Matter',
-  },
-];
-
-export const insights: Insight[] = [
-  {
-    id: 'business-law-nigeria',
-    category: 'Insights',
-    date: 'July 18, 2026',
-    title: 'Building Stronger Legal Foundations for Nigerian Businesses',
-    summary:
-      'A practical guide to contracts, governance and compliance steps that help companies grow with confidence.',
-    image: 'conference',
-    featured: true,
-  },
-  {
-    id: 'debt-recovery-strategy',
-    category: 'Articles',
-    date: 'July 9, 2026',
-    title: 'Debt Recovery Strategy: What Businesses Should Do Before Litigation',
-    summary:
-      'How evidence, negotiation posture and debtor analysis can shape better recovery outcomes.',
-    image: 'scales',
-  },
-  {
-    id: 'startup-readiness',
-    category: 'Resources',
-    date: 'June 26, 2026',
-    title: 'Startup Legal Readiness Checklist',
-    summary:
-      'A founder-focused checklist covering incorporation, equity, contracts, IP and investor preparedness.',
-    image: 'boardroom',
   },
 ];
 

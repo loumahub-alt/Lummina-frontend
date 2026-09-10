@@ -89,30 +89,6 @@ const baseRoutes = [
       'Important information about website content, professional services, representative matters and lawyer-client relationships.',
   },
   {
-    path: '/insights/business-law-nigeria',
-    type: 'article',
-    title: 'Building Stronger Legal Foundations for Nigerian Businesses | Lummina Law Firm',
-    description: 'A practical guide to contracts, governance and compliance steps that help Nigerian companies grow with confidence.',
-    image: `${siteUrl}/assets/conference-room.webp`,
-    publishedTime: '2026-07-18T00:00:00.000Z',
-  },
-  {
-    path: '/insights/debt-recovery-strategy',
-    type: 'article',
-    title: 'Debt Recovery Strategy: What Businesses Should Do Before Litigation | Lummina Law Firm',
-    description: 'How evidence, negotiation posture and debtor analysis can shape better commercial debt recovery outcomes.',
-    image: `${siteUrl}/assets/scales.webp`,
-    publishedTime: '2026-07-09T00:00:00.000Z',
-  },
-  {
-    path: '/insights/startup-readiness',
-    type: 'article',
-    title: 'Startup Legal Readiness Checklist | Lummina Law Firm',
-    description: 'A founder-focused checklist covering incorporation, equity, contracts, intellectual property and investor preparedness.',
-    image: `${siteUrl}/assets/boardroom.webp`,
-    publishedTime: '2026-06-26T00:00:00.000Z',
-  },
-  {
     path: '/services/corporate-commercial-law-lagos',
     title: 'Corporate & Commercial Lawyers Lagos | Lummina Law Firm',
     description:

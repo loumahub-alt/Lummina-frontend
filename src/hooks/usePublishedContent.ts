@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { brand, offices, practiceAreaGroups } from '../data/site';
-import type { PracticeArea, Stat } from '../types';
+import type { Insight, InsightCategory, PracticeArea, Stat } from '../types';
 import { iconMap } from '../utils/icons';
+import { contentAssetFromRecord } from '../utils/contentAssets';
 import { usePreloadedCollection } from '../context/PreloadedContentContext';
 
 export type PublishedRecord = Record<string, unknown>;
@@ -30,7 +31,7 @@ export const usePublishedCollection = (resource: string) => {
         if (active) setRecords(items);
       })
       .catch(() => {
-        // The public site keeps its bundled content as a resilient fallback.
+        // Keep preloaded records, when available, if the CMS request fails.
       });
 
     return () => {
@@ -39,6 +40,53 @@ export const usePublishedCollection = (resource: string) => {
   }, [preloadedRecords, resource]);
 
   return records;
+};
+
+const insightCategoryFromType = (value: unknown): InsightCategory => {
+  const type = typeof value === 'string' ? value.trim().toLowerCase() : '';
+  if (type === 'insight' || type === 'insights') return 'Insights';
+  if (type === 'newsletter' || type === 'newsletters') return 'Newsletters';
+  if (type === 'resource' || type === 'resources' || type === 'publication' || type === 'publications') return 'Resources';
+  if (type === 'event' || type === 'events') return 'Events';
+  return 'Articles';
+};
+
+const insightDate = (value: unknown) => {
+  if (typeof value !== 'string' || !value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf())
+    ? ''
+    : date.toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: 'numeric' });
+};
+
+export const mapPublishedInsightRecord = (record: PublishedRecord, index = 0): Insight => {
+  const image = contentAssetFromRecord(record, 'image');
+  const thumbnail = contentAssetFromRecord(record, 'thumbnail');
+  const ebook = contentAssetFromRecord(record, 'ebook');
+  const ebookRecord = record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
+    ? record.ebook as Record<string, unknown>
+    : {};
+  const title = typeof record.title === 'string' && record.title.trim() ? record.title.trim() : 'Lummina Insight';
+  const publishedAt = typeof record.publishedAt === 'string' ? record.publishedAt : '';
+
+  return {
+    id: typeof record.slug === 'string' && record.slug.trim()
+      ? record.slug
+      : String(record.id ?? record._id ?? `insight-${index + 1}`),
+    category: insightCategoryFromType(record.type ?? record.category),
+    date: insightDate(publishedAt),
+    publishedAt: publishedAt || undefined,
+    title,
+    summary: typeof record.excerpt === 'string' ? record.excerpt : '',
+    image: 'library',
+    imageUrl: image.url || undefined,
+    imageAlt: image.alt || undefined,
+    thumbnailUrl: thumbnail.url || undefined,
+    thumbnailAlt: thumbnail.alt || undefined,
+    ebookUrl: ebook.url || undefined,
+    ebookFileName: String(ebookRecord.fileName ?? ebookRecord.originalName ?? '') || undefined,
+    featured: record.isFeatured === true,
+  };
 };
 
 const servicesFromRecord = (value: unknown) => {

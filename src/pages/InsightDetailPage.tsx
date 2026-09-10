@@ -6,7 +6,7 @@ import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
 import { SecondaryButton } from '../components/common/SecondaryButton';
 import { TransitionLink } from '../components/transitions';
-import { brand, images, insights } from '../data/site';
+import { brand, images } from '../data/site';
 import { api, ApiError } from '../services/api';
 import type { InsightCategory } from '../types';
 import { applySeo } from '../utils/seo';
@@ -102,11 +102,10 @@ const formatDate = (value: unknown, fallback: string) => {
 
 export const InsightDetailPage = () => {
   const { slug = '' } = useParams();
-  const fallback = insights.find((item) => item.id === slug);
   const preloadedInsight = usePreloadedItem('insights', slug);
   const [remoteInsight, setRemoteInsight] = useState<RemoteInsight | null>(preloadedInsight);
   const [remoteStatus, setRemoteStatus] = useState<'idle' | 'loaded' | 'not-found' | 'error'>(preloadedInsight ? 'loaded' : 'idle');
-  const [loading, setLoading] = useState(!fallback && !preloadedInsight);
+  const [loading, setLoading] = useState(!preloadedInsight);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -114,7 +113,7 @@ export const InsightDetailPage = () => {
     let active = true;
     setRemoteInsight(preloadedInsight);
     setRemoteStatus(preloadedInsight ? 'loaded' : 'idle');
-    setLoading(!fallback && !preloadedInsight);
+    setLoading(!preloadedInsight);
 
     api.public
       .item('insights', slug)
@@ -136,13 +135,12 @@ export const InsightDetailPage = () => {
     return () => {
       active = false;
     };
-  }, [fallback, preloadedInsight, slug]);
+  }, [preloadedInsight, slug]);
 
   const insight = useMemo<InsightDetail | null>(() => {
-    if ((!fallback && !remoteInsight) || remoteStatus === 'not-found') return null;
+    if (!remoteInsight || remoteStatus === 'not-found') return null;
 
-    const record = remoteInsight ?? {};
-    const fallbackImage = fallback?.image ?? 'library';
+    const record = remoteInsight;
     const image = contentAssetFromRecord(record, 'image');
     const ebook = contentAssetFromRecord(record, 'ebook');
     const ebookRecord = record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
@@ -150,24 +148,24 @@ export const InsightDetailPage = () => {
       : {};
     const summary = typeof record.excerpt === 'string'
       ? record.excerpt
-      : fallback?.summary ?? '';
+      : '';
     const content = typeof record.content === 'string' && record.content.trim()
       ? record.content
       : summary;
-    const title = typeof record.title === 'string' ? record.title : fallback?.title ?? 'Lummina Insight';
+    const title = typeof record.title === 'string' ? record.title : 'Lummina Insight';
     const description = seoValue(record, 'description') || summary;
     const publishedTime = typeof record.publishedAt === 'string' ? record.publishedAt : undefined;
     const modifiedTime = typeof record.updatedAt === 'string' ? record.updatedAt : publishedTime;
 
     return {
-      category: categoryFor(record.type, fallback?.category ?? 'Articles'),
-      date: formatDate(publishedTime, fallback?.date ?? ''),
+      category: categoryFor(record.type, 'Articles'),
+      date: formatDate(publishedTime, ''),
       title,
       summary,
       content,
-      image: fallbackImage,
-      imageUrl: image.url || fallback?.imageUrl,
-      imageAlt: image.alt || fallback?.imageAlt,
+      image: 'library',
+      imageUrl: image.url || undefined,
+      imageAlt: image.alt || undefined,
       ebookUrl: ebook.url || undefined,
       ebookFileName: String(ebookRecord.fileName ?? ebookRecord.originalName ?? '') || undefined,
       seoTitle: seoValue(record, 'title') || title + ' | Lummina Law Firm',
@@ -176,7 +174,7 @@ export const InsightDetailPage = () => {
       publishedTime,
       modifiedTime,
     };
-  }, [fallback, remoteInsight, remoteStatus]);
+  }, [remoteInsight, remoteStatus]);
 
   const heroImage = insight?.imageUrl
     ? { ...images[insight.image], src: insight.imageUrl, alt: insight.imageAlt ?? insight.title }

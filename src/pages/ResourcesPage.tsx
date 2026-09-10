@@ -2,36 +2,19 @@ import { useMemo } from 'react';
 import { InsightCard } from '../components/cards/InsightCard';
 import { CallToAction } from '../components/common/CallToAction';
 import { PageHero } from '../components/common/PageHero';
-import { images, insights } from '../data/site';
-import { usePublishedCollection } from '../hooks/usePublishedContent';
-import { contentAssetFromRecord } from '../utils/contentAssets';
+import { images } from '../data/site';
+import { mapPublishedInsightRecord, usePublishedCollection } from '../hooks/usePublishedContent';
 import { TransitionLink } from '../components/transitions';
 import type { Insight } from '../types';
 
 export const ResourcesPage = () => {
   const publishedRecords = usePublishedCollection('insights');
   const resources = useMemo<Insight[]>(() => {
-    if (publishedRecords === null) return insights.filter((item) => item.id === 'startup-readiness');
+    if (publishedRecords === null) return [];
 
     return publishedRecords
       .filter((record) => ['resource', 'resources', 'publication', 'publications'].includes(String(record.type ?? '').toLowerCase()))
-      .map((record, index) => {
-        const fallback = insights.find((item) => item.id === record.slug) ?? insights[index] ?? insights[0];
-        const image = contentAssetFromRecord(record, 'image');
-        return {
-          ...fallback,
-          id: typeof record.slug === 'string' ? record.slug : fallback.id,
-          category: 'Resources',
-          title: typeof record.title === 'string' ? record.title : fallback.title,
-          summary: typeof record.excerpt === 'string' ? record.excerpt : fallback.summary,
-          imageUrl: image.url || undefined,
-          imageAlt: image.alt || undefined,
-          ebookUrl: contentAssetFromRecord(record, 'ebook').url || undefined,
-          ebookFileName: record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
-            ? String((record.ebook as Record<string, unknown>).fileName ?? (record.ebook as Record<string, unknown>).originalName ?? '') || undefined
-            : undefined,
-        };
-      });
+      .map(mapPublishedInsightRecord);
   }, [publishedRecords]);
 
   return (

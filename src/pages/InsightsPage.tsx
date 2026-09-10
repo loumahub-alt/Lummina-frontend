@@ -6,11 +6,9 @@ import { InsightCard } from '../components/cards/InsightCard';
 import { NewsletterForm } from '../components/forms/NewsletterForm';
 import { PageHero } from '../components/common/PageHero';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { images, insights } from '../data/site';
-import { usePublishedCollection } from '../hooks/usePublishedContent';
-import { contentAssetFromRecord } from '../utils/contentAssets';
-import type { InsightCategory } from '../types';
-import type { Insight } from '../types';
+import { images } from '../data/site';
+import { mapPublishedInsightRecord, usePublishedCollection } from '../hooks/usePublishedContent';
+import type { InsightCategory, Insight } from '../types';
 
 const categories: InsightCategory[] = [
   'Insights',
@@ -186,55 +184,8 @@ export const InsightsPage = () => {
 
   const publishedRecords = usePublishedCollection('insights');
   const insightItems = useMemo<Insight[]>(() => {
-    if (publishedRecords === null) return insights;
-
-    return publishedRecords.map((record, index) => {
-      const fallback = insights.find((item) => item.id === record.slug) ?? insights[index] ?? insights[0];
-      const type = typeof record.type === 'string'
-        ? record.type.trim().toLowerCase()
-        : typeof record.category === 'string'
-          ? record.category.trim().toLowerCase()
-          : '';
-      const category: InsightCategory = type === 'newsletter' || type === 'newsletters'
-        ? 'Newsletters'
-        : type === 'resource' || type === 'resources' || type === 'publication' || type === 'publications'
-          ? 'Resources'
-          : type === 'insight' || type === 'insights'
-            ? 'Insights'
-        : type === 'event' || type === 'events'
-          ? 'Events'
-          : 'Articles';
-      const fallbackImage = typeof record.slug === 'string'
-        ? insights.find((item) => item.id === record.slug)?.image
-        : undefined;
-      const image = contentAssetFromRecord(record, 'image');
-      const thumbnail = contentAssetFromRecord(record, 'thumbnail');
-      const publishedAt = typeof record.publishedAt === 'string' ? record.publishedAt : '';
-
-      return {
-        ...fallback,
-        id: typeof record.slug === 'string' ? record.slug : fallback.id,
-        category,
-        date: publishedAt ? new Date(publishedAt).toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: 'numeric' }) : fallback.date,
-        publishedAt: publishedAt || undefined,
-        title: typeof record.title === 'string' ? record.title : fallback.title,
-        summary: typeof record.excerpt === 'string' && record.excerpt.trim()
-          ? record.excerpt
-          : category === 'Events'
-            ? ''
-            : fallback.summary,
-        image: fallbackImage ?? fallback.image,
-        imageUrl: image.url || undefined,
-        imageAlt: image.alt || undefined,
-        thumbnailUrl: thumbnail.url || undefined,
-        thumbnailAlt: thumbnail.alt || undefined,
-        ebookUrl: contentAssetFromRecord(record, 'ebook').url || undefined,
-        ebookFileName: record.ebook && typeof record.ebook === 'object' && !Array.isArray(record.ebook)
-          ? String((record.ebook as Record<string, unknown>).fileName ?? (record.ebook as Record<string, unknown>).originalName ?? '') || undefined
-          : undefined,
-        featured: record.isFeatured === true || fallback.featured,
-      };
-    });
+    if (publishedRecords === null) return [];
+    return publishedRecords.map(mapPublishedInsightRecord);
   }, [publishedRecords]);
 
   const filteredInsights = useMemo(() => {

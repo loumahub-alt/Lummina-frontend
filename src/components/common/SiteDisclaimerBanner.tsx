@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 
-const DISCLAIMER_STORAGE_KEY = 'lummina_site_disclaimer_confirmed';
 const LEGAL_PATHS = new Set(['/privacy-policy', '/terms-of-use']);
 
 export const SiteDisclaimerBanner = () => {
@@ -11,19 +10,24 @@ export const SiteDisclaimerBanner = () => {
   const [confirmed, setConfirmed] = useState(false);
   const normalizedPathname = pathname.replace(/\/+$/, '') || '/';
   const isLegalPage = LEGAL_PATHS.has(normalizedPathname);
+  const previousPathnameRef = useRef<string | null>(null);
 
   useEffect(() => {
+    const previousPathname = previousPathnameRef.current;
+    const enteredFromLegalPage = previousPathname
+      ? LEGAL_PATHS.has(previousPathname.replace(/\/+$/, '') || '/')
+      : false;
+    const enteredHomePage = previousPathname !== null && normalizedPathname === '/';
+
     if (isLegalPage) {
       setVisible(false);
-      return;
-    }
-
-    try {
-      setVisible(window.localStorage.getItem(DISCLAIMER_STORAGE_KEY) !== 'true');
-    } catch {
+    } else if (previousPathname === null || enteredFromLegalPage || enteredHomePage) {
+      setConfirmed(false);
       setVisible(true);
     }
-  }, [isLegalPage]);
+
+    previousPathnameRef.current = normalizedPathname;
+  }, [isLegalPage, normalizedPathname]);
 
   useEffect(() => {
     if (!visible) return undefined;
@@ -38,11 +42,6 @@ export const SiteDisclaimerBanner = () => {
   if (!visible) return null;
 
   const acknowledge = () => {
-    try {
-      window.localStorage.setItem(DISCLAIMER_STORAGE_KEY, 'true');
-    } catch {
-      // Keep the confirmation for the current session if browser storage is unavailable.
-    }
     setVisible(false);
   };
 

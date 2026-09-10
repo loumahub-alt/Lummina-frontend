@@ -4,9 +4,9 @@ import { PageHero } from '../components/common/PageHero';
 import { PracticeAreaCard } from '../components/cards/PracticeAreaCard';
 import { SecondaryButton } from '../components/common/SecondaryButton';
 import { SectionHeading } from '../components/common/SectionHeading';
-import { brand, images, insights, practiceAreas } from '../data/site';
-import { mapPracticeAreaRecord, usePublishedCollection } from '../hooks/usePublishedContent';
-import type { ServicePage as ServicePageData } from '../types';
+import { brand, images, practiceAreas } from '../data/site';
+import { mapPracticeAreaRecord, mapPublishedInsightRecord, usePublishedCollection } from '../hooks/usePublishedContent';
+import type { Insight, ServicePage as ServicePageData } from '../types';
 
 type ServicePageProps = {
   page: ServicePageData;
@@ -14,6 +14,7 @@ type ServicePageProps = {
 
 export const ServicePage = ({ page }: ServicePageProps) => {
   const practiceAreaRecords = usePublishedCollection('practice-areas');
+  const insightRecords = usePublishedCollection('insights');
   const currentPracticeAreas = useMemo(() => {
     if (practiceAreaRecords === null) return practiceAreas;
     const recordsBySlug = new Map(
@@ -29,9 +30,13 @@ export const ServicePage = ({ page }: ServicePageProps) => {
   const relatedPracticeAreas = page.practiceAreaIds
     .map((id) => currentPracticeAreas.find((area) => area.id === id))
     .filter((area): area is (typeof practiceAreas)[number] => Boolean(area));
-  const relatedInsights = (page.insightIds ?? [])
-    .map((id) => insights.find((insight) => insight.id === id))
-    .filter((insight): insight is (typeof insights)[number] => Boolean(insight));
+  const relatedInsights = useMemo<Insight[]>(() => {
+    if (insightRecords === null) return [];
+    const mappedInsights = insightRecords.map(mapPublishedInsightRecord);
+    return (page.insightIds ?? [])
+      .map((id) => mappedInsights.find((insight) => insight.id === id))
+      .filter((insight): insight is Insight => Boolean(insight));
+  }, [insightRecords, page.insightIds]);
   const heroImage = images[relatedPracticeAreas[0]?.image ?? 'boardroom'];
 
   return (
