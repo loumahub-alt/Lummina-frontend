@@ -210,6 +210,23 @@ export const InsightsPage = () => {
         image={images.library}
       />
 
+      <section className="luxury-dark py-20">
+        <div className="container-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <SectionHeading
+            eyebrow="Newsletter"
+            title="Would you like to receive Newsletters and updates from us? Subscribe below."
+            dark
+          >
+            <p>
+              Receive practical perspectives and updates from Lummina.
+            </p>
+          </SectionHeading>
+          <div className="rounded-[2px] border border-champagne/15 bg-champagne/5 p-7 shadow-luxe luxury-inset">
+            <NewsletterForm />
+          </div>
+        </div>
+      </section>
+
       <section className="cream-section py-20">
         <div className="container-shell">
           <div className="flex flex-wrap gap-3" role="tablist" aria-label="Insight filters">
@@ -268,23 +285,6 @@ export const InsightsPage = () => {
               )}
             </>
           )}
-        </div>
-      </section>
-
-      <section className="luxury-dark py-20">
-        <div className="container-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <SectionHeading
-            eyebrow="Newsletter"
-            title="Would you like to receive Newsletters and updates from us? Subscribe below."
-            dark
-          >
-            <p>
-              Receive practical perspectives and updates from Lummina.
-            </p>
-          </SectionHeading>
-          <div className="rounded-[2px] border border-champagne/15 bg-champagne/5 p-7 shadow-luxe luxury-inset">
-            <NewsletterForm />
-          </div>
         </div>
       </section>
     </>
