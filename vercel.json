@@ -149,6 +149,10 @@
     {
       "source": "/admin/:path*",
       "destination": "/index.html"
+    },
+    {
+      "source": "/insights/:slug",
+      "destination": "/index.html"
     }
   ]
 }
