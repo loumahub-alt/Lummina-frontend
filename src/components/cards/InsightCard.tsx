@@ -48,7 +48,13 @@ export const InsightCard = ({ insight, featured = false }: InsightCardProps) => 
         </h3>
         <p className="mt-4 leading-7 text-ink/70">{insight.summary}</p>
         <SecondaryButton to={'/insights/' + insight.id} dark className="mt-6">
-          {insight.category === 'Newsletters' ? 'Read Newsletter' : insight.category === 'Resources' && insight.ebookUrl ? 'Read E-book' : 'Read Article'}
+          {insight.category === 'Newsletters'
+            ? 'Read Newsletter'
+            : insight.category === 'Resources' && insight.ebookUrl
+              ? 'Read E-book'
+              : insight.category === 'Insights'
+                ? 'Read Insight'
+                : 'Read Article'}
         </SecondaryButton>
       </div>
     </article>
