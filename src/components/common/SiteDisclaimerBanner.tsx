@@ -3,6 +3,14 @@ import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 
 const LEGAL_PATHS = new Set(['/privacy-policy', '/terms-of-use']);
+const DISCLAIMER_STORAGE_KEY = 'lummina_disclaimer_acknowledged_on';
+
+const localDayKey = () => {
+  const now = new Date();
+  return [now.getFullYear(), now.getMonth() + 1, now.getDate()]
+    .map((value) => String(value).padStart(2, '0'))
+    .join('-');
+};
 
 export const SiteDisclaimerBanner = () => {
   const { pathname } = useLocation();
@@ -17,13 +25,19 @@ export const SiteDisclaimerBanner = () => {
     const enteredFromLegalPage = previousPathname
       ? LEGAL_PATHS.has(previousPathname.replace(/\/+$/, '') || '/')
       : false;
-    const enteredHomePage = previousPathname !== null && normalizedPathname === '/';
 
     if (isLegalPage) {
       setVisible(false);
-    } else if (previousPathname === null || enteredFromLegalPage || enteredHomePage) {
       setConfirmed(false);
-      setVisible(true);
+    } else if (previousPathname === null || enteredFromLegalPage) {
+      let acknowledgedToday = false;
+      try {
+        acknowledgedToday = window.localStorage.getItem(DISCLAIMER_STORAGE_KEY) === localDayKey();
+      } catch {
+        // If storage is unavailable, keep showing the disclaimer until it is accepted.
+      }
+      setConfirmed(false);
+      setVisible(!acknowledgedToday);
     }
 
     previousPathnameRef.current = normalizedPathname;
@@ -42,6 +56,11 @@ export const SiteDisclaimerBanner = () => {
   if (!visible) return null;
 
   const acknowledge = () => {
+    try {
+      window.localStorage.setItem(DISCLAIMER_STORAGE_KEY, localDayKey());
+    } catch {
+      // The popup still closes for this visit when browser storage is unavailable.
+    }
     setVisible(false);
   };
 
