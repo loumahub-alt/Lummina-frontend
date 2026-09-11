@@ -36,11 +36,29 @@ type InsightDetail = {
 
 type ArticleBlock =
   | { kind: 'heading'; text: string }
+  | { kind: 'subheading'; text: string }
   | { kind: 'paragraph'; text: string }
-  | { kind: 'list'; items: string[]; ordered: boolean };
+  | { kind: 'citation'; text: string }
+  | { kind: 'list'; items: string[]; ordered: boolean; citation?: boolean };
+
+const citationSectionPattern = /^(?:key\s+)?(?:sources?|references?|footnotes?|authorities)$/i;
+
+const looksLikeCitation = (text: string) => (
+  /^\[\d+\]\s+/.test(text)
+  || /^(?:s|ss|section|sections)\.?\s*\d+/i.test(text)
+  || /^appeal\s+no\.?\s+/i.test(text)
+);
+
+const looksLikeSubheading = (text: string) => {
+  if (text.length > 110) return false;
+  if (/^[A-Z0-9][A-Z0-9\s.,'’“”‘’—–:&()/-]{9,}$/.test(text)) return true;
+  return /^(?:for|what|why|how|who|when|where|key|important|before|after|understanding)\b/i.test(text)
+    && (text.length <= 80 || /:\s*$/.test(text));
+};
 
 const parseArticleContent = (content: string): ArticleBlock[] => {
   const blocks: ArticleBlock[] = [];
+  let inCitationSection = false;
 
   content
     .replace(/\r\n?/g, '\n')
@@ -52,22 +70,34 @@ const parseArticleContent = (content: string): ArticleBlock[] => {
       if (lines.length === 0) return;
 
       if (lines.length === 1 && /^#{1,3}\s+/.test(lines[0])) {
-        blocks.push({ kind: 'heading', text: lines[0].replace(/^#{1,3}\s+/, '') });
+        const text = lines[0].replace(/^#{1,3}\s+/, '');
+        inCitationSection = citationSectionPattern.test(text);
+        blocks.push({ kind: 'heading', text });
         return;
       }
 
       const unorderedItems = lines.map((line) => line.match(/^[-*•]\s+(.+)$/)?.[1]);
       const orderedItems = lines.map((line) => line.match(/^\d+[.)]\s+(.+)$/)?.[1]);
       if (unorderedItems.every(Boolean)) {
-        blocks.push({ kind: 'list', items: unorderedItems as string[], ordered: false });
+        blocks.push({ kind: 'list', items: unorderedItems as string[], ordered: false, citation: inCitationSection });
         return;
       }
       if (orderedItems.every(Boolean)) {
-        blocks.push({ kind: 'list', items: orderedItems as string[], ordered: true });
+        blocks.push({ kind: 'list', items: orderedItems as string[], ordered: true, citation: inCitationSection });
         return;
       }
 
-      blocks.push({ kind: 'paragraph', text: lines.join(' ') });
+      const text = lines.join(' ');
+      if (citationSectionPattern.test(text)) {
+        inCitationSection = true;
+        blocks.push({ kind: 'heading', text });
+      } else if (inCitationSection || looksLikeCitation(text)) {
+        blocks.push({ kind: 'citation', text });
+      } else if (lines.length === 1 && looksLikeSubheading(text)) {
+        blocks.push({ kind: 'subheading', text });
+      } else {
+        blocks.push({ kind: 'paragraph', text });
+      }
     });
 
   return blocks;
@@ -266,18 +296,24 @@ export const InsightDetailPage = () => {
               {articleBlocks.map((block, index) => {
                 if (block.kind === 'heading') {
                   return (
-                    <h3 key={`${block.kind}-${index}`} className="pt-3 font-serif text-2xl font-medium leading-tight text-bordeaux sm:text-3xl">
+                    <h3 key={`${block.kind}-${index}`} className="pt-3 font-serif text-2xl font-bold leading-tight text-bordeaux sm:text-3xl">
                       {block.text}
                     </h3>
                   );
                 }
+                if (block.kind === 'subheading') {
+                  return <p key={`${block.kind}-${index}`} className="pt-2 font-bold leading-7 text-bordeaux">{block.text}</p>;
+                }
                 if (block.kind === 'list') {
                   const List = block.ordered ? 'ol' : 'ul';
                   return (
-                    <List key={`${block.kind}-${index}`} className={`${block.ordered ? 'list-decimal' : 'list-disc'} space-y-2 pl-6`}>
+                    <List key={`${block.kind}-${index}`} className={`${block.ordered ? 'list-decimal' : 'list-disc'} space-y-2 pl-6 ${block.citation ? 'italic text-ink/65' : ''}`}>
                       {block.items.map((item, itemIndex) => <li key={`${item}-${itemIndex}`}>{item}</li>)}
                     </List>
                   );
+                }
+                if (block.kind === 'citation') {
+                  return <p key={`${block.kind}-${index}`} className="italic text-ink/65">{block.text}</p>;
                 }
                 return <p key={`${block.kind}-${index}`}>{block.text}</p>;
               })}
